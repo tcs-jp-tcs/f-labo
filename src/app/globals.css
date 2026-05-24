@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+:root {
+  --color-red: #E10600;
+  --color-dark: #0A0A0A;
+  --color-darker: #050505;
+  --color-carbon: #1A1A1A;
+  --color-carbon-light: #2A2A2A;
+  --color-white-soft: #F0F0F0;
+  --color-grey: #888;
+  --color-accent-yellow: #FFD700;
+  --color-accent-green: #00FF88;
+  --color-accent-blue: #00AAFF;
+}
+
+@theme inline {
+  --color-flabo-red: var(--color-red);
+  --color-flabo-dark: var(--color-dark);
+  --color-flabo-darker: var(--color-darker);
+  --color-flabo-carbon: var(--color-carbon);
+  --color-flabo-carbon-light: var(--color-carbon-light);
+  --color-flabo-text: var(--color-white-soft);
+  --color-flabo-grey: var(--color-grey);
+  --color-flabo-yellow: var(--color-accent-yellow);
+  --color-flabo-green: var(--color-accent-green);
+  --color-flabo-blue: var(--color-accent-blue);
+  --font-display: var(--font-orbitron);
+  --font-sans: var(--font-noto-sans-jp);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background: var(--color-darker);
+  color: var(--color-white-soft);
+  font-family: var(--font-noto-sans-jp), "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+  font-weight: 300;
+}
+
+body {
+  overflow-x: hidden;
+  min-height: 100dvh;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-conic-gradient(rgba(255, 255, 255, 0.02) 0% 25%, transparent 0% 50%) 0 0 / 4px 4px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.kerb-stripe {
+  height: 4px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--color-red) 0,
+    var(--color-red) 12px,
+    #fff 12px,
+    #fff 24px
+  );
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+.pulse-dot {
+  animation: pulse-dot 1.5s infinite;
+}
+
+.hero-glow {
+  position: relative;
+  overflow: hidden;
+}
+.hero-glow::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(225, 6, 0, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
