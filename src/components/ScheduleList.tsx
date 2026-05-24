@@ -102,7 +102,7 @@ export default function ScheduleList({ items }: { items: ScheduleItem[] }) {
                 </span>
               )}
               <div className="font-display tracking-[0.18em] text-[0.55rem] text-flabo-grey mb-2">
-                ROUND {item.round}
+                {item.roundLabel ?? `ROUND ${item.round}`}
                 {item.weekendType === "スプリント週末" && (
                   <span className="ml-2 text-flabo-yellow">SPRINT</span>
                 )}
