@@ -83,9 +83,9 @@ export default function AboutPage() {
               <div className="text-xs text-flabo-grey">連絡先</div>
               <a
                 className="font-bold text-white hover:text-flabo-red transition-colors"
-                href="mailto:contact@f-labo.app"
+                href="mailto:info.tcsjp@gmail.com"
               >
-                contact@f-labo.app
+                info.tcsjp@gmail.com
               </a>
             </div>
           </div>

@@ -1,6 +1,6 @@
 export default function MainLogo({ width = 240 }: { width?: number }) {
   return (
-    <svg viewBox="0 0 280 125" width={width} aria-label="フォーミュラ研究所">
+    <svg viewBox="-20 0 300 125" width={width} aria-label="フォーミュラ研究所">
       <defs>
         <pattern
           id="ck"

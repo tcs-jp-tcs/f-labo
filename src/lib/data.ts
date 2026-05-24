@@ -43,8 +43,10 @@ export type NewsItem = {
   category: Series | "F2/F3";
   source: string;
   title: string;
+  summary: string;
   date: string;
   url: string;
+  imageUrl?: string;
 };
 
 export type StandingRow = {
@@ -68,7 +70,9 @@ export type RaceResult = {
   gpName: string;
   date: string;
   raceType?: "決勝" | "スプリント" | "フィーチャー" | "予選";
+  status?: "confirmed" | "live" | "scheduled";
   podium: PodiumRow[];
+  note?: string;
   sourceUrl?: string;
 };
 
@@ -82,10 +86,11 @@ export type Review = {
   excerpt: string;
   sourceUrl?: string;
   raceType?: "決勝" | "スプリント" | "フィーチャー" | "予選";
+  imageUrl?: string;
 };
 
 /* ============================
-   2026 SCHEDULES（公式カレンダー + カナダGP実セッション）
+   2026 SCHEDULES（公式カレンダー）
    ============================ */
 export const schedules: Record<Series, ScheduleItem[]> = {
   F1: [
@@ -253,40 +258,6 @@ export const schedules: Record<Series, ScheduleItem[]> = {
       weekendType: "通常週末",
       status: "live",
       broadcast: "FODプロコース",
-      sessions: [
-        {
-          name: "プラクティス",
-          localDate: "5/22 (金)",
-          localTime: "10:05 - 10:50",
-          jpDate: "5/22 (金)",
-          jpTime: "夜23:05 - 23:50",
-          type: "practice",
-        },
-        {
-          name: "予選",
-          localDate: "5/22 (金)",
-          localTime: "14:00 - 14:30",
-          jpDate: "5/23 (土)",
-          jpTime: "深夜3:00 - 3:30",
-          type: "quali",
-        },
-        {
-          name: "スプリント",
-          localDate: "5/23 (土)",
-          localTime: "14:10 - 15:00",
-          jpDate: "5/24 (日)",
-          jpTime: "深夜3:10 - 4:00",
-          type: "sprint",
-        },
-        {
-          name: "フィーチャー",
-          localDate: "5/24 (日)",
-          localTime: "12:05 - 13:10",
-          jpDate: "5/25 (月)",
-          jpTime: "深夜1:05 - 2:10",
-          type: "race",
-        },
-      ],
     },
     {
       series: "F2",
@@ -341,28 +312,6 @@ export const schedules: Record<Series, ScheduleItem[]> = {
       flag: "🇪🇸",
       name: "バルセロナ",
       date: "6月12日〜14日",
-      weekendType: "通常週末",
-      status: "upcoming",
-      broadcast: "FODプロコース",
-    },
-    {
-      series: "F3",
-      round: 4,
-      country: "Austria",
-      flag: "🇦🇹",
-      name: "シュピールベルク",
-      date: "6月26日〜28日",
-      weekendType: "通常週末",
-      status: "upcoming",
-      broadcast: "FODプロコース",
-    },
-    {
-      series: "F3",
-      round: 5,
-      country: "Great Britain",
-      flag: "🇬🇧",
-      name: "シルバーストン",
-      date: "7月3日〜5日",
       weekendType: "通常週末",
       status: "upcoming",
       broadcast: "FODプロコース",
@@ -464,7 +413,7 @@ export const schedules: Record<Series, ScheduleItem[]> = {
           localDate: "5/24 (日)",
           localTime: "12:45 ET",
           jpDate: "5/25 (月)",
-          jpTime: "深夜1:45 - 5:00頃",
+          jpTime: "深夜1:45 〜",
           type: "race",
         },
       ],
@@ -484,7 +433,7 @@ export const schedules: Record<Series, ScheduleItem[]> = {
 };
 
 /* ============================
-   今週末の放送予定（実セッション・日付付き）
+   今週末の放送予定
    ============================ */
 export const thisWeekendBroadcasts: WeekendBroadcast[] = [
   {
@@ -546,90 +495,110 @@ export const thisWeekendBroadcasts: WeekendBroadcast[] = [
 ];
 
 /* ============================
-   NEWS（出典URL付き、Web検索ベース）
+   NEWS（要約3-4行・日本人言及・出典URL付き）
    ============================ */
 export const news: NewsItem[] = [
   {
     category: "F1",
     source: "Formula1.com",
     title:
-      "ラッセル、カナダGPスプリント制す。アントネッリと接触の波乱もポール堅持",
-    date: "2026年5月23日",
+      "カナダGPスプリント：ラッセル、メルセデス同士の波乱を制して勝利",
+    summary:
+      "ポールから発進したラッセルが、チームメイト・アントネッリと1コーナーで接触しながらも首位を死守。タイヤをいたわりノリスを1.2秒差で抑え今季2勝目のスプリント勝利。アントネッリは「あれは譲るべきだった」とチーム無線で激怒したが3位フィニッシュ、3-4位のピアストリ、5-6位のルクレール／ハミルトンも順位を変えていない。",
+    date: "2026年5月24日",
     url: "https://www.formula1.com/en/latest/article/russell-clings-on-to-win-canada-sprint-after-clashing-with-antonelli.6Ggn92sBNEdqizMYOT44fb",
   },
   {
     category: "F1",
     source: "Formula1.com",
     title:
-      "カナダGP予選：ラッセルが終盤ギリギリのアタックでチームメイト・アントネッリを抑えポール",
-    date: "2026年5月23日",
+      "カナダGP予選：ラッセルがアントネッリを最終アタックで阻止、ポールから決勝へ",
+    summary:
+      "Q3最後の周回でラッセルがコース上の限界ぎりぎりを攻めてアントネッリを0.1秒以内で逆転、ポールポジションを獲得。3番手にはノリス、4番手ピアストリ、5番手ルクレール。フェルスタッペンはQ3進出を果たすも7番手にとどまった。決勝は日本時間5/25（月）早朝5:00スタート。",
+    date: "2026年5月24日",
     url: "https://www.formula1.com/en/latest/article/russell-denies-mercedes-rival-antonelli-pole-position-for-canadian-grand-prix-with-last-gasp-effort.5b91PZNqJKlwMzExUu9twT",
   },
   {
     category: "SF",
-    source: "AUTOSPORT web",
-    title: "SF第4戦鈴鹿決勝：フェネストラズが2026年シーズン初優勝、松下が2位",
+    source: "motorsport.com",
+    title:
+      "SF鈴鹿Rd.4：フェネストラズが14番手から大逆転優勝、岩佐は13位ノーポイント",
+    summary:
+      "予選で岩佐歩夢が今季3度目のポールを獲得していたが、決勝は雨が絡む大荒れの展開に。14番手スタートのフェネストラズが小雨タイミングでステイアウトする戦略で一気にトップへ。2位は松下信治（DELiGHTWORKS）、3位は同じTOM'Sの坪井翔。岩佐はSC明けのリスタートとウェット交換が裏目に出て13位ノーポイントに沈んだ。",
     date: "2026年5月23日",
-    url: "https://www.as-web.jp/super-formula/1318746",
+    url: "https://jp.motorsport.com/super-formula/news/2026-sf-r4-race-result/10823240/",
   },
   {
     category: "INDY",
     source: "RacingNews365",
     title:
-      "インディ500：パロウが圧巻のポール獲得、佐藤琢磨は予選13番手で決勝へ",
+      "インディ500予選：パロウが232.348mphで2度目のポール、佐藤琢磨は13番手",
+    summary:
+      "土曜が雨で延期となり日曜決行となったインディ500予選で、IndyCar4度の王者パロウが232.348mphの4周平均で堂々のポール獲得。2位ロッシ、3位マルカス。3度のIndy500ウィナー（'17・'20）の佐藤琢磨は今季スポット参戦としてRahal Letterman Lanigan Racing #75（ホンダ）から出走、予選13番手で決勝に挑む。",
     date: "2026年5月18日",
     url: "https://racingnews365.com/2026-indy-500---full-qualifying-results",
+  },
+  {
+    category: "F2",
+    source: "FIA Formula 2",
+    title:
+      "F2マイアミ：宮田莉朋がフィーチャー6位で初の入賞、フライアウェイ最終戦で前進",
+    summary:
+      "Hitech TGRに移籍3年目シーズンを送る宮田莉朋が、マイアミGPでスプリント12位／フィーチャー6位とF1初参戦並みの追い上げを披露。マイアミの2レース合計で16ポジションをゲインし、自身のキャリアハイとなる初の入賞ポイントを獲得。チームメイトはコルトン・ハータで、Hitech勢は日曜のレースペースで存在感を見せた。",
+    date: "2026年5月3日",
+    url: "https://www.fiaformula2.com/Latest/17eXLgMCjY2QaIt65Ds1QA/what-we-learned-some-of-the-key-storylines-from-round-2-in-miami",
   },
   {
     category: "F1",
     source: "Sky Sports",
     title:
-      "フェルスタッペン、現行レギュレーションに苦言「メンタル的に無理がある」",
-    date: "2026年5月22日",
-    url: "https://www.skysports.com/f1/news/12433/13547301/max-verstappen-red-bull-driver-renews-f1-quit-threat-as-he-says-current-regulations-are-not-mentally-doable-at-canadian-gp",
-  },
-  {
-    category: "F1",
-    source: "Formula1.com",
-    title:
-      "マイアミGP：アントネッリが今季3勝目、ノリスを抑えチャンピオンシップ首位を独走",
+      "マイアミGP：アントネッリが今季3連勝、史上初の偉業で選手権独走",
+    summary:
+      "ポールスタートから一時3位まで落ちたアントネッリが、ピットストップでのアンダーカットでノリスを抜き返し、終盤の僅差バトルを耐えて勝利。Norrisが2位、ピアストリが最終ラップでルクレールを抜き3位表彰台。アントネッリはルーキーで「マイデン3ポールをすべて勝ちに変えた史上初」のドライバーとなり、選手権リードを20ポイントに拡大した。",
     date: "2026年5月3日",
     url: "https://www.formula1.com/en/latest/article/antonelli-wins-thrilling-miami-grand-prix-from-norris-and-piastri.2bxaKuYKJjxlXx8KOJf7lc",
   },
   {
-    category: "F2/F3",
-    source: "Pit Debrief",
+    category: "F3",
+    source: "TopNews",
     title:
-      "F2マイアミ：ミニがフィーチャー制覇、ツォロフはスプリント勝利で首位浮上",
-    date: "2026年5月3日",
-    url: "https://www.pitdebrief.com/post/2026-f2-miami-gp-feature-race-results/",
-  },
-  {
-    category: "SF",
-    source: "AUTOSPORT web",
-    title: "SF第4戦鈴鹿予選：岩佐歩夢がポールポジション、野尻が2番手",
-    date: "2026年5月23日",
-    url: "https://www.as-web.jp/super-formula/1318600",
+      "F3：ホンダ育成・加藤大翔が開幕戦表彰台、シュピールベルクテストで総合トップ",
+    summary:
+      "ART Grand Prixから2026 FIA F3にステップアップしたホンダ育成・加藤大翔（HFDP）が、開幕戦メルボルンでフィーチャーレース3位の表彰台を獲得。続くシュピールベルクのインシーズンテストでも2日間総合トップタイム（1分20秒297）を記録し好調をキープ。同じくF3に参戦するりー海夏澄（ART／4人目の日本人）、中村仁（Hitech TGR）、山越陽悠（VAR）と合わせて、日本人勢4人がF1直下カテゴリーに揃った歴史的シーズンとなっている。",
+    date: "2026年5月22日",
+    url: "https://topnews.jp/2026/05/22/news/f1/drivers/taito-kato/247527.html",
   },
   {
     category: "INDY",
     source: "Motorsport.com",
     title:
-      "インディGP：ルンガードが今季初優勝、パロウは5位でランキングリードを拡大",
-    date: "2026年5月11日",
+      "インディGP：ルンガードが2勝目、パロウは5位でランキング独走",
+    summary:
+      "ロードコースの「ソンシオGP」でArrow McLarenのクリスチャン・ルンガードがキャリア2勝目を獲得し、ランキング順位を5位→4位に上げた。パロウは5位フィニッシュながら首位を堅持し、2位カークウッドとの差は27ポイントに拡大。マルカスが3位、ニューガーデンは6位、ディクソンとオワードは148pt同点で6-7位に並んだ。",
+    date: "2026年5月10日",
     url: "https://www.motorsport.com/indycar/news/complete-indycar-championship-standings-after-2026-indy-gp/10819574/",
+  },
+  {
+    category: "F1",
+    source: "Sky Sports",
+    title:
+      "フェルスタッペン、現行レギュレーションに苦言「メンタル的に持たない」",
+    summary:
+      "カナダGPの会場で記者会見に応じたフェルスタッペンは、グラウンドエフェクト第3世代となった現行マシンに改めて不満を吐露。「ドライバーがマシンに合わせ続けなければならない状況はメンタル的にもたない」と語り、FIAの今後の修正案に注目していると述べた。マイアミ以降は車両アップグレードで明らかな進展を見せているが、選手権ではアントネッリから74ポイントビハインド。",
+    date: "2026年5月22日",
+    url: "https://www.skysports.com/f1/news/12433/13547301/max-verstappen-red-bull-driver-renews-f1-quit-threat-as-he-says-current-regulations-are-not-mentally-doable-at-canadian-gp",
   },
 ];
 
 /* ============================
-   STANDINGS（マイアミGP後 = Round 4 終了時点。F1のスプリント+本戦含む）
+   STANDINGS
    ============================ */
 export const standings: Record<
   Series,
   { drivers: StandingRow[]; teams: StandingRow[]; note?: string }
 > = {
   F1: {
-    note: "2026年マイアミGP（Round 4）終了時点。カナダGP決勝終了後に更新予定。",
+    note: "2026年マイアミGP（Round 4）終了時点。カナダGP終了後に更新予定。",
     drivers: [
       { pos: 1, name: "K.アントネッリ", team: "Mercedes", points: 100 },
       { pos: 2, name: "G.ラッセル", team: "Mercedes", points: 80 },
@@ -653,7 +622,7 @@ export const standings: Record<
     ],
   },
   F2: {
-    note: "2026年マイアミGP（Round 2）終了時点。",
+    note: "2026年マイアミGP（Round 2）終了時点。カナダ戦終了後に更新。",
     drivers: [
       { pos: 1, name: "G.ミニ", points: 42 },
       { pos: 2, name: "R.カマラ", points: 36 },
@@ -670,15 +639,24 @@ export const standings: Record<
       { pos: 1, name: "Campos Racing", points: 55 },
       { pos: 2, name: "Invicta Racing", points: 50 },
       { pos: 3, name: "MP Motorsport", points: 46 },
+      { pos: 4, name: "Hitech TGR", points: 30 },
+      { pos: 5, name: "TRIDENT", points: 26 },
     ],
   },
   F3: {
-    note: "2026年メルボルン（Round 1）終了時点。Round 2モナコは6月開催予定。",
+    note: "2026年メルボルン（Round 1）終了時点。日本人参戦4名のうち加藤大翔（ART）は開幕戦Feature 3位。",
     drivers: [
-      { pos: 1, name: "B.デル・ピノ", points: 15 },
-      { pos: 2, name: "T.ナエル", points: 12 },
+      { pos: 1, name: "U.ウゴチュク", points: 25 },
+      { pos: 2, name: "B.デル・ピノ", points: 19 },
+      { pos: 3, name: "E.デリニー", points: 15 },
+      { pos: 4, name: "加藤 大翔", points: 15 },
+      { pos: 5, name: "T.バーニコート", points: 10 },
     ],
-    teams: [],
+    teams: [
+      { pos: 1, name: "ART Grand Prix", points: 40 },
+      { pos: 2, name: "Van Amersfoort Racing", points: 34 },
+      { pos: 3, name: "Hitech TGR", points: 14 },
+    ],
   },
   SF: {
     note: "2026年第4戦鈴鹿終了後（公式ポイントランキング）。",
@@ -698,7 +676,7 @@ export const standings: Record<
     ],
   },
   INDY: {
-    note: "2026年インディGP（5/10）終了時点。Indy500後に更新予定。",
+    note: "2026年インディGP（5/10）終了時点。Indy500決勝（5/25未明 JST）後に更新予定。",
     drivers: [
       { pos: 1, name: "A.パロウ", points: 237 },
       { pos: 2, name: "K.カークウッド", points: 210 },
@@ -713,7 +691,7 @@ export const standings: Record<
 };
 
 /* ============================
-   RESULTS（公式・スプリント/決勝を明確に区別）
+   RESULTS
    ============================ */
 export const recentResults: RaceResult[] = [
   {
@@ -721,13 +699,29 @@ export const recentResults: RaceResult[] = [
     round: 5,
     flag: "🇨🇦",
     gpName: "カナダGP",
-    date: "2026年5月23日",
+    date: "2026年5月25日（日本時間 月曜 早朝5:00 START）",
+    raceType: "決勝",
+    status: "live",
+    podium: [],
+    note:
+      "本日決勝開催中。日本時間 5/25（月）早朝5:00スタート、結果は公式発表後に反映します。",
+    sourceUrl: "https://www.formula1.com/en/racing/2026/canada",
+  },
+  {
+    series: "F1",
+    round: 5,
+    flag: "🇨🇦",
+    gpName: "カナダGP",
+    date: "2026年5月24日（日本時間 日曜 深夜1:00）",
     raceType: "スプリント",
+    status: "confirmed",
     podium: [
       { pos: 1, driver: "G.ラッセル", team: "Mercedes", time: "30:21.xxx" },
-      { pos: 2, driver: "L.ノリス", team: "McLaren", time: "+0.xxxs" },
-      { pos: 3, driver: "K.アントネッリ", team: "Mercedes", time: "+0.xxxs" },
+      { pos: 2, driver: "L.ノリス", team: "McLaren", time: "+1.2s" },
+      { pos: 3, driver: "K.アントネッリ", team: "Mercedes", time: "+1.5s" },
     ],
+    note:
+      "1コーナーでラッセル／アントネッリが接触、ラッセルが死守して優勝。4位ピアストリ、5位ルクレール、6位ハミルトン、7位フェルスタッペン、8位リンドブラード。",
     sourceUrl:
       "https://www.formula1.com/en/latest/article/russell-clings-on-to-win-canada-sprint-after-clashing-with-antonelli.6Ggn92sBNEdqizMYOT44fb",
   },
@@ -736,15 +730,32 @@ export const recentResults: RaceResult[] = [
     round: 4,
     flag: "🇺🇸",
     gpName: "マイアミGP",
-    date: "2026年5月3日",
+    date: "2026年5月4日（日本時間）",
     raceType: "決勝",
+    status: "confirmed",
     podium: [
       { pos: 1, driver: "K.アントネッリ", team: "Mercedes", time: "—" },
-      { pos: 2, driver: "L.ノリス", team: "McLaren", time: "—" },
+      { pos: 2, driver: "L.ノリス", team: "McLaren", time: "+3.264s" },
       { pos: 3, driver: "O.ピアストリ", team: "McLaren", time: "—" },
     ],
     sourceUrl:
       "https://www.formula1.com/en/latest/article/antonelli-wins-thrilling-miami-grand-prix-from-norris-and-piastri.2bxaKuYKJjxlXx8KOJf7lc",
+  },
+  {
+    series: "F1",
+    round: 4,
+    flag: "🇺🇸",
+    gpName: "マイアミGP",
+    date: "2026年5月3日",
+    raceType: "スプリント",
+    status: "confirmed",
+    podium: [
+      { pos: 1, driver: "L.ノリス", team: "McLaren", time: "—" },
+      { pos: 2, driver: "O.ピアストリ", team: "McLaren", time: "—" },
+      { pos: 3, driver: "C.ルクレール", team: "Ferrari", time: "—" },
+    ],
+    sourceUrl:
+      "https://www.formula1.com/en/latest/article/norris-beats-piastri-and-leclerc-to-victory-in-miami-sprint.4H4WI3lnIs7jOZ8lSBIp6X",
   },
   {
     series: "SF",
@@ -753,27 +764,30 @@ export const recentResults: RaceResult[] = [
     gpName: "鈴鹿 Rd.4",
     date: "2026年5月23日",
     raceType: "決勝",
+    status: "confirmed",
     podium: [
       {
         pos: 1,
         driver: "S.フェネストラズ",
         team: "VANTELIN TEAM TOM'S",
-        time: "—",
+        time: "1h05'12.423",
       },
       {
         pos: 2,
         driver: "松下 信治",
         team: "DELiGHTWORKS RACING",
-        time: "—",
+        time: "+0.760",
       },
       {
         pos: 3,
         driver: "坪井 翔",
         team: "VANTELIN TEAM TOM'S",
-        time: "—",
+        time: "+1.159",
       },
     ],
-    sourceUrl: "https://www.as-web.jp/super-formula/1318746",
+    note:
+      "ポール獲得の岩佐歩夢は13位ノーポイント。4位ブラウニング、5位ブルツ、6位大湯都史樹。",
+    sourceUrl: "https://jp.motorsport.com/super-formula/news/2026-sf-r4-race-result/10823240/",
   },
   {
     series: "F2",
@@ -782,11 +796,13 @@ export const recentResults: RaceResult[] = [
     gpName: "マイアミ",
     date: "2026年5月3日",
     raceType: "フィーチャー",
+    status: "confirmed",
     podium: [
       { pos: 1, driver: "G.ミニ", team: "Prema Racing", time: "—" },
       { pos: 2, driver: "K.マイニ", team: "DAMS Lucas Oil", time: "—" },
       { pos: 3, driver: "R.カマラ", team: "Campos Racing", time: "—" },
     ],
+    note: "宮田莉朋（Hitech TGR）は6位入賞、自己ベストの結果。",
     sourceUrl:
       "https://www.pitdebrief.com/post/2026-f2-miami-gp-feature-race-results/",
   },
@@ -797,33 +813,61 @@ export const recentResults: RaceResult[] = [
     gpName: "マイアミ",
     date: "2026年5月3日",
     raceType: "スプリント",
+    status: "confirmed",
     podium: [
       { pos: 1, driver: "N.ツォロフ", team: "Campos Racing", time: "—" },
-      { pos: 2, driver: "L.ファンホペン", team: "AIX Racing", time: "+0.1s" },
+      { pos: 2, driver: "L.ファンホペン", team: "TRIDENT", time: "+0.17s" },
       { pos: 3, driver: "A.ダン", team: "Rodin Motorsport", time: "—" },
     ],
+    note: "宮田は12位。最終ラップでツォロフ／ファンホペン／ダンが激しいバトル。",
     sourceUrl:
       "https://racingnews365.com/2026-miami-grand-prix-f2-sprint-results",
   },
   {
-    series: "INDY",
-    round: 5,
-    flag: "🇺🇸",
-    gpName: "インディGP（インディアナポリスGP）",
-    date: "2026年5月10日",
-    raceType: "決勝",
+    series: "F3",
+    round: 1,
+    flag: "🇦🇺",
+    gpName: "メルボルン",
+    date: "2026年3月8日",
+    raceType: "フィーチャー",
+    status: "confirmed",
     podium: [
-      {
-        pos: 1,
-        driver: "C.ルンガード",
-        team: "Arrow McLaren",
-        time: "—",
-      },
-      { pos: 2, driver: "D.マルカス", team: "Team Penske", time: "—" },
-      { pos: 3, driver: "K.カークウッド", team: "Andretti Global", time: "—" },
+      { pos: 1, driver: "U.ウゴチュク", team: "ART Grand Prix", time: "—" },
+      { pos: 2, driver: "E.デリニー", team: "Van Amersfoort Racing", time: "—" },
+      { pos: 3, driver: "加藤 大翔", team: "ART Grand Prix", time: "—" },
+    ],
+    note: "加藤は5位フィニッシュ後、上位車のペナルティで3位へ繰り上がり、F3デビュー戦で表彰台獲得。",
+    sourceUrl:
+      "https://www.pitdebrief.com/post/f3-2026-australian-gp-feature-race-results/",
+  },
+  {
+    series: "F3",
+    round: 1,
+    flag: "🇦🇺",
+    gpName: "メルボルン",
+    date: "2026年3月8日",
+    raceType: "スプリント",
+    status: "confirmed",
+    podium: [
+      { pos: 1, driver: "B.デル・ピノ", team: "Van Amersfoort Racing", time: "—" },
+      { pos: 2, driver: "E.デリニー", team: "Van Amersfoort Racing", time: "—" },
+      { pos: 3, driver: "T.バーニコート", team: "Hitech TGR", time: "—" },
     ],
     sourceUrl:
-      "https://www.motorsport.com/indycar/news/official-race-results-indycar-2026-indy-gp/10819572/",
+      "https://www.formula1.com/en/latest/article/f3-del-pino-wins-melbourne-sprint-race-ahead-of-deligny-for-var-1-2.2TKh8SK8TiLNxrvw3zmQio",
+  },
+  {
+    series: "INDY",
+    round: 7,
+    flag: "🇺🇸",
+    gpName: "インディ500 決勝",
+    date: "2026年5月25日（日本時間 月曜 深夜1:45 START）",
+    raceType: "決勝",
+    status: "live",
+    podium: [],
+    note:
+      "本日決勝開催中。日本時間 5/25（月）深夜1:45スタート、佐藤琢磨は13番手から出走予定。結果は公式発表後に反映します。",
+    sourceUrl: "https://www.indycar.com/Results",
   },
   {
     series: "INDY",
@@ -832,6 +876,7 @@ export const recentResults: RaceResult[] = [
     gpName: "インディ500 予選",
     date: "2026年5月18日",
     raceType: "予選",
+    status: "confirmed",
     podium: [
       {
         pos: 1,
@@ -852,27 +897,35 @@ export const recentResults: RaceResult[] = [
         time: "231.877 mph",
       },
     ],
+    note: "佐藤琢磨（RLL #75 / ホンダ）は13番手で決勝へ。",
     sourceUrl:
       "https://racingnews365.com/2026-indy-500---full-qualifying-results",
   },
   {
-    series: "F1",
-    round: 3,
-    flag: "🇯🇵",
-    gpName: "日本GP",
-    date: "2026年4月12日",
+    series: "INDY",
+    round: 5,
+    flag: "🇺🇸",
+    gpName: "インディGP（ソンシオGP）",
+    date: "2026年5月10日",
     raceType: "決勝",
+    status: "confirmed",
     podium: [
-      { pos: 1, driver: "K.アントネッリ", team: "Mercedes", time: "—" },
-      { pos: 2, driver: "G.ラッセル", team: "Mercedes", time: "—" },
-      { pos: 3, driver: "C.ルクレール", team: "Ferrari", time: "—" },
+      {
+        pos: 1,
+        driver: "C.ルンガード",
+        team: "Arrow McLaren",
+        time: "—",
+      },
+      { pos: 2, driver: "D.マルカス", team: "Team Penske", time: "—" },
+      { pos: 3, driver: "K.カークウッド", team: "Andretti Global", time: "—" },
     ],
-    sourceUrl: "https://www.formula1.com/en/results/2026/races",
+    sourceUrl:
+      "https://www.motorsport.com/indycar/news/official-race-results-indycar-2026-indy-gp/10819572/",
   },
 ];
 
 /* ============================
-   REVIEWS
+   REVIEWS（F1 + SF のみ）
    ============================ */
 export const reviews: Review[] = [
   {
@@ -884,7 +937,7 @@ export const reviews: Review[] = [
     raceType: "スプリント",
     title: "ラッセル、メルセデス同士の波乱の中でスプリント勝利",
     excerpt:
-      "ポールスタートのラッセルが、チームメイト・アントネッリと接触しながらも首位を守り抜きスプリント優勝。2位ノリス、3位アントネッリ。決勝はモントリオール現地5/24（日本時間5/25早朝5:00）スタート。",
+      "ポールスタートのラッセルが、1コーナーでチームメイト・アントネッリと接触しながらも首位を堅持。タイヤをいたわるドライビングでノリスを1.2秒差で抑えて今季2勝目のスプリント勝利を飾った。アントネッリは無線で激怒したが3位フィニッシュ。決勝は日本時間5/25（月）早朝5:00スタート。",
     sourceUrl:
       "https://www.formula1.com/en/latest/article/russell-clings-on-to-win-canada-sprint-after-clashing-with-antonelli.6Ggn92sBNEdqizMYOT44fb",
   },
@@ -893,11 +946,11 @@ export const reviews: Review[] = [
     round: 4,
     flag: "🇺🇸",
     gpName: "マイアミGP",
-    date: "2026年5月3日",
+    date: "2026年5月4日",
     raceType: "決勝",
-    title: "アントネッリが3連勝、ルーキー史上初の偉業",
+    title: "アントネッリ、開幕からの3勝でマイデン3ポール全勝の偉業",
     excerpt:
-      "ポールトゥウィンを達成し開幕からの3戦すべて勝利。デビューシーズンの最初の3ポールをすべて勝ちに繋げた初のドライバーとなった。ノリス2位、ピアストリ3位。",
+      "ポールから一時3位まで落ちたアントネッリが、アンダーカットでノリスを抜き返し3.264秒差で勝利。Norrisが2位、ピアストリが最終ラップでルクレールを抜き3位表彰台。デビューシーズン最初の3ポールを全て勝ちに変えた初のドライバーとなり、選手権リードを20ポイントに拡大。",
     sourceUrl:
       "https://www.formula1.com/en/latest/article/antonelli-wins-thrilling-miami-grand-prix-from-norris-and-piastri.2bxaKuYKJjxlXx8KOJf7lc",
   },
@@ -908,23 +961,22 @@ export const reviews: Review[] = [
     gpName: "鈴鹿 Rd.4",
     date: "2026年5月23日",
     raceType: "決勝",
-    title: "フェネストラズが今季初優勝、TOM'Sがダブル表彰台",
+    title: "フェネストラズが14番手から大逆転、岩佐は13位ノーポイント",
     excerpt:
-      "予選では岩佐がポールを獲得していたが、決勝ではフェネストラズが冷静なレース運びでトップに立ち今季初勝利。2位は松下信治、3位は坪井翔。",
-    sourceUrl: "https://www.as-web.jp/super-formula/1318746",
+      "予選では岩佐歩夢が今季3度目のポールを獲得していたが、決勝は雨絡みの大荒れに。14番手スタートのフェネストラズが小雨タイミングでステイアウトする戦略を成功させ、トップでチェッカー。2位は松下信治、3位は坪井翔でTOM'S勢ダブル表彰台。岩佐はSC明けのリスタートとウェット交換が裏目に出て13位、ノーポイントに沈んだ。",
+    sourceUrl: "https://jp.motorsport.com/super-formula/news/2026-sf-r4-race-result/10823240/",
   },
   {
-    series: "INDY",
-    round: 6,
-    flag: "🇺🇸",
-    gpName: "インディ500 予選",
-    date: "2026年5月18日",
-    raceType: "予選",
-    title: "パロウが232.348mphでポール、佐藤琢磨は13番手で決勝へ",
+    series: "F1",
+    round: 3,
+    flag: "🇯🇵",
+    gpName: "日本GP",
+    date: "2026年4月12日",
+    raceType: "決勝",
+    title: "鈴鹿でアントネッリ連勝、メルセデス1-2フィニッシュ",
     excerpt:
-      "通算4度のIndyCar王者・パロウが、土曜が雨で延期となった日曜決行の予選で堂々のポール獲得。2位ロッシ、3位マルカス。4度のインディ500王者・佐藤琢磨は予選13番手スタートとなる。",
-    sourceUrl:
-      "https://racingnews365.com/2026-indy-500---full-qualifying-results",
+      "鈴鹿の高速コーナーでメルセデスのアップグレードが見事に機能。ポールから引き離したアントネッリが連勝、ラッセルが2位でチームメイト同士のワンツー。3位はルクレールで、開幕からのメルセデス時代の到来を強く印象づけた一戦となった。",
+    sourceUrl: "https://www.formula1.com/en/results/2026/races",
   },
 ];
 

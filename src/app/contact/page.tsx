@@ -23,10 +23,10 @@ export default function ContactPage() {
               メール
             </div>
             <a
-              href="mailto:contact@f-labo.app"
+              href="mailto:info.tcsjp@gmail.com"
               className="text-base font-bold text-white hover:text-flabo-red transition-colors"
             >
-              contact@f-labo.app
+              info.tcsjp@gmail.com
             </a>
             <p className="text-xs text-flabo-grey mt-1">
               ※ご返信までに数日いただく場合があります。
