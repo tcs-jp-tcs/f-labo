@@ -26,7 +26,7 @@ export default function SnsCard() {
         aria-label={`Instagram ${sns.instagram.handle}`}
         className="flex items-center gap-3 px-3 py-2 rounded-md bg-white/[0.04] text-white text-sm hover:bg-white/10 transition-colors"
       >
-        <span className="flex h-8 w-8 items-center justify-center rounded-md bg-gradient-to-br from-[#feda75] via-[#d62976] to-[#4f5bd5]">
+        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-black">
           <InstagramLogo className="h-4 w-4 text-white" />
         </span>
         <span>{sns.instagram.handle}</span>

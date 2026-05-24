@@ -61,9 +61,6 @@ export default function ContactPage() {
             <li>
               掲載画像・ロゴ等の権利者の方からのご連絡には最優先で対応いたします。
             </li>
-            <li>
-              モータースポーツに関する取材・寄稿等のご相談も歓迎しています。
-            </li>
           </ul>
         </section>
       </article>

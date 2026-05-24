@@ -330,25 +330,72 @@ export const news: NewsItem[] = [
   {
     category: "F1",
     source: "Formula1.com",
+    title:
+      "カナダGP予選：ラッセルが1:12.578でポール、ポール to ポール狙うアントネッリを0.068秒差で阻止",
+    summary:
+      "Q3最終アタックでラッセルが1:12.578をマーク、4戦連続ポールを狙ったアントネッリを0.068秒差で阻みポールポジション。3番手ノリス(+0.151)、4番手ピアストリ(+0.203)、5番手ハミルトン(+0.290)、6番手フェルスタッペン(+0.329)、7番手ハジャー、8番手ルクレール。決勝は日本時間5/25(月)早朝5:00スタート、フジテレビNEXT／FODで4:20より中継。",
+    date: "2026年5月24日",
+    url: "https://www.formula1.com/en/latest/article/russell-denies-mercedes-rival-antonelli-pole-position-for-canadian-grand-prix-with-last-gasp-effort.5b91PZNqJKlwMzExUu9twT",
+    imageUrl:
+      "https://media.formula1.com/image/upload/t_16by9Centre/c_lfill,w_2048/q_auto/v1740000001/trackside-images/2026/F1_Grand_Prix_of_Canada___Sprint__Qualifying/2277884971.webp",
+  },
+  {
+    category: "F2",
+    source: "RacingNews365",
+    title: "F2モントリオールRd.3スプリント：ノエル・レオンが2026シーズン初勝利",
+    summary:
+      "モントリオールでのF2スプリントレースで、メキシコ人ドライバーのノエル・レオンがキャリア初のF2勝利を獲得。2位は選手権首位のG.ミニ、3位はM.ステンスホルネ。宮田 莉朋（Hitech TGR）は2026シーズンここまで4戦中3戦で入賞しており、今回のマイアミ以降のチームの好調を継続中。",
+    date: "2026年5月24日",
+    url: "https://racingnews365.com/2026-canadian-grand-prix---f2-sprint-race-results",
+    imageUrl:
+      "https://cdn.racingnews365.com/2026/Formula-2/Tsolov.jpg?v=1777733213&width=1800&height=945&quality=75&crop=3780%2C1985%2C0%2C267",
+  },
+  {
+    category: "F1",
+    source: "Formula1.com",
     title: "カナダGPスプリント：ラッセル、メルセデス同士の波乱を制して勝利",
     summary:
       "ポールから発進したラッセルが、1コーナーでチームメイト・アントネッリと接触しながらも首位を死守。28:50.951でゴール、ノリスを1.272秒差、アントネッリを1.843秒差で抑え今季2勝目のスプリント勝利。4位ピアストリ、5位ルクレール、6位ハミルトン、7位フェルスタッペンと続いた。",
-    date: "2026年5月24日",
+    date: "2026年5月23日",
     url: "https://www.formula1.com/en/latest/article/russell-clings-on-to-win-canada-sprint-after-clashing-with-antonelli.6Ggn92sBNEdqizMYOT44fb",
     imageUrl:
       "https://media.formula1.com/image/upload/t_16by9Centre/c_lfill,w_2048/q_auto/v1740000001/trackside-images/2026/F1_Grand_Prix_of_Canada___Sprint__Qualifying/2277841936.webp",
   },
   {
-    category: "F1",
-    source: "Formula1.com",
+    category: "SF",
+    source: "AUTOSPORT web",
     title:
-      "カナダGP予選：ラッセルが最終アタックでアントネッリを阻止、ポール獲得",
+      "SF鈴鹿Rd.5予選：福住仁嶺がポール獲得、岩佐2番手・牧野3番手で日本勢上位独占",
     summary:
-      "Q3最後の周回でラッセルがコース上の限界を攻めてアントネッリを僅差で逆転、ポールポジションを獲得。3番手にはノリス、4番手ピアストリ、5番手ルクレール。フェルスタッペンはQ3進出を果たした。決勝は日本時間5/25（月）早朝5:00スタート、フジテレビNEXT／FODで4:20より中継。",
+      "5月24日、鈴鹿で行われた2026年スーパーフォーミュラ第5戦の予選で、福住仁嶺（NTT docomo Business ROOKIE）がポールポジションを獲得。2番手には岩佐歩夢（TEAM MUGEN AUTOBACS、前日Rd.4のポールから決勝13位ノーポイントの雪辱に向け好走）、3番手は牧野任祐（DOCOMO TEAM DANDELION）。Rd.4を制したフェネストラズも上位、太田格之進は9番手(1'44.017)。",
     date: "2026年5月24日",
-    url: "https://www.formula1.com/en/latest/article/russell-denies-mercedes-rival-antonelli-pole-position-for-canadian-grand-prix-with-last-gasp-effort.5b91PZNqJKlwMzExUu9twT",
+    url: "https://www.as-web.jp/super-formula/1319073",
     imageUrl:
-      "https://media.formula1.com/image/upload/t_16by9Centre/c_lfill,w_2048/q_auto/v1740000001/trackside-images/2026/F1_Grand_Prix_of_Canada___Sprint__Qualifying/2277884971.webp",
+      "https://cdn-2.motorsport.com/images/amp/0qgP47wY/s6/sacha-fenestraz-vantelin-team-.jpg",
+  },
+  {
+    category: "F3",
+    source: "Pit Debrief",
+    title:
+      "F3：加藤大翔、メルボルン表彰台＆シュピールベルクテスト総合トップでモナコ初参戦へ",
+    summary:
+      "ART Grand Prixのホンダ育成・加藤大翔（HFDP）が、開幕戦メルボルンでフィーチャー3位を獲得後、シュピールベルクのインシーズンテストで総合トップタイム(1:20.297)を記録。マカオ経験を武器にモナコへ初参戦。中村仁（Hitech TGR）はメルボルンFeature 9位、りー海夏澄（ART）と山越陽悠（VAR）も合わせて日本人勢4名がF1直下カテゴリーに揃った歴史的シーズン。",
+    date: "2026年5月22日",
+    url: "https://www.pitdebrief.com/post/kato-confident-ahead-of-monaco-after-encouraging-performance-in-2026-f3-melbourne-opener-with-art/",
+    imageUrl:
+      "https://i0.wp.com/topnews.jp/wp-content/uploads/2026/05/taitokato_F3test_austria.jpg",
+  },
+  {
+    category: "INDY",
+    source: "RacingNews365",
+    title:
+      "インディ500：パロウが232.348mphで2度目のポール、佐藤琢磨は13番手で決勝へ",
+    summary:
+      "土曜が雨で延期となり日曜決行となったインディ500予選で、IndyCar4度の王者パロウが232.348mphの4周平均で堂々のポール獲得。2位ロッシ（231.990mph）、3位マルカス（231.877mph）。3度のIndy500ウィナー（'17・'20）の佐藤琢磨はスポット参戦としてRahal Letterman Lanigan Racing #75（ホンダ）から13番手で決勝に挑む。決勝は日本時間5/25(月)深夜1:45スタート。",
+    date: "2026年5月18日",
+    url: "https://racingnews365.com/2026-indy-500---full-qualifying-results",
+    imageUrl:
+      "https://cdn.racingnews365.com/2026/Palou.jpg?v=1779057568&width=1800&height=945&quality=75&crop=4269%2C2242%2C0%2C302",
   },
   {
     category: "SF",
@@ -361,18 +408,6 @@ export const news: NewsItem[] = [
     url: "https://jp.motorsport.com/super-formula/news/2026-sf-r4-race-result/10823240/",
     imageUrl:
       "https://cdn-2.motorsport.com/images/amp/0qgP47wY/s6/sacha-fenestraz-vantelin-team-.jpg",
-  },
-  {
-    category: "INDY",
-    source: "RacingNews365",
-    title:
-      "インディ500予選：パロウが232.348mphで2度目のポール、佐藤琢磨は13番手",
-    summary:
-      "土曜が雨で延期となり日曜決行となったインディ500予選で、IndyCar4度の王者パロウが232.348mphの4周平均で堂々のポール獲得。2位ロッシ（231.990mph）、3位マルカス（231.877mph）。3度のIndy500ウィナー（'17・'20）の佐藤琢磨は今季スポット参戦としてRahal Letterman Lanigan Racing #75（ホンダ）から出走、予選13番手で決勝に挑む。",
-    date: "2026年5月18日",
-    url: "https://racingnews365.com/2026-indy-500---full-qualifying-results",
-    imageUrl:
-      "https://cdn.racingnews365.com/2026/Palou.jpg?v=1779057568&width=1800&height=945&quality=75&crop=4269%2C2242%2C0%2C302",
   },
   {
     category: "F2",

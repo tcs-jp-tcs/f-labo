@@ -34,7 +34,7 @@
 
 html,
 body {
-  background: var(--color-darker);
+  background-color: #060606;
   color: var(--color-white-soft);
   font-family: var(--font-noto-sans-jp), "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
   font-weight: 300;
@@ -46,15 +46,44 @@ body {
   position: relative;
 }
 
+/* Carbon fiber weave — repeating diagonal threads layered with a soft
+   diamond highlight. Stays subtle so body text remains readable. */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
-  background: repeating-conic-gradient(rgba(255, 255, 255, 0.02) 0% 25%, transparent 0% 50%) 0 0 / 4px 4px;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.022) 0px,
+      rgba(255, 255, 255, 0.022) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(0, 0, 0, 0.45) 0px,
+      rgba(0, 0, 0, 0.45) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    radial-gradient(
+      circle at 30% 20%,
+      rgba(225, 6, 0, 0.05) 0,
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(0, 170, 255, 0.04) 0,
+      transparent 50%
+    );
+  background-color: #060606;
+  background-size: 6px 6px, 6px 6px, 100% 100%, 100% 100%;
   pointer-events: none;
   z-index: 0;
 }
 
+/* Kerb stripe */
 .kerb-stripe {
   height: 4px;
   background: repeating-linear-gradient(
