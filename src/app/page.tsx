@@ -20,10 +20,10 @@ import {
 export default function HomePage() {
   const featuredNews = news[0];
   const restHomeNews = news.slice(1, 4);
-  const latestF1Sprint = recentResults.find(
-    (r) => r.series === "F1" && r.raceType === "スプリント",
+  const latestF1Race = recentResults.find(
+    (r) => r.series === "F1" && r.raceType === "決勝" && r.podium.length > 0,
   );
-  const sidebarResult = latestF1Sprint ?? recentResults.find((r) => r.podium.length > 0) ?? recentResults[0];
+  const sidebarResult = latestF1Race ?? recentResults.find((r) => r.podium.length > 0) ?? recentResults[0];
   const f1Schedule = schedules.F1.slice(0, 8);
   const f1Standings = standings.F1;
 
