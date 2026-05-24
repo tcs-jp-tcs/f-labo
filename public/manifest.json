@@ -1,0 +1,30 @@
+{
+  "name": "フォーミュラ研究所（Fラボ）",
+  "short_name": "Fラボ",
+  "description": "F1・F2・F3・スーパーフォーミュラ・インディカーの最新ニュース、放送予定、順位表まとめ",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#E10600",
+  "lang": "ja",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

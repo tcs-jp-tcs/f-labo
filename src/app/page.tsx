@@ -10,7 +10,6 @@ import SectionHeader from "@/components/SectionHeader";
 import Section from "@/components/Section";
 import MainLogo from "@/components/MainLogo";
 import {
-  reviews,
   recentResults,
   schedules,
   news,
@@ -19,13 +18,13 @@ import {
 } from "@/lib/data";
 
 export default function HomePage() {
-  const featured = reviews[0];
+  const featuredNews = news[0];
+  const restHomeNews = news.slice(1, 4);
   const latestF1Sprint = recentResults.find(
     (r) => r.series === "F1" && r.raceType === "スプリント",
   );
-  const sidebarResult = latestF1Sprint ?? recentResults[0];
-  const f1Schedule = schedules.F1.slice(0, 6);
-  const homeNews = news.slice(0, 3);
+  const sidebarResult = latestF1Sprint ?? recentResults.find((r) => r.podium.length > 0) ?? recentResults[0];
+  const f1Schedule = schedules.F1.slice(0, 8);
   const f1Standings = standings.F1;
 
   return (
@@ -42,13 +41,14 @@ export default function HomePage() {
           </p>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-5">
-          <HeroFeature review={featured} />
+          <HeroFeature item={featuredNews} />
           <div className="flex flex-col gap-3.5">
             <PodiumCard
               title={`🏆 ${sidebarResult.gpName}${
                 sidebarResult.raceType ? ` ${sidebarResult.raceType}` : ""
               } 結果`}
               podium={sidebarResult.podium}
+              note={sidebarResult.note}
             />
             <SnsCard />
           </div>
@@ -57,14 +57,14 @@ export default function HomePage() {
 
       {/* Schedule */}
       <Section>
-        <SectionHeader title="F1 レーススケジュール" seeAllHref="/schedule" seeAllLabel="全日程を見る →" />
+        <SectionHeader title="F1 レーススケジュール（全22戦）" seeAllHref="/schedule" seeAllLabel="全日程を見る →" />
         <ScheduleList items={f1Schedule} />
       </Section>
 
       {/* Broadcast */}
       <Section>
         <SectionHeader
-          title="📺 今週末の放送予定"
+          title="📺 今週末の放送予定（フジテレビNEXT / FOD）"
           seeAllHref="/schedule"
           seeAllLabel="全放送予定 →"
         />
@@ -79,7 +79,7 @@ export default function HomePage() {
       <Section>
         <SectionHeader title="最新ニュース" seeAllHref="/news" seeAllLabel="すべてのニュース →" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-          {homeNews.map((n, i) => (
+          {restHomeNews.map((n, i) => (
             <NewsCard key={`${n.category}-${i}`} item={n} />
           ))}
         </div>

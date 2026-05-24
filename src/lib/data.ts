@@ -9,6 +9,23 @@ export type ScheduleSession = {
   type?: "race" | "sprint" | "quali" | "practice";
 };
 
+export type ScheduleResultPodium = {
+  pos: number;
+  driver: string;
+  team: string;
+};
+
+export type ScheduleResult = {
+  pole?: { driver: string; team: string; time?: string };
+  fastestLap?: { driver: string; team: string; time?: string };
+  podium?: ScheduleResultPodium[];
+  sprint?: {
+    pole?: { driver: string; team: string; time?: string };
+    podium?: ScheduleResultPodium[];
+  };
+  sourceUrl?: string;
+};
+
 export type ScheduleItem = {
   series: Series;
   round: number;
@@ -20,6 +37,7 @@ export type ScheduleItem = {
   status?: "next" | "past" | "upcoming" | "live";
   broadcast: string;
   sessions?: ScheduleSession[];
+  result?: ScheduleResult;
 };
 
 export type BroadcastSession = {
@@ -37,6 +55,7 @@ export type WeekendBroadcast = {
   weekendType: "通常週末" | "スプリント週末";
   channels: string[];
   sessions: BroadcastSession[];
+  note?: string;
 };
 
 export type NewsItem = {
@@ -76,21 +95,9 @@ export type RaceResult = {
   sourceUrl?: string;
 };
 
-export type Review = {
-  series: Series;
-  round: number;
-  flag: string;
-  gpName: string;
-  date: string;
-  title: string;
-  excerpt: string;
-  sourceUrl?: string;
-  raceType?: "決勝" | "スプリント" | "フィーチャー" | "予選";
-  imageUrl?: string;
-};
-
 /* ============================
-   2026 SCHEDULES（公式カレンダー）
+   2026 F1 公式カレンダー（formula1.com 公式 22戦）
+   スプリント開催: 中国・マイアミ・カナダ・イギリス・オランダ・シンガポール
    ============================ */
 export const schedules: Record<Series, ScheduleItem[]> = {
   F1: [
@@ -104,6 +111,16 @@ export const schedules: Record<Series, ScheduleItem[]> = {
       weekendType: "通常週末",
       status: "past",
       broadcast: "FOD / フジテレビNEXT",
+      result: {
+        pole: { driver: "G.ラッセル", team: "Mercedes", time: "1:18.518" },
+        podium: [
+          { pos: 1, driver: "G.ラッセル", team: "Mercedes" },
+          { pos: 2, driver: "K.アントネッリ", team: "Mercedes" },
+          { pos: 3, driver: "C.ルクレール", team: "Ferrari" },
+        ],
+        sourceUrl:
+          "https://www.formula1.com/en/latest/article/russell-wins-action-packed-australian-gp-from-antonelli-as-mercedes-secure-1.4WRxPAtF4dFtrKCsWIiQX2",
+      },
     },
     {
       series: "F1",
@@ -111,10 +128,28 @@ export const schedules: Record<Series, ScheduleItem[]> = {
       country: "China",
       flag: "🇨🇳",
       name: "中国GP",
-      date: "3月20日〜22日",
+      date: "3月13日〜15日",
       weekendType: "スプリント週末",
       status: "past",
       broadcast: "FOD / フジテレビNEXT",
+      result: {
+        sprint: {
+          pole: { driver: "G.ラッセル", team: "Mercedes" },
+          podium: [
+            { pos: 1, driver: "G.ラッセル", team: "Mercedes" },
+            { pos: 2, driver: "C.ルクレール", team: "Ferrari" },
+            { pos: 3, driver: "L.ハミルトン", team: "Ferrari" },
+          ],
+        },
+        pole: { driver: "K.アントネッリ", team: "Mercedes" },
+        podium: [
+          { pos: 1, driver: "K.アントネッリ", team: "Mercedes" },
+          { pos: 2, driver: "G.ラッセル", team: "Mercedes" },
+          { pos: 3, driver: "C.ルクレール", team: "Ferrari" },
+        ],
+        sourceUrl:
+          "https://www.formula1.com/en/latest/article/russell-wins-thrilling-china-sprint-from-ferraris-leclerc-and-hamilton.3HLw6daSkBmV0rPREohMwQ",
+      },
     },
     {
       series: "F1",
@@ -122,10 +157,20 @@ export const schedules: Record<Series, ScheduleItem[]> = {
       country: "Japan",
       flag: "🇯🇵",
       name: "日本GP",
-      date: "4月10日〜12日",
+      date: "3月27日〜29日",
       weekendType: "通常週末",
       status: "past",
       broadcast: "FOD / フジテレビNEXT",
+      result: {
+        pole: { driver: "K.アントネッリ", team: "Mercedes" },
+        podium: [
+          { pos: 1, driver: "K.アントネッリ", team: "Mercedes" },
+          { pos: 2, driver: "O.ピアストリ", team: "McLaren" },
+          { pos: 3, driver: "C.ルクレール", team: "Ferrari" },
+        ],
+        sourceUrl:
+          "https://www.formula1.com/en/latest/article/antonelli-takes-championship-lead-after-surging-to-victory-in-japan-from.4EC4uZc29IUEO2iE5nKpUp",
+      },
     },
     {
       series: "F1",
@@ -137,6 +182,24 @@ export const schedules: Record<Series, ScheduleItem[]> = {
       weekendType: "スプリント週末",
       status: "past",
       broadcast: "FOD / フジテレビNEXT",
+      result: {
+        sprint: {
+          pole: { driver: "L.ノリス", team: "McLaren" },
+          podium: [
+            { pos: 1, driver: "L.ノリス", team: "McLaren" },
+            { pos: 2, driver: "O.ピアストリ", team: "McLaren" },
+            { pos: 3, driver: "C.ルクレール", team: "Ferrari" },
+          ],
+        },
+        pole: { driver: "K.アントネッリ", team: "Mercedes", time: "1:27.798" },
+        podium: [
+          { pos: 1, driver: "K.アントネッリ", team: "Mercedes" },
+          { pos: 2, driver: "L.ノリス", team: "McLaren" },
+          { pos: 3, driver: "O.ピアストリ", team: "McLaren" },
+        ],
+        sourceUrl:
+          "https://www.formula1.com/en/latest/article/antonelli-wins-thrilling-miami-grand-prix-from-norris-and-piastri.2bxaKuYKJjxlXx8KOJf7lc",
+      },
     },
     {
       series: "F1",
@@ -184,20 +247,33 @@ export const schedules: Record<Series, ScheduleItem[]> = {
         {
           name: "決勝（70 LAP）",
           localDate: "5/24 (日)",
-          localTime: "16:00 - 18:00",
+          localTime: "14:00 - 16:00",
           jpDate: "5/25 (月)",
           jpTime: "早朝5:00 - 7:00",
           type: "race",
         },
       ],
+      result: {
+        sprint: {
+          pole: { driver: "G.ラッセル", team: "Mercedes" },
+          podium: [
+            { pos: 1, driver: "G.ラッセル", team: "Mercedes" },
+            { pos: 2, driver: "L.ノリス", team: "McLaren" },
+            { pos: 3, driver: "K.アントネッリ", team: "Mercedes" },
+          ],
+        },
+        pole: { driver: "G.ラッセル", team: "Mercedes" },
+        sourceUrl:
+          "https://www.formula1.com/en/latest/article/russell-clings-on-to-win-canada-sprint-after-clashing-with-antonelli.6Ggn92sBNEdqizMYOT44fb",
+      },
     },
     {
       series: "F1",
       round: 6,
-      country: "Spain",
-      flag: "🇪🇸",
-      name: "スペインGP",
-      date: "6月12日〜14日",
+      country: "Monaco",
+      flag: "🇲🇨",
+      name: "モナコGP",
+      date: "6月5日〜7日",
       weekendType: "通常週末",
       status: "next",
       broadcast: "FOD / フジテレビNEXT",
@@ -205,6 +281,17 @@ export const schedules: Record<Series, ScheduleItem[]> = {
     {
       series: "F1",
       round: 7,
+      country: "Spain",
+      flag: "🇪🇸",
+      name: "スペインGP（バルセロナ）",
+      date: "6月12日〜14日",
+      weekendType: "通常週末",
+      status: "upcoming",
+      broadcast: "FOD / フジテレビNEXT",
+    },
+    {
+      series: "F1",
+      round: 8,
       country: "Austria",
       flag: "🇦🇹",
       name: "オーストリアGP",
@@ -215,12 +302,155 @@ export const schedules: Record<Series, ScheduleItem[]> = {
     },
     {
       series: "F1",
-      round: 8,
+      round: 9,
       country: "Great Britain",
       flag: "🇬🇧",
       name: "イギリスGP",
       date: "7月3日〜5日",
       weekendType: "スプリント週末",
+      status: "upcoming",
+      broadcast: "FOD / フジテレビNEXT",
+    },
+    {
+      series: "F1",
+      round: 10,
+      country: "Belgium",
+      flag: "🇧🇪",
+      name: "ベルギーGP",
+      date: "7月17日〜19日",
+      weekendType: "通常週末",
+      status: "upcoming",
+      broadcast: "FOD / フジテレビNEXT",
+    },
+    {
+      series: "F1",
+      round: 11,
+      country: "Hungary",
+      flag: "🇭🇺",
+      name: "ハンガリーGP",
+      date: "7月24日〜26日",
+      weekendType: "通常週末",
+      status: "upcoming",
+      broadcast: "FOD / フジテレビNEXT",
+    },
+    {
+      series: "F1",
+      round: 12,
+      country: "Netherlands",
+      flag: "🇳🇱",
+      name: "オランダGP",
+      date: "8月21日〜23日",
+      weekendType: "スプリント週末",
+      status: "upcoming",
+      broadcast: "FOD / フジテレビNEXT",
+    },
+    {
+      series: "F1",
+      round: 13,
+      country: "Italy",
+      flag: "🇮🇹",
+      name: "イタリアGP（モンツァ）",
+      date: "9月4日〜6日",
+      weekendType: "通常週末",
+      status: "upcoming",
+      broadcast: "FOD / フジテレビNEXT",
+    },
+    {
+      series: "F1",
+      round: 14,
+      country: "Spain",
+      flag: "🇪🇸",
+      name: "スペインGP（マドリード）",
+      date: "9月11日〜13日",
+      weekendType: "通常週末",
+      status: "upcoming",
+      broadcast: "FOD / フジテレビNEXT",
+    },
+    {
+      series: "F1",
+      round: 15,
+      country: "Azerbaijan",
+      flag: "🇦🇿",
+      name: "アゼルバイジャンGP",
+      date: "9月24日〜26日",
+      weekendType: "通常週末",
+      status: "upcoming",
+      broadcast: "FOD / フジテレビNEXT",
+    },
+    {
+      series: "F1",
+      round: 16,
+      country: "Singapore",
+      flag: "🇸🇬",
+      name: "シンガポールGP",
+      date: "10月9日〜11日",
+      weekendType: "スプリント週末",
+      status: "upcoming",
+      broadcast: "FOD / フジテレビNEXT",
+    },
+    {
+      series: "F1",
+      round: 17,
+      country: "USA",
+      flag: "🇺🇸",
+      name: "アメリカGP（オースティン）",
+      date: "10月23日〜25日",
+      weekendType: "通常週末",
+      status: "upcoming",
+      broadcast: "FOD / フジテレビNEXT",
+    },
+    {
+      series: "F1",
+      round: 18,
+      country: "Mexico",
+      flag: "🇲🇽",
+      name: "メキシコシティGP",
+      date: "10月30日〜11月1日",
+      weekendType: "通常週末",
+      status: "upcoming",
+      broadcast: "FOD / フジテレビNEXT",
+    },
+    {
+      series: "F1",
+      round: 19,
+      country: "Brazil",
+      flag: "🇧🇷",
+      name: "サンパウロGP",
+      date: "11月6日〜8日",
+      weekendType: "通常週末",
+      status: "upcoming",
+      broadcast: "FOD / フジテレビNEXT",
+    },
+    {
+      series: "F1",
+      round: 20,
+      country: "USA",
+      flag: "🇺🇸",
+      name: "ラスベガスGP",
+      date: "11月19日〜21日",
+      weekendType: "通常週末",
+      status: "upcoming",
+      broadcast: "FOD / フジテレビNEXT",
+    },
+    {
+      series: "F1",
+      round: 21,
+      country: "Qatar",
+      flag: "🇶🇦",
+      name: "カタールGP",
+      date: "11月27日〜29日",
+      weekendType: "通常週末",
+      status: "upcoming",
+      broadcast: "FOD / フジテレビNEXT",
+    },
+    {
+      series: "F1",
+      round: 22,
+      country: "Abu Dhabi",
+      flag: "🇦🇪",
+      name: "アブダビGP",
+      date: "12月4日〜6日",
+      weekendType: "通常週末",
       status: "upcoming",
       broadcast: "FOD / フジテレビNEXT",
     },
@@ -265,7 +495,7 @@ export const schedules: Record<Series, ScheduleItem[]> = {
       country: "Monaco",
       flag: "🇲🇨",
       name: "モナコ",
-      date: "6月4日〜7日",
+      date: "6月5日〜7日",
       weekendType: "通常週末",
       status: "next",
       broadcast: "FODプロコース",
@@ -300,7 +530,7 @@ export const schedules: Record<Series, ScheduleItem[]> = {
       country: "Monaco",
       flag: "🇲🇨",
       name: "モナコ",
-      date: "6月4日〜7日",
+      date: "6月5日〜7日",
       weekendType: "通常週末",
       status: "next",
       broadcast: "FODプロコース",
@@ -361,6 +591,16 @@ export const schedules: Record<Series, ScheduleItem[]> = {
       weekendType: "通常週末",
       status: "past",
       broadcast: "ABEMA / J SPORTS / SFgo",
+      result: {
+        pole: { driver: "岩佐 歩夢", team: "TEAM MUGEN" },
+        podium: [
+          { pos: 1, driver: "S.フェネストラズ", team: "VANTELIN TEAM TOM'S" },
+          { pos: 2, driver: "松下 信治", team: "DELiGHTWORKS RACING" },
+          { pos: 3, driver: "坪井 翔", team: "VANTELIN TEAM TOM'S" },
+        ],
+        sourceUrl:
+          "https://jp.motorsport.com/super-formula/news/2026-sf-r4-race-result/10823240/",
+      },
     },
     {
       series: "SF",
@@ -380,11 +620,20 @@ export const schedules: Record<Series, ScheduleItem[]> = {
       round: 5,
       country: "USA",
       flag: "🇺🇸",
-      name: "インディGP",
+      name: "インディGP（ソンシオGP）",
       date: "5月10日",
       weekendType: "通常週末",
       status: "past",
       broadcast: "GAORA SPORTS / GAORAオンデマンド",
+      result: {
+        podium: [
+          { pos: 1, driver: "C.ルンガード", team: "Arrow McLaren" },
+          { pos: 2, driver: "D.マルカス", team: "Team Penske" },
+          { pos: 3, driver: "K.カークウッド", team: "Andretti Global" },
+        ],
+        sourceUrl:
+          "https://www.motorsport.com/indycar/news/official-race-results-indycar-2026-indy-gp/10819572/",
+      },
     },
     {
       series: "INDY",
@@ -396,6 +645,16 @@ export const schedules: Record<Series, ScheduleItem[]> = {
       weekendType: "通常週末",
       status: "past",
       broadcast: "GAORA SPORTS / GAORAオンデマンド",
+      result: {
+        pole: { driver: "A.パロウ", team: "Chip Ganassi Racing", time: "232.348 mph" },
+        podium: [
+          { pos: 1, driver: "A.パロウ", team: "Chip Ganassi Racing" },
+          { pos: 2, driver: "A.ロッシ", team: "Ed Carpenter Racing" },
+          { pos: 3, driver: "D.マルカス", team: "Team Penske" },
+        ],
+        sourceUrl:
+          "https://racingnews365.com/2026-indy-500---full-qualifying-results",
+      },
     },
     {
       series: "INDY",
@@ -433,7 +692,8 @@ export const schedules: Record<Series, ScheduleItem[]> = {
 };
 
 /* ============================
-   今週末の放送予定
+   今週末の放送予定（フジテレビNEXT 公式時刻＋FOD ライブ配信）
+   出典: フジテレビNEXT 番組表（28:20表記の翌日5時系を「早朝H:MM」表記に変換）
    ============================ */
 export const thisWeekendBroadcasts: WeekendBroadcast[] = [
   {
@@ -442,37 +702,39 @@ export const thisWeekendBroadcasts: WeekendBroadcast[] = [
     flag: "🇨🇦",
     gpName: "カナダGP",
     weekendType: "スプリント週末",
-    channels: ["FOD", "フジNEXT"],
+    channels: ["フジTV NEXT", "FOD"],
+    note:
+      "番組開始は番組表ベース（深夜0:30／早朝H:MM 表記）。決勝レースは日本時間 5/25(月) 早朝5:00スタート。",
     sessions: [
       {
         session: "FP1",
         date: "5/23 (土)",
-        jst: "深夜1:30",
-        channels: { FOD: true, "フジNEXT": true },
+        jst: "深夜1:20",
+        channels: { "フジTV NEXT": true, FOD: true },
       },
       {
         session: "スプリント予選",
         date: "5/23 (土)",
-        jst: "早朝5:30",
-        channels: { FOD: true, "フジNEXT": true },
+        jst: "早朝5:20",
+        channels: { "フジTV NEXT": true, FOD: true },
       },
       {
         session: "🏁 スプリント",
         date: "5/24 (日)",
-        jst: "深夜1:00",
-        channels: { FOD: true, "フジNEXT": true },
+        jst: "深夜0:30",
+        channels: { "フジTV NEXT": true, FOD: true },
       },
       {
         session: "予選",
         date: "5/24 (日)",
-        jst: "早朝5:00",
-        channels: { FOD: true, "フジNEXT": true },
+        jst: "早朝4:50",
+        channels: { "フジTV NEXT": true, FOD: true },
       },
       {
-        session: "🏁 決勝",
+        session: "🏁 決勝（番組開始4:20 / レース5:00）",
         date: "5/25 (月)",
-        jst: "早朝5:00",
-        channels: { FOD: true, "フジNEXT": true },
+        jst: "早朝4:20",
+        channels: { "フジTV NEXT": true, FOD: true },
       },
     ],
   },
@@ -495,16 +757,15 @@ export const thisWeekendBroadcasts: WeekendBroadcast[] = [
 ];
 
 /* ============================
-   NEWS（要約3-4行・日本人言及・出典URL付き）
+   NEWS（要約3〜4行・日本人言及・出典URL付き）
    ============================ */
 export const news: NewsItem[] = [
   {
     category: "F1",
     source: "Formula1.com",
-    title:
-      "カナダGPスプリント：ラッセル、メルセデス同士の波乱を制して勝利",
+    title: "カナダGPスプリント：ラッセル、メルセデス同士の波乱を制して勝利",
     summary:
-      "ポールから発進したラッセルが、チームメイト・アントネッリと1コーナーで接触しながらも首位を死守。タイヤをいたわりノリスを1.2秒差で抑え今季2勝目のスプリント勝利。アントネッリは「あれは譲るべきだった」とチーム無線で激怒したが3位フィニッシュ、3-4位のピアストリ、5-6位のルクレール／ハミルトンも順位を変えていない。",
+      "ポールから発進したラッセルが、チームメイト・アントネッリと1コーナーで接触しながらも首位を死守。タイヤをいたわってノリスを1.272秒差で抑え今季2勝目のスプリント勝利を飾った。3位にアントネッリ。4位ピアストリ、5位ルクレール、6位ハミルトン、7位フェルスタッペンと続いた。",
     date: "2026年5月24日",
     url: "https://www.formula1.com/en/latest/article/russell-clings-on-to-win-canada-sprint-after-clashing-with-antonelli.6Ggn92sBNEdqizMYOT44fb",
   },
@@ -512,9 +773,9 @@ export const news: NewsItem[] = [
     category: "F1",
     source: "Formula1.com",
     title:
-      "カナダGP予選：ラッセルがアントネッリを最終アタックで阻止、ポールから決勝へ",
+      "カナダGP予選：ラッセルが最終アタックでアントネッリを阻止、ポール獲得",
     summary:
-      "Q3最後の周回でラッセルがコース上の限界ぎりぎりを攻めてアントネッリを0.1秒以内で逆転、ポールポジションを獲得。3番手にはノリス、4番手ピアストリ、5番手ルクレール。フェルスタッペンはQ3進出を果たすも7番手にとどまった。決勝は日本時間5/25（月）早朝5:00スタート。",
+      "Q3最後の周回でラッセルがコース上の限界を攻めてアントネッリを僅差で逆転、ポールポジションを獲得。3番手にはノリス、4番手ピアストリ、5番手ルクレール。フェルスタッペンはQ3進出を果たした。決勝は日本時間5/25（月）早朝5:00スタート、フジテレビNEXT／FODで4:20より中継。",
     date: "2026年5月24日",
     url: "https://www.formula1.com/en/latest/article/russell-denies-mercedes-rival-antonelli-pole-position-for-canadian-grand-prix-with-last-gasp-effort.5b91PZNqJKlwMzExUu9twT",
   },
@@ -524,7 +785,7 @@ export const news: NewsItem[] = [
     title:
       "SF鈴鹿Rd.4：フェネストラズが14番手から大逆転優勝、岩佐は13位ノーポイント",
     summary:
-      "予選で岩佐歩夢が今季3度目のポールを獲得していたが、決勝は雨が絡む大荒れの展開に。14番手スタートのフェネストラズが小雨タイミングでステイアウトする戦略で一気にトップへ。2位は松下信治（DELiGHTWORKS）、3位は同じTOM'Sの坪井翔。岩佐はSC明けのリスタートとウェット交換が裏目に出て13位ノーポイントに沈んだ。",
+      "予選で岩佐歩夢（TEAM MUGEN）が今季3度目のポールを獲得していたが、決勝は雨絡みの大荒れの展開に。14番手スタートのフェネストラズが小雨タイミングでステイアウトする戦略で一気にトップへ。2位は松下信治（DELiGHTWORKS）、3位は坪井翔（TOM'S）。岩佐はSC明けのリスタートとウェット交換が裏目に出て13位、ノーポイントに沈んだ。",
     date: "2026年5月23日",
     url: "https://jp.motorsport.com/super-formula/news/2026-sf-r4-race-result/10823240/",
   },
@@ -542,20 +803,20 @@ export const news: NewsItem[] = [
     category: "F2",
     source: "FIA Formula 2",
     title:
-      "F2マイアミ：宮田莉朋がフィーチャー6位で初の入賞、フライアウェイ最終戦で前進",
+      "F2マイアミ：宮田莉朋がフィーチャー6位入賞、Hitech TGRで日曜の強さ示す",
     summary:
-      "Hitech TGRに移籍3年目シーズンを送る宮田莉朋が、マイアミGPでスプリント12位／フィーチャー6位とF1初参戦並みの追い上げを披露。マイアミの2レース合計で16ポジションをゲインし、自身のキャリアハイとなる初の入賞ポイントを獲得。チームメイトはコルトン・ハータで、Hitech勢は日曜のレースペースで存在感を見せた。",
+      "Hitech TGRに移籍3年目シーズンを送る宮田莉朋が、マイアミGPでスプリント12位／フィーチャー6位とF1初参戦並みの追い上げを披露。2レース合計で16ポジションをゲインし、今季初の入賞ポイントを獲得。チームメイトはコルトン・ハータで、Hitech勢は日曜のレースペースで存在感を見せた。",
     date: "2026年5月3日",
     url: "https://www.fiaformula2.com/Latest/17eXLgMCjY2QaIt65Ds1QA/what-we-learned-some-of-the-key-storylines-from-round-2-in-miami",
   },
   {
     category: "F1",
-    source: "Sky Sports",
+    source: "Formula1.com",
     title:
-      "マイアミGP：アントネッリが今季3連勝、史上初の偉業で選手権独走",
+      "マイアミGP決勝：アントネッリが今季3連勝、史上初の偉業で選手権独走",
     summary:
-      "ポールスタートから一時3位まで落ちたアントネッリが、ピットストップでのアンダーカットでノリスを抜き返し、終盤の僅差バトルを耐えて勝利。Norrisが2位、ピアストリが最終ラップでルクレールを抜き3位表彰台。アントネッリはルーキーで「マイデン3ポールをすべて勝ちに変えた史上初」のドライバーとなり、選手権リードを20ポイントに拡大した。",
-    date: "2026年5月3日",
+      "ポールスタートから一時3位まで落ちたアントネッリが、ピットでのアンダーカットでノリスを抜き返し、3.0秒差で勝利。3位は最終ラップにルクレールを抜いたピアストリ。デビューシーズン「マイデン3ポールを全て勝ちに変えた」史上初の偉業を達成し、選手権リードを20ポイントに拡大した。",
+    date: "2026年5月4日",
     url: "https://www.formula1.com/en/latest/article/antonelli-wins-thrilling-miami-grand-prix-from-norris-and-piastri.2bxaKuYKJjxlXx8KOJf7lc",
   },
   {
@@ -564,15 +825,14 @@ export const news: NewsItem[] = [
     title:
       "F3：ホンダ育成・加藤大翔が開幕戦表彰台、シュピールベルクテストで総合トップ",
     summary:
-      "ART Grand Prixから2026 FIA F3にステップアップしたホンダ育成・加藤大翔（HFDP）が、開幕戦メルボルンでフィーチャーレース3位の表彰台を獲得。続くシュピールベルクのインシーズンテストでも2日間総合トップタイム（1分20秒297）を記録し好調をキープ。同じくF3に参戦するりー海夏澄（ART／4人目の日本人）、中村仁（Hitech TGR）、山越陽悠（VAR）と合わせて、日本人勢4人がF1直下カテゴリーに揃った歴史的シーズンとなっている。",
+      "ART Grand Prixから2026 FIA F3にステップアップしたホンダ育成・加藤大翔（HFDP）が、開幕戦メルボルンでフィーチャー3位の表彰台を獲得。続くシュピールベルクのインシーズンテストでも2日間総合トップタイム（1分20秒297）を記録。同じくF3に参戦するりー海夏澄（ART）、中村仁（Hitech TGR）、山越陽悠（VAR）と合わせて日本人勢4人がF1直下カテゴリーに揃った歴史的シーズン。",
     date: "2026年5月22日",
     url: "https://topnews.jp/2026/05/22/news/f1/drivers/taito-kato/247527.html",
   },
   {
     category: "INDY",
     source: "Motorsport.com",
-    title:
-      "インディGP：ルンガードが2勝目、パロウは5位でランキング独走",
+    title: "インディGP：ルンガードが2勝目、パロウは5位でランキング独走",
     summary:
       "ロードコースの「ソンシオGP」でArrow McLarenのクリスチャン・ルンガードがキャリア2勝目を獲得し、ランキング順位を5位→4位に上げた。パロウは5位フィニッシュながら首位を堅持し、2位カークウッドとの差は27ポイントに拡大。マルカスが3位、ニューガーデンは6位、ディクソンとオワードは148pt同点で6-7位に並んだ。",
     date: "2026年5月10日",
@@ -584,7 +844,7 @@ export const news: NewsItem[] = [
     title:
       "フェルスタッペン、現行レギュレーションに苦言「メンタル的に持たない」",
     summary:
-      "カナダGPの会場で記者会見に応じたフェルスタッペンは、グラウンドエフェクト第3世代となった現行マシンに改めて不満を吐露。「ドライバーがマシンに合わせ続けなければならない状況はメンタル的にもたない」と語り、FIAの今後の修正案に注目していると述べた。マイアミ以降は車両アップグレードで明らかな進展を見せているが、選手権ではアントネッリから74ポイントビハインド。",
+      "カナダGPの会場で記者会見に応じたフェルスタッペンは、現行マシンに改めて不満を吐露。「ドライバーがマシンに合わせ続けなければならない状況はメンタル的にもたない」と語った。マイアミ以降は車両アップグレードで進展を見せているが、選手権ではアントネッリから74ポイントビハインドの7位に沈む。",
     date: "2026年5月22日",
     url: "https://www.skysports.com/f1/news/12433/13547301/max-verstappen-red-bull-driver-renews-f1-quit-threat-as-he-says-current-regulations-are-not-mentally-doable-at-canadian-gp",
   },
@@ -622,7 +882,7 @@ export const standings: Record<
     ],
   },
   F2: {
-    note: "2026年マイアミGP（Round 2）終了時点。カナダ戦終了後に更新。",
+    note: "2026年マイアミGP（Round 2）終了時点。",
     drivers: [
       { pos: 1, name: "G.ミニ", points: 42 },
       { pos: 2, name: "R.カマラ", points: 36 },
@@ -691,7 +951,7 @@ export const standings: Record<
 };
 
 /* ============================
-   RESULTS
+   RESULTS（タイムは公式確定値・無い場合は省略）
    ============================ */
 export const recentResults: RaceResult[] = [
   {
@@ -704,7 +964,7 @@ export const recentResults: RaceResult[] = [
     status: "live",
     podium: [],
     note:
-      "本日決勝開催中。日本時間 5/25（月）早朝5:00スタート、結果は公式発表後に反映します。",
+      "本日決勝開催中。日本時間 5/25（月）早朝5:00スタート。結果は公式発表後に反映します。",
     sourceUrl: "https://www.formula1.com/en/racing/2026/canada",
   },
   {
@@ -716,12 +976,12 @@ export const recentResults: RaceResult[] = [
     raceType: "スプリント",
     status: "confirmed",
     podium: [
-      { pos: 1, driver: "G.ラッセル", team: "Mercedes", time: "30:21.xxx" },
-      { pos: 2, driver: "L.ノリス", team: "McLaren", time: "+1.2s" },
-      { pos: 3, driver: "K.アントネッリ", team: "Mercedes", time: "+1.5s" },
+      { pos: 1, driver: "G.ラッセル", team: "Mercedes", time: "—" },
+      { pos: 2, driver: "L.ノリス", team: "McLaren", time: "+1.272s" },
+      { pos: 3, driver: "K.アントネッリ", team: "Mercedes", time: "—" },
     ],
     note:
-      "1コーナーでラッセル／アントネッリが接触、ラッセルが死守して優勝。4位ピアストリ、5位ルクレール、6位ハミルトン、7位フェルスタッペン、8位リンドブラード。",
+      "1コーナーでラッセル／アントネッリが接触、ラッセルが死守して優勝。4位ピアストリ、5位ルクレール、6位ハミルトン、7位フェルスタッペン。",
     sourceUrl:
       "https://www.formula1.com/en/latest/article/russell-clings-on-to-win-canada-sprint-after-clashing-with-antonelli.6Ggn92sBNEdqizMYOT44fb",
   },
@@ -730,14 +990,15 @@ export const recentResults: RaceResult[] = [
     round: 4,
     flag: "🇺🇸",
     gpName: "マイアミGP",
-    date: "2026年5月4日（日本時間）",
+    date: "2026年5月4日",
     raceType: "決勝",
     status: "confirmed",
     podium: [
       { pos: 1, driver: "K.アントネッリ", team: "Mercedes", time: "—" },
-      { pos: 2, driver: "L.ノリス", team: "McLaren", time: "+3.264s" },
+      { pos: 2, driver: "L.ノリス", team: "McLaren", time: "+3.0s" },
       { pos: 3, driver: "O.ピアストリ", team: "McLaren", time: "—" },
     ],
+    note: "ポール：アントネッリ（1:27.798）。4位ラッセル、5位フェルスタッペン、6位ハミルトン。",
     sourceUrl:
       "https://www.formula1.com/en/latest/article/antonelli-wins-thrilling-miami-grand-prix-from-norris-and-piastri.2bxaKuYKJjxlXx8KOJf7lc",
   },
@@ -751,11 +1012,76 @@ export const recentResults: RaceResult[] = [
     status: "confirmed",
     podium: [
       { pos: 1, driver: "L.ノリス", team: "McLaren", time: "—" },
-      { pos: 2, driver: "O.ピアストリ", team: "McLaren", time: "—" },
-      { pos: 3, driver: "C.ルクレール", team: "Ferrari", time: "—" },
+      { pos: 2, driver: "O.ピアストリ", team: "McLaren", time: "+3.766s" },
+      { pos: 3, driver: "C.ルクレール", team: "Ferrari", time: "+6.251s" },
     ],
     sourceUrl:
       "https://www.formula1.com/en/latest/article/norris-beats-piastri-and-leclerc-to-victory-in-miami-sprint.4H4WI3lnIs7jOZ8lSBIp6X",
+  },
+  {
+    series: "F1",
+    round: 3,
+    flag: "🇯🇵",
+    gpName: "日本GP",
+    date: "2026年3月29日",
+    raceType: "決勝",
+    status: "confirmed",
+    podium: [
+      { pos: 1, driver: "K.アントネッリ", team: "Mercedes", time: "—" },
+      { pos: 2, driver: "O.ピアストリ", team: "McLaren", time: "+13s台" },
+      { pos: 3, driver: "C.ルクレール", team: "Ferrari", time: "—" },
+    ],
+    note: "ポール：アントネッリ。4位ラッセルでアントネッリが選手権首位浮上。",
+    sourceUrl:
+      "https://www.formula1.com/en/latest/article/antonelli-takes-championship-lead-after-surging-to-victory-in-japan-from.4EC4uZc29IUEO2iE5nKpUp",
+  },
+  {
+    series: "F1",
+    round: 2,
+    flag: "🇨🇳",
+    gpName: "中国GP",
+    date: "2026年3月15日",
+    raceType: "決勝",
+    status: "confirmed",
+    podium: [
+      { pos: 1, driver: "K.アントネッリ", team: "Mercedes", time: "—" },
+      { pos: 2, driver: "G.ラッセル", team: "Mercedes", time: "—" },
+      { pos: 3, driver: "C.ルクレール", team: "Ferrari", time: "—" },
+    ],
+    sourceUrl: "https://www.formula1.com/en/results/2026/races",
+  },
+  {
+    series: "F1",
+    round: 2,
+    flag: "🇨🇳",
+    gpName: "中国GP",
+    date: "2026年3月15日",
+    raceType: "スプリント",
+    status: "confirmed",
+    podium: [
+      { pos: 1, driver: "G.ラッセル", team: "Mercedes", time: "—" },
+      { pos: 2, driver: "C.ルクレール", team: "Ferrari", time: "+0.674s" },
+      { pos: 3, driver: "L.ハミルトン", team: "Ferrari", time: "+2.554s" },
+    ],
+    sourceUrl:
+      "https://www.formula1.com/en/latest/article/russell-wins-thrilling-china-sprint-from-ferraris-leclerc-and-hamilton.3HLw6daSkBmV0rPREohMwQ",
+  },
+  {
+    series: "F1",
+    round: 1,
+    flag: "🇦🇺",
+    gpName: "オーストラリアGP",
+    date: "2026年3月8日",
+    raceType: "決勝",
+    status: "confirmed",
+    podium: [
+      { pos: 1, driver: "G.ラッセル", team: "Mercedes", time: "—" },
+      { pos: 2, driver: "K.アントネッリ", team: "Mercedes", time: "+4s台" },
+      { pos: 3, driver: "C.ルクレール", team: "Ferrari", time: "—" },
+    ],
+    note: "ポール：ラッセル（1:18.518、2位アントネッリに+0.785）",
+    sourceUrl:
+      "https://www.formula1.com/en/latest/article/russell-wins-action-packed-australian-gp-from-antonelli-as-mercedes-secure-1.4WRxPAtF4dFtrKCsWIiQX2",
   },
   {
     series: "SF",
@@ -786,7 +1112,7 @@ export const recentResults: RaceResult[] = [
       },
     ],
     note:
-      "ポール獲得の岩佐歩夢は13位ノーポイント。4位ブラウニング、5位ブルツ、6位大湯都史樹。",
+      "ポール：岩佐歩夢（TEAM MUGEN）→ 決勝P13ノーポイント。4位ブラウニング(+6.639)、5位ブルツ(+10.419)、6位大湯。",
     sourceUrl: "https://jp.motorsport.com/super-formula/news/2026-sf-r4-race-result/10823240/",
   },
   {
@@ -816,7 +1142,7 @@ export const recentResults: RaceResult[] = [
     status: "confirmed",
     podium: [
       { pos: 1, driver: "N.ツォロフ", team: "Campos Racing", time: "—" },
-      { pos: 2, driver: "L.ファンホペン", team: "TRIDENT", time: "+0.17s" },
+      { pos: 2, driver: "L.ファンホペン", team: "TRIDENT", time: "+0.170s" },
       { pos: 3, driver: "A.ダン", team: "Rodin Motorsport", time: "—" },
     ],
     note: "宮田は12位。最終ラップでツォロフ／ファンホペン／ダンが激しいバトル。",
@@ -836,7 +1162,7 @@ export const recentResults: RaceResult[] = [
       { pos: 2, driver: "E.デリニー", team: "Van Amersfoort Racing", time: "—" },
       { pos: 3, driver: "加藤 大翔", team: "ART Grand Prix", time: "—" },
     ],
-    note: "加藤は5位フィニッシュ後、上位車のペナルティで3位へ繰り上がり、F3デビュー戦で表彰台獲得。",
+    note: "加藤は5位フィニッシュ後、ペナルティで3位繰り上がりF3デビュー戦表彰台。",
     sourceUrl:
       "https://www.pitdebrief.com/post/f3-2026-australian-gp-feature-race-results/",
   },
@@ -866,7 +1192,7 @@ export const recentResults: RaceResult[] = [
     status: "live",
     podium: [],
     note:
-      "本日決勝開催中。日本時間 5/25（月）深夜1:45スタート、佐藤琢磨は13番手から出走予定。結果は公式発表後に反映します。",
+      "本日決勝開催中。日本時間 5/25（月）深夜1:45スタート、佐藤琢磨は13番手から出走。結果は公式発表後に反映します。",
     sourceUrl: "https://www.indycar.com/Results",
   },
   {
@@ -910,12 +1236,7 @@ export const recentResults: RaceResult[] = [
     raceType: "決勝",
     status: "confirmed",
     podium: [
-      {
-        pos: 1,
-        driver: "C.ルンガード",
-        team: "Arrow McLaren",
-        time: "—",
-      },
+      { pos: 1, driver: "C.ルンガード", team: "Arrow McLaren", time: "—" },
       { pos: 2, driver: "D.マルカス", team: "Team Penske", time: "—" },
       { pos: 3, driver: "K.カークウッド", team: "Andretti Global", time: "—" },
     ],
@@ -924,61 +1245,8 @@ export const recentResults: RaceResult[] = [
   },
 ];
 
-/* ============================
-   REVIEWS（F1 + SF のみ）
-   ============================ */
-export const reviews: Review[] = [
-  {
-    series: "F1",
-    round: 5,
-    flag: "🇨🇦",
-    gpName: "カナダGP",
-    date: "2026年5月23日",
-    raceType: "スプリント",
-    title: "ラッセル、メルセデス同士の波乱の中でスプリント勝利",
-    excerpt:
-      "ポールスタートのラッセルが、1コーナーでチームメイト・アントネッリと接触しながらも首位を堅持。タイヤをいたわるドライビングでノリスを1.2秒差で抑えて今季2勝目のスプリント勝利を飾った。アントネッリは無線で激怒したが3位フィニッシュ。決勝は日本時間5/25（月）早朝5:00スタート。",
-    sourceUrl:
-      "https://www.formula1.com/en/latest/article/russell-clings-on-to-win-canada-sprint-after-clashing-with-antonelli.6Ggn92sBNEdqizMYOT44fb",
-  },
-  {
-    series: "F1",
-    round: 4,
-    flag: "🇺🇸",
-    gpName: "マイアミGP",
-    date: "2026年5月4日",
-    raceType: "決勝",
-    title: "アントネッリ、開幕からの3勝でマイデン3ポール全勝の偉業",
-    excerpt:
-      "ポールから一時3位まで落ちたアントネッリが、アンダーカットでノリスを抜き返し3.264秒差で勝利。Norrisが2位、ピアストリが最終ラップでルクレールを抜き3位表彰台。デビューシーズン最初の3ポールを全て勝ちに変えた初のドライバーとなり、選手権リードを20ポイントに拡大。",
-    sourceUrl:
-      "https://www.formula1.com/en/latest/article/antonelli-wins-thrilling-miami-grand-prix-from-norris-and-piastri.2bxaKuYKJjxlXx8KOJf7lc",
-  },
-  {
-    series: "SF",
-    round: 4,
-    flag: "🇯🇵",
-    gpName: "鈴鹿 Rd.4",
-    date: "2026年5月23日",
-    raceType: "決勝",
-    title: "フェネストラズが14番手から大逆転、岩佐は13位ノーポイント",
-    excerpt:
-      "予選では岩佐歩夢が今季3度目のポールを獲得していたが、決勝は雨絡みの大荒れに。14番手スタートのフェネストラズが小雨タイミングでステイアウトする戦略を成功させ、トップでチェッカー。2位は松下信治、3位は坪井翔でTOM'S勢ダブル表彰台。岩佐はSC明けのリスタートとウェット交換が裏目に出て13位、ノーポイントに沈んだ。",
-    sourceUrl: "https://jp.motorsport.com/super-formula/news/2026-sf-r4-race-result/10823240/",
-  },
-  {
-    series: "F1",
-    round: 3,
-    flag: "🇯🇵",
-    gpName: "日本GP",
-    date: "2026年4月12日",
-    raceType: "決勝",
-    title: "鈴鹿でアントネッリ連勝、メルセデス1-2フィニッシュ",
-    excerpt:
-      "鈴鹿の高速コーナーでメルセデスのアップグレードが見事に機能。ポールから引き離したアントネッリが連勝、ラッセルが2位でチームメイト同士のワンツー。3位はルクレールで、開幕からのメルセデス時代の到来を強く印象づけた一戦となった。",
-    sourceUrl: "https://www.formula1.com/en/results/2026/races",
-  },
-];
+/* レビューは Coming Soon。データ自体は使わないが互換のため空配列を残す */
+export const reviews: never[] = [];
 
 /* ============================
    SNS
