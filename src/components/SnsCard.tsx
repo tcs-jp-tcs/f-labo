@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { sns } from "@/lib/data";
+import { XLogo, InstagramLogo } from "./SnsIcons";
 
 export default function SnsCard() {
   return (
@@ -11,30 +11,24 @@ export default function SnsCard() {
         href={sns.x.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex items-center gap-2.5 px-3 py-2 rounded-md bg-white/[0.03] text-white text-sm hover:bg-flabo-red/10 hover:text-flabo-red transition-colors"
+        aria-label={`X ${sns.x.handle}`}
+        className="flex items-center gap-3 px-3 py-2 rounded-md bg-white/[0.04] text-white text-sm hover:bg-white/10 transition-colors"
       >
-        <Image
-          src="/flabo-icons/flabo-circle-x-400.png"
-          alt=""
-          width={24}
-          height={24}
-          className="rounded-full"
-        />
+        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-black">
+          <XLogo className="h-4 w-4 text-white" />
+        </span>
         <span>{sns.x.handle}</span>
       </a>
       <a
         href={sns.instagram.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex items-center gap-2.5 px-3 py-2 rounded-md bg-white/[0.03] text-white text-sm hover:bg-flabo-red/10 hover:text-flabo-red transition-colors"
+        aria-label={`Instagram ${sns.instagram.handle}`}
+        className="flex items-center gap-3 px-3 py-2 rounded-md bg-white/[0.04] text-white text-sm hover:bg-white/10 transition-colors"
       >
-        <Image
-          src="/flabo-icons/flabo-circle-instagram-320.png"
-          alt=""
-          width={24}
-          height={24}
-          className="rounded-full"
-        />
+        <span className="flex h-8 w-8 items-center justify-center rounded-md bg-gradient-to-br from-[#feda75] via-[#d62976] to-[#4f5bd5]">
+          <InstagramLogo className="h-4 w-4 text-white" />
+        </span>
         <span>{sns.instagram.handle}</span>
       </a>
     </div>

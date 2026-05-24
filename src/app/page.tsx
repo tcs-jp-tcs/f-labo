@@ -2,7 +2,7 @@ import Link from "next/link";
 import HeroFeature from "@/components/HeroFeature";
 import PodiumCard from "@/components/PodiumCard";
 import SnsCard from "@/components/SnsCard";
-import ScheduleCard from "@/components/ScheduleCard";
+import ScheduleList from "@/components/ScheduleList";
 import NewsCard from "@/components/NewsCard";
 import StandingsCard from "@/components/StandingsCard";
 import BroadcastTable from "@/components/BroadcastTable";
@@ -20,8 +20,11 @@ import {
 
 export default function HomePage() {
   const featured = reviews[0];
-  const latestF1 = recentResults.find((r) => r.series === "F1") ?? recentResults[0];
-  const f1Schedule = schedules.F1.slice(0, 4);
+  const latestF1Sprint = recentResults.find(
+    (r) => r.series === "F1" && r.raceType === "スプリント",
+  );
+  const sidebarResult = latestF1Sprint ?? recentResults[0];
+  const f1Schedule = schedules.F1.slice(0, 6);
   const homeNews = news.slice(0, 3);
   const f1Standings = standings.F1;
 
@@ -42,8 +45,10 @@ export default function HomePage() {
           <HeroFeature review={featured} />
           <div className="flex flex-col gap-3.5">
             <PodiumCard
-              title={`🏆 ${latestF1.gpName} 決勝結果`}
-              podium={latestF1.podium}
+              title={`🏆 ${sidebarResult.gpName}${
+                sidebarResult.raceType ? ` ${sidebarResult.raceType}` : ""
+              } 結果`}
+              podium={sidebarResult.podium}
             />
             <SnsCard />
           </div>
@@ -53,11 +58,7 @@ export default function HomePage() {
       {/* Schedule */}
       <Section>
         <SectionHeader title="F1 レーススケジュール" seeAllHref="/schedule" seeAllLabel="全日程を見る →" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-          {f1Schedule.map((item) => (
-            <ScheduleCard key={`${item.series}-${item.round}`} item={item} />
-          ))}
-        </div>
+        <ScheduleList items={f1Schedule} />
       </Section>
 
       {/* Broadcast */}
@@ -87,11 +88,14 @@ export default function HomePage() {
       {/* Standings */}
       <Section>
         <SectionHeader title="F1 チャンピオンシップ" seeAllHref="/standings" seeAllLabel="全順位を見る →" />
+        {f1Standings.note && (
+          <p className="text-[0.7rem] text-flabo-grey mb-4">{f1Standings.note}</p>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-          <StandingsCard title="🏎️ ドライバーズ" rows={f1Standings.drivers.slice(0, 5)} />
+          <StandingsCard title="🏎️ ドライバーズ" rows={f1Standings.drivers.slice(0, 7)} />
           <StandingsCard
             title="コンストラクターズ"
-            rows={f1Standings.teams.slice(0, 5)}
+            rows={f1Standings.teams.slice(0, 7)}
             showTeamBar
           />
         </div>

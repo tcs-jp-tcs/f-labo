@@ -11,7 +11,12 @@ const CATEGORY_STYLE: Record<NewsItem["category"], string> = {
 
 export default function NewsCard({ item }: { item: NewsItem }) {
   return (
-    <article className="flex flex-col rounded-xl border border-white/5 bg-flabo-carbon p-5 transition-all duration-300 hover:border-white/15 hover:-translate-y-0.5">
+    <a
+      href={item.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group flex flex-col rounded-xl border border-white/5 bg-flabo-carbon p-5 transition-all duration-300 hover:border-flabo-red/60 hover:-translate-y-0.5"
+    >
       <span
         className={`font-display tracking-[0.08em] text-[0.55rem] px-1.5 py-0.5 rounded mb-2 w-fit ${
           CATEGORY_STYLE[item.category]
@@ -22,10 +27,15 @@ export default function NewsCard({ item }: { item: NewsItem }) {
       <div className="font-display tracking-[0.18em] text-[0.55rem] text-flabo-red uppercase mb-2">
         {item.source}
       </div>
-      <h3 className="font-bold text-[0.9rem] leading-relaxed mb-2.5 flex-1">
+      <h3 className="font-bold text-[0.9rem] leading-relaxed mb-3 flex-1 group-hover:text-flabo-red transition-colors">
         {item.title}
       </h3>
-      <div className="text-[0.7rem] text-flabo-grey">{item.date}</div>
-    </article>
+      <div className="flex items-center justify-between">
+        <span className="text-[0.7rem] text-flabo-grey">{item.date}</span>
+        <span className="font-display tracking-[0.18em] text-[0.55rem] text-flabo-grey group-hover:text-flabo-red transition-colors">
+          元記事 ↗
+        </span>
+      </div>
+    </a>
   );
 }

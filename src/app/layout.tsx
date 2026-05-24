@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Orbitron, Noto_Sans_JP } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import TestBanner from "@/components/TestBanner";
 import "./globals.css";
 
 const orbitron = Orbitron({
@@ -55,6 +56,7 @@ export default function RootLayout({
       className={`${orbitron.variable} ${notoSansJp.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <TestBanner />
         <div className="kerb-stripe relative z-[101]" aria-hidden />
         <Header />
         <main className="flex-1 relative z-[1]">{children}</main>
