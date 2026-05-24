@@ -167,14 +167,7 @@ export const schedules: Record<Series, ScheduleItem[]> = {
         sourceUrl: "https://www.formula1.com/en/latest/article/antonelli-wins-thrilling-miami-grand-prix-from-norris-and-piastri.2bxaKuYKJjxlXx8KOJf7lc",
       },
     },
-    { series: "F1", round: 5, country: "Canada", flag: "🇨🇦", name: "カナダGP", date: "5月22日〜24日", weekendType: "スプリント週末", status: "live", broadcast: "FOD / フジテレビNEXT",
-      sessions: [
-        { name: "FP1", localDate: "5/22 (金)", localTime: "12:30 - 13:30", jpDate: "5/23 (土)", jpTime: "深夜1:30 - 2:30", type: "practice" },
-        { name: "スプリント予選", localDate: "5/22 (金)", localTime: "16:30 - 17:14", jpDate: "5/23 (土)", jpTime: "早朝5:30 - 6:14", type: "quali" },
-        { name: "スプリント", localDate: "5/23 (土)", localTime: "12:00 - 12:30", jpDate: "5/24 (日)", jpTime: "深夜1:00 - 1:30", type: "sprint" },
-        { name: "予選", localDate: "5/23 (土)", localTime: "16:00 - 17:00", jpDate: "5/24 (日)", jpTime: "早朝5:00 - 6:00", type: "quali" },
-        { name: "決勝（70 LAP）", localDate: "5/24 (日)", localTime: "14:00 - 16:00", jpDate: "5/25 (月)", jpTime: "早朝5:00 - 7:00", type: "race" },
-      ],
+    { series: "F1", round: 5, country: "Canada", flag: "🇨🇦", name: "カナダGP", date: "5月22日〜24日", weekendType: "スプリント週末", status: "past", broadcast: "FOD / フジテレビNEXT",
       result: {
         sprint: {
           pole: { driver: "G.ラッセル", team: "Mercedes" },
@@ -184,8 +177,14 @@ export const schedules: Record<Series, ScheduleItem[]> = {
             { pos: 3, driver: "K.アントネッリ", team: "Mercedes" },
           ],
         },
-        pole: { driver: "G.ラッセル", team: "Mercedes" },
-        sourceUrl: "https://www.formula1.com/en/latest/article/russell-clings-on-to-win-canada-sprint-after-clashing-with-antonelli.6Ggn92sBNEdqizMYOT44fb",
+        pole: { driver: "G.ラッセル", team: "Mercedes", time: "1:12.578" },
+        fastestLap: { driver: "K.アントネッリ", team: "Mercedes", time: "1:14.210" },
+        podium: [
+          { pos: 1, driver: "K.アントネッリ", team: "Mercedes" },
+          { pos: 2, driver: "L.ハミルトン", team: "Ferrari" },
+          { pos: 3, driver: "M.フェルスタッペン", team: "Red Bull" },
+        ],
+        sourceUrl: "https://www.formula1.com/en/results/2026/races/1285/canada/race-result",
       },
     },
     { series: "F1", round: 6, country: "Monaco", flag: "🇲🇨", name: "モナコGP", date: "6月5日〜7日", weekendType: "通常週末", status: "next", broadcast: "FOD / フジテレビNEXT" },
@@ -331,9 +330,21 @@ export const news: NewsItem[] = [
     category: "F1",
     source: "Formula1.com",
     title:
-      "カナダGP予選：ラッセルが1:12.578でポール、ポール to ポール狙うアントネッリを0.068秒差で阻止",
+      "カナダGP決勝：アントネッリがF1史上初のキャリア初4連勝、ラッセルはリードからリタイア",
     summary:
-      "Q3最終アタックでラッセルが1:12.578をマーク、4戦連続ポールを狙ったアントネッリを0.068秒差で阻みポールポジション。3番手ノリス(+0.151)、4番手ピアストリ(+0.203)、5番手ハミルトン(+0.290)、6番手フェルスタッペン(+0.329)、7番手ハジャー、8番手ルクレール。決勝は日本時間5/25(月)早朝5:00スタート、フジテレビNEXT／FODで4:20より中継。",
+      "ポールスタートのラッセルが序盤に首位を奪い返したが、31周目にパワーロスでリタイア。代わって首位に立ったアントネッリが残りラップを支配し、中国・日本・マイアミに続く4連勝を達成。デビューシーズン4連勝はF1史上初の偉業となった。2位は今季ベストのハミルトン(+10.768)、3位フェルスタッペン(+11.276)、4位ルクレール(+44.151)、5位ハジャー、6位コラピント。ノリスはギアボックストラブルでDNF、ピアストリはアルボン接触のペナルティで11位に沈んだ。アントネッリは選手権リードを43ポイントに拡大。",
+    date: "2026年5月25日",
+    url: "https://www.formula1.com/en/latest/article/live-coverage-formula-1-lenovo-grand-prix-du-canada-2026.7m4KTueNNOQnM0HuMqI1RW",
+    imageUrl:
+      "https://media.formula1.com/image/upload/t_16by9Centre/c_fill,w_2048/q_auto/v1740000001/trackside-images/2026/F1_Grand_Prix_of_Canada/2278029679.webp",
+  },
+  {
+    category: "F1",
+    source: "Formula1.com",
+    title:
+      "カナダGP予選：ラッセルが1:12.578でポール、4戦連続ポール狙うアントネッリを0.068秒差で阻止",
+    summary:
+      "Q3最終アタックでラッセルが1:12.578をマーク、4戦連続ポールを狙ったアントネッリを0.068秒差で阻みポールポジション。3番手ノリス(+0.151)、4番手ピアストリ(+0.203)、5番手ハミルトン(+0.290)、6番手フェルスタッペン(+0.329)、7番手ハジャー、8番手ルクレール。",
     date: "2026年5月24日",
     url: "https://www.formula1.com/en/latest/article/russell-denies-mercedes-rival-antonelli-pole-position-for-canadian-grand-prix-with-last-gasp-effort.5b91PZNqJKlwMzExUu9twT",
     imageUrl:
@@ -478,25 +489,28 @@ export const standings: Record<
   { drivers: StandingRow[]; teams: StandingRow[]; note?: string }
 > = {
   F1: {
-    note: "2026年マイアミGP（Round 4）終了時点。カナダGP終了後に更新予定。",
+    note: "2026年カナダGP（Round 5）終了時点。アントネッリが中国・日本・マイアミに続く4連勝でF1史上初のキャリア初4連勝。リード43ポイントに拡大。",
     drivers: [
-      { pos: 1, name: "K.アントネッリ", team: "Mercedes", points: 100 },
-      { pos: 2, name: "G.ラッセル", team: "Mercedes", points: 80 },
-      { pos: 3, name: "C.ルクレール", team: "Ferrari", points: 59 },
-      { pos: 4, name: "L.ノリス", team: "McLaren", points: 51 },
-      { pos: 5, name: "L.ハミルトン", team: "Ferrari", points: 51 },
-      { pos: 6, name: "O.ピアストリ", team: "McLaren", points: 43 },
-      { pos: 7, name: "M.フェルスタッペン", team: "Red Bull", points: 26 },
+      { pos: 1, name: "K.アントネッリ", team: "Mercedes", points: 131 },
+      { pos: 2, name: "G.ラッセル", team: "Mercedes", points: 88 },
+      { pos: 3, name: "C.ルクレール", team: "Ferrari", points: 75 },
+      { pos: 4, name: "L.ハミルトン", team: "Ferrari", points: 72 },
+      { pos: 5, name: "L.ノリス", team: "McLaren", points: 58 },
+      { pos: 6, name: "O.ピアストリ", team: "McLaren", points: 48 },
+      { pos: 7, name: "M.フェルスタッペン", team: "Red Bull", points: 43 },
+      { pos: 8, name: "I.ハジャー", team: "Red Bull", points: 11 },
+      { pos: 9, name: "F.コラピント", team: "Alpine", points: 8 },
+      { pos: 10, name: "L.ローソン", team: "Racing Bulls", points: 6 },
     ],
     teams: [
-      { pos: 1, name: "Mercedes", points: 180 },
-      { pos: 2, name: "Ferrari", points: 110 },
-      { pos: 3, name: "McLaren", points: 94 },
-      { pos: 4, name: "Red Bull", points: 30 },
-      { pos: 5, name: "Alpine", points: 23 },
-      { pos: 6, name: "Haas", points: 18 },
-      { pos: 7, name: "RB", points: 14 },
-      { pos: 8, name: "Williams", points: 10 },
+      { pos: 1, name: "Mercedes", points: 219 },
+      { pos: 2, name: "Ferrari", points: 147 },
+      { pos: 3, name: "McLaren", points: 106 },
+      { pos: 4, name: "Red Bull", points: 58 },
+      { pos: 5, name: "Alpine", points: 35 },
+      { pos: 6, name: "Racing Bulls", points: 20 },
+      { pos: 7, name: "Haas", points: 19 },
+      { pos: 8, name: "Williams", points: 12 },
       { pos: 9, name: "Audi", points: 2 },
       { pos: 10, name: "Aston Martin", points: 0 },
     ],
@@ -576,9 +590,14 @@ export const standings: Record<
 export const recentResults: RaceResult[] = [
   {
     series: "F1", round: 5, flag: "🇨🇦", gpName: "カナダGP",
-    date: "2026年5月25日（日本時間 月曜 早朝5:00 START）", raceType: "決勝", status: "live",
-    podium: [], note: "本日決勝開催中。日本時間 5/25（月）早朝5:00スタート。結果は公式発表後に反映します。",
-    sourceUrl: "https://www.formula1.com/en/racing/2026/canada",
+    date: "2026年5月25日（日本時間 月曜 早朝）", raceType: "決勝", status: "confirmed",
+    podium: [
+      { pos: 1, driver: "K.アントネッリ", team: "Mercedes", time: "—" },
+      { pos: 2, driver: "L.ハミルトン", team: "Ferrari", time: "+10.768s" },
+      { pos: 3, driver: "M.フェルスタッペン", team: "Red Bull", time: "+11.276s" },
+    ],
+    note: "ポール：ラッセル（1:12.578）/ FL：アントネッリ（1:14.210）。アントネッリは中国・日本・マイアミに続く4連勝でF1史上初のキャリア初4連勝。ラッセルは31周目にパワーロスでDNF、ノリスはギアボックストラブルでDNF、ピアストリはアルボン接触の10秒ペナルティで11位。トップ10：4位ルクレール(+44.151)、5位ハジャー(+1Lap)、6位コラピント(+1Lap)、7位ローソン(+1Lap)、8位ガスリー(+1Lap)、9位サインツ(+1Lap)、10位ベアマン(+1Lap)。",
+    sourceUrl: "https://www.formula1.com/en/results/2026/races/1285/canada/race-result",
   },
   {
     series: "F1", round: 5, flag: "🇨🇦", gpName: "カナダGP",
