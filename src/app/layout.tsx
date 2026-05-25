@@ -7,6 +7,7 @@ import TestBanner from "@/components/TestBanner";
 import "./globals.css";
 
 const GA_ID = "G-WVP9R50FW5";
+const ADSENSE_CLIENT = "ca-pub-3569776484788072";
 
 const orbitron = Orbitron({
   variable: "--font-orbitron",
@@ -91,6 +92,13 @@ export default function RootLayout({
             gtag('config', '${GA_ID}');
           `}
         </Script>
+        {/* Google AdSense */}
+        <Script
+          id="google-adsense"
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
+          strategy="afterInteractive"
+          crossOrigin="anonymous"
+        />
         <TestBanner />
         <div className="kerb-stripe relative z-[101]" aria-hidden />
         <Header />
