@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { seriesNetworks } from "@/lib/data";
 import type { ScheduleItem, ScheduleResult, ScheduleSession } from "@/lib/data";
 
 const STATUS_BADGE: Record<NonNullable<ScheduleItem["status"]>, { label: string; cls: string }> = {
@@ -23,53 +24,56 @@ const POS_BORDER = [
   "border-l-[#CD7F32]",
 ];
 
-function ResultBlock({ title, result }: { title: string; result: NonNullable<ScheduleResult["sprint"]> | ScheduleResult }) {
+function PodiumLines({ podium }: { podium: NonNullable<ScheduleResult["podium"]> }) {
   return (
-    <div className="rounded-lg bg-white/[0.02] border border-white/5 p-3 md:p-4">
-      <div className="font-display tracking-[0.18em] text-[0.55rem] text-flabo-grey uppercase mb-2">
-        {title}
-      </div>
-      {result.pole && (
-        <div className="text-[0.75rem] mb-2 flex items-start gap-2">
-          <span className="font-display tracking-[0.18em] text-[0.5rem] text-flabo-red bg-flabo-red/15 px-1.5 py-0.5 rounded shrink-0 mt-0.5">
-            POLE
-          </span>
-          <div>
-            <span className="font-bold">{result.pole.driver}</span>
-            <span className="text-flabo-grey ml-1">({result.pole.team})</span>
-            {result.pole.time && (
-              <span className="font-display text-flabo-yellow ml-2">{result.pole.time}</span>
-            )}
-          </div>
+    <div className="space-y-1">
+      {podium.map((p, i) => (
+        <div
+          key={p.pos}
+          className={`flex items-center gap-1.5 text-[0.7rem] pl-1.5 border-l-2 ${POS_BORDER[i]}`}
+        >
+          <span className="font-display font-black w-4 text-center">{p.pos}</span>
+          <span className="font-bold flex-1 truncate">{p.driver}</span>
+          <span className="text-flabo-grey text-[0.6rem] truncate max-w-[80px]">{p.team}</span>
         </div>
-      )}
-      {result.podium && result.podium.length > 0 && (
-        <div className="space-y-1">
-          {result.podium.map((p, i) => (
-            <div
-              key={p.pos}
-              className={`flex items-center gap-2 text-[0.75rem] pl-2 border-l-2 ${POS_BORDER[i]}`}
-            >
-              <span className="font-display font-black w-5 text-center">{p.pos}</span>
-              <span className="font-bold flex-1 truncate">{p.driver}</span>
-              <span className="text-flabo-grey text-[0.65rem] truncate">{p.team}</span>
-            </div>
-          ))}
-        </div>
-      )}
+      ))}
     </div>
   );
 }
 
-function FastestLapBlock({ fl }: { fl: NonNullable<ScheduleResult["fastestLap"]> }) {
+function ResultBlock({ title, result }: { title: string; result: { pole?: ScheduleResult["pole"]; podium?: ScheduleResult["podium"] } }) {
+  if (!result.pole && (!result.podium || result.podium.length === 0)) return null;
   return (
-    <div className="rounded-lg bg-flabo-blue/5 border border-flabo-blue/30 p-3 flex items-center gap-2 text-[0.75rem]">
-      <span className="font-display tracking-[0.18em] text-[0.5rem] text-flabo-blue bg-flabo-blue/15 px-1.5 py-0.5 rounded">
-        FASTEST LAP
+    <div className="rounded-md bg-white/[0.02] border border-white/5 p-2.5">
+      <div className="font-display tracking-[0.18em] text-[0.5rem] text-flabo-grey uppercase mb-1.5">
+        {title}
+      </div>
+      {result.pole && (
+        <div className="text-[0.7rem] mb-1.5 flex items-start gap-1.5">
+          <span className="font-display tracking-[0.18em] text-[0.45rem] text-flabo-red bg-flabo-red/15 px-1 py-0.5 rounded shrink-0 mt-0.5">
+            POLE
+          </span>
+          <div className="min-w-0">
+            <span className="font-bold">{result.pole.driver}</span>
+            {result.pole.time && (
+              <span className="font-display text-flabo-yellow ml-1.5 text-[0.65rem]">{result.pole.time}</span>
+            )}
+          </div>
+        </div>
+      )}
+      {result.podium && result.podium.length > 0 && <PodiumLines podium={result.podium} />}
+    </div>
+  );
+}
+
+function FastestLapInline({ fl }: { fl: NonNullable<ScheduleResult["fastestLap"]> }) {
+  return (
+    <div className="rounded-md bg-flabo-blue/5 border border-flabo-blue/30 p-2 flex items-center gap-1.5 text-[0.7rem]">
+      <span className="font-display tracking-[0.18em] text-[0.45rem] text-flabo-blue bg-flabo-blue/15 px-1 py-0.5 rounded shrink-0">
+        FL
       </span>
-      <span className="font-bold">{fl.driver}</span>
-      <span className="text-flabo-grey">({fl.team})</span>
-      {fl.time && <span className="font-display text-white ml-auto">{fl.time}</span>}
+      <span className="font-bold truncate">{fl.driver}</span>
+      {fl.time && <span className="font-display text-white ml-auto text-[0.65rem]">{fl.time}</span>}
     </div>
   );
 }
@@ -79,13 +83,14 @@ export default function ScheduleList({ items }: { items: ScheduleItem[] }) {
   const [openIndex, setOpenIndex] = useState<number>(initial >= 0 ? initial : -1);
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
       {items.map((item, i) => {
         const isOpen = openIndex === i;
         const badge = item.status ? STATUS_BADGE[item.status] : null;
         const isHighlight = item.status === "live" || item.status === "next";
+        const networks = item.networks ?? seriesNetworks[item.series] ?? [];
         return (
-          <div key={`${item.series}-${item.round}`} className={isOpen ? "sm:col-span-2 lg:col-span-4" : ""}>
+          <div key={`${item.series}-${item.round}`} className="flex flex-col">
             <button
               type="button"
               onClick={() => setOpenIndex(isOpen ? -1 : i)}
@@ -94,7 +99,7 @@ export default function ScheduleList({ items }: { items: ScheduleItem[] }) {
                 isHighlight
                   ? "bg-gradient-to-br from-flabo-red/10 to-flabo-carbon border-flabo-red"
                   : "bg-flabo-carbon border-white/5 hover:border-flabo-red hover:-translate-y-0.5"
-              } ${item.status === "past" ? "opacity-80" : ""}`}
+              } ${item.status === "past" ? "opacity-80" : ""} ${isOpen ? "rounded-b-none" : ""}`}
             >
               {badge && badge.label && (
                 <span className={`absolute top-2.5 right-2.5 font-display font-bold tracking-[0.18em] text-[0.5rem] px-1.5 py-0.5 rounded ${badge.cls}`}>
@@ -121,80 +126,90 @@ export default function ScheduleList({ items }: { items: ScheduleItem[] }) {
             </button>
 
             {isOpen && (
-              <div className="mt-2 rounded-xl border border-white/5 bg-flabo-carbon p-4 md:p-5 space-y-4">
-                {/* セッションタイムテーブル（未来 / live） */}
+              <div className="rounded-b-xl border border-t-0 border-white/5 bg-flabo-carbon px-3 py-3 space-y-3">
+                {/* セッション × 放送統合テーブル */}
                 {item.sessions && item.sessions.length > 0 && (
-                  <div className="overflow-x-auto">
-                    <div className="font-display tracking-[0.18em] text-[0.55rem] text-flabo-grey uppercase mb-2">
-                      セッションタイム
+                  <div>
+                    <div className="font-display tracking-[0.18em] text-[0.5rem] text-flabo-grey uppercase mb-1.5">
+                      セッション × 放送
                     </div>
-                    <table className="w-full text-[0.75rem] md:text-xs">
-                      <thead>
-                        <tr className="text-flabo-grey font-display tracking-[0.18em] text-[0.55rem]">
-                          <th className="text-left py-2 pr-3">セッション</th>
-                          <th className="text-left py-2 pr-3">現地</th>
-                          <th className="text-left py-2 pr-3">日本</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {item.sessions.map((s) => (
-                          <tr key={s.name} className="border-t border-white/5">
-                            <td className="py-2.5 pr-3">
-                              <div className="flex items-center gap-2">
-                                {s.type && (
-                                  <span className={`font-display tracking-[0.18em] text-[0.5rem] px-1.5 py-0.5 rounded ${SESSION_BADGE[s.type]}`}>
-                                    {s.type.toUpperCase()}
-                                  </span>
-                                )}
-                                <span className="font-bold">{s.name}</span>
-                              </div>
-                            </td>
-                            <td className="py-2.5 pr-3">
-                              <div className="text-flabo-grey text-[0.65rem]">{s.localDate}</div>
-                              <div className="font-display">{s.localTime}</div>
-                            </td>
-                            <td className="py-2.5 pr-3">
-                              <div className="text-flabo-grey text-[0.65rem]">{s.jpDate}</div>
-                              <div className="font-display text-flabo-green">{s.jpTime}</div>
-                            </td>
+                    <div className="overflow-x-auto -mx-1">
+                      <table className="w-full text-[0.65rem]">
+                        <thead>
+                          <tr className="text-flabo-grey font-display tracking-[0.14em] text-[0.5rem]">
+                            <th className="text-left py-1 px-1 font-normal">セッション</th>
+                            <th className="text-left py-1 px-1 font-normal">現地</th>
+                            <th className="text-left py-1 px-1 font-normal text-flabo-green">日本</th>
+                            {networks.map((n) => (
+                              <th key={n} className="text-left py-1 px-1 font-normal">{n}</th>
+                            ))}
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody>
+                          {item.sessions.map((s) => (
+                            <tr key={s.name} className="border-t border-white/5 align-top">
+                              <td className="py-1.5 px-1">
+                                <div className="flex items-center gap-1 flex-wrap">
+                                  {s.type && (
+                                    <span className={`font-display tracking-[0.14em] text-[0.45rem] px-1 py-0.5 rounded ${SESSION_BADGE[s.type]}`}>
+                                      {s.type.toUpperCase()}
+                                    </span>
+                                  )}
+                                  <span className="font-bold text-[0.65rem]">{s.name}</span>
+                                </div>
+                              </td>
+                              <td className="py-1.5 px-1 whitespace-nowrap">
+                                <div className="text-flabo-grey text-[0.55rem]">{s.localDate}</div>
+                                <div className="font-display">{s.localTime}</div>
+                              </td>
+                              <td className="py-1.5 px-1 whitespace-nowrap">
+                                <div className="text-flabo-grey text-[0.55rem]">{s.jpDate}</div>
+                                <div className="font-display text-flabo-green">{s.jpTime}</div>
+                              </td>
+                              {networks.map((n) => {
+                                const t = s.broadcasts?.[n];
+                                return (
+                                  <td key={n} className="py-1.5 px-1 whitespace-nowrap font-display">
+                                    {t ? <span className="text-white">{t}</span> : <span className="text-flabo-grey/40">—</span>}
+                                  </td>
+                                );
+                              })}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    <div className="mt-1.5 text-[0.5rem] text-flabo-grey/70 leading-relaxed">
+                      ※ 放送局列は番組開始時刻（公式番組表）。空欄は未確認。
+                    </div>
                   </div>
                 )}
 
                 {/* レース結果（過去） */}
                 {item.result && (
-                  <div className="space-y-3">
-                    <div className="font-display tracking-[0.18em] text-[0.55rem] text-flabo-grey uppercase">
-                      結果（公式ソース）
+                  <div className="space-y-2 border-t border-white/5 pt-3">
+                    <div className="font-display tracking-[0.18em] text-[0.5rem] text-flabo-grey uppercase">
+                      結果（公式）
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {item.result.sprint && (
-                        <ResultBlock title="🏁 スプリント" result={item.result.sprint} />
-                      )}
-                      {(item.result.pole || (item.result.podium && item.result.podium.length > 0)) && (
-                        <ResultBlock
-                          title={
-                            item.result.sprint || item.status === "live"
-                              ? "🏁 GP予選 / 決勝"
-                              : "🏁 決勝"
-                          }
-                          result={{
-                            pole: item.result.pole,
-                            podium: item.result.podium,
-                          }}
-                        />
-                      )}
-                    </div>
-                    {item.result.fastestLap && <FastestLapBlock fl={item.result.fastestLap} />}
+                    {item.result.sprint && (
+                      <ResultBlock title="🏁 スプリント" result={item.result.sprint} />
+                    )}
+                    {(item.result.pole || (item.result.podium && item.result.podium.length > 0)) && (
+                      <ResultBlock
+                        title="🏁 決勝"
+                        result={{
+                          pole: item.result.pole,
+                          podium: item.result.podium,
+                        }}
+                      />
+                    )}
+                    {item.result.fastestLap && <FastestLapInline fl={item.result.fastestLap} />}
                     {item.result.sourceUrl && (
                       <a
                         href={item.result.sourceUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-block text-[0.6rem] text-flabo-grey hover:text-flabo-red font-display tracking-[0.18em]"
+                        className="inline-block text-[0.55rem] text-flabo-grey hover:text-flabo-red font-display tracking-[0.18em]"
                       >
                         出典 ↗
                       </a>
@@ -203,8 +218,8 @@ export default function ScheduleList({ items }: { items: ScheduleItem[] }) {
                 )}
 
                 {!item.sessions && !item.result && (
-                  <p className="text-flabo-grey text-xs leading-relaxed">
-                    詳細なセッションタイムテーブル・結果は開催日が近づき次第こちらに反映します。
+                  <p className="text-flabo-grey text-[0.7rem] leading-relaxed">
+                    詳細セッション・結果は開催日が近づき次第こちらに反映します。
                   </p>
                 )}
               </div>

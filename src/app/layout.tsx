@@ -1,9 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import { Orbitron, Noto_Sans_JP } from "next/font/google";
+import Script from "next/script";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import TestBanner from "@/components/TestBanner";
 import "./globals.css";
+
+const GA_ID = "G-WVP9R50FW5";
 
 const orbitron = Orbitron({
   variable: "--font-orbitron",
@@ -75,6 +78,19 @@ export default function RootLayout({
       className={`${orbitron.variable} ${notoSansJp.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        {/* Google Analytics 4 */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga4-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_ID}');
+          `}
+        </Script>
         <TestBanner />
         <div className="kerb-stripe relative z-[101]" aria-hidden />
         <Header />

@@ -7,6 +7,8 @@ export type ScheduleSession = {
   jpDate: string;
   jpTime: string;
   type?: "race" | "sprint" | "quali" | "practice";
+  /** 放送局名 → 番組開始時刻（公式番組表で確認できた分のみ） */
+  broadcasts?: Record<string, string>;
 };
 
 export type ScheduleResultPodium = {
@@ -38,6 +40,8 @@ export type ScheduleItem = {
   weekendType: "通常週末" | "スプリント週末";
   status?: "next" | "past" | "upcoming" | "live";
   broadcast: string;
+  /** カード展開時の統合テーブルで列ヘッダとして使う放送局名（最大2局推奨） */
+  networks?: string[];
   sessions?: ScheduleSession[];
   result?: ScheduleResult;
 };
@@ -168,6 +172,18 @@ export const schedules: Record<Series, ScheduleItem[]> = {
       },
     },
     { series: "F1", round: 5, country: "Canada", flag: "🇨🇦", name: "カナダGP", date: "5月22日〜24日", weekendType: "スプリント週末", status: "past", broadcast: "FOD / フジテレビNEXT",
+      sessions: [
+        { name: "FP1", localDate: "5/22 (金)", localTime: "13:30 - 14:30", jpDate: "5/23 (土)", jpTime: "深夜1:20 -", type: "practice",
+          broadcasts: { "フジTV NEXT": "深夜1:20", "FOD": "深夜1:20" } },
+        { name: "スプリント予選", localDate: "5/22 (金)", localTime: "17:30 - 18:14", jpDate: "5/23 (土)", jpTime: "早朝5:20 -", type: "quali",
+          broadcasts: { "フジTV NEXT": "早朝5:20", "FOD": "早朝5:20" } },
+        { name: "スプリント", localDate: "5/23 (土)", localTime: "12:00 - 12:30", jpDate: "5/24 (日)", jpTime: "深夜0:30 -", type: "sprint",
+          broadcasts: { "フジTV NEXT": "深夜0:30", "FOD": "深夜0:30" } },
+        { name: "予選", localDate: "5/23 (土)", localTime: "16:00 - 17:00", jpDate: "5/24 (日)", jpTime: "早朝4:50 -", type: "quali",
+          broadcasts: { "フジTV NEXT": "早朝4:50", "FOD": "早朝4:50" } },
+        { name: "決勝（70 LAP）", localDate: "5/24 (日)", localTime: "14:00 -", jpDate: "5/25 (月)", jpTime: "早朝5:00 -", type: "race",
+          broadcasts: { "フジTV NEXT": "早朝4:20", "FOD": "早朝4:20" } },
+      ],
       result: {
         sprint: {
           pole: { driver: "G.ラッセル", team: "Mercedes" },
@@ -187,8 +203,34 @@ export const schedules: Record<Series, ScheduleItem[]> = {
         sourceUrl: "https://www.formula1.com/en/results/2026/races/1285/canada/race-result",
       },
     },
-    { series: "F1", round: 6, country: "Monaco", flag: "🇲🇨", name: "モナコGP", date: "6月5日〜7日", weekendType: "通常週末", status: "next", broadcast: "FOD / フジテレビNEXT" },
-    { series: "F1", round: 7, country: "Spain", flag: "🇪🇸", name: "スペインGP（バルセロナ）", date: "6月12日〜14日", weekendType: "通常週末", status: "upcoming", broadcast: "FOD / フジテレビNEXT" },
+    { series: "F1", round: 6, country: "Monaco", flag: "🇲🇨", name: "モナコGP", date: "6月5日〜7日", weekendType: "通常週末", status: "next", broadcast: "FOD / フジテレビNEXT",
+      sessions: [
+        { name: "FP1", localDate: "6/5 (金)", localTime: "13:30 - 14:30", jpDate: "6/5 (金)", jpTime: "20:30 - 21:30", type: "practice",
+          broadcasts: { "フジTV NEXT": "20:20", "FOD": "20:20" } },
+        { name: "FP2", localDate: "6/5 (金)", localTime: "17:00 - 18:00", jpDate: "6/6 (土)", jpTime: "深夜0:00 - 1:00", type: "practice",
+          broadcasts: { "フジTV NEXT": "深夜23:50", "FOD": "深夜23:50" } },
+        { name: "FP3", localDate: "6/6 (土)", localTime: "12:30 - 13:30", jpDate: "6/6 (土)", jpTime: "19:30 - 20:30", type: "practice",
+          broadcasts: { "フジTV NEXT": "19:20", "FOD": "19:20" } },
+        { name: "予選", localDate: "6/6 (土)", localTime: "16:00 - 17:00", jpDate: "6/6 (土)", jpTime: "23:00 - 24:00", type: "quali",
+          broadcasts: { "フジTV NEXT": "22:50", "FOD": "22:50" } },
+        { name: "決勝（78 LAP）", localDate: "6/7 (日)", localTime: "15:00 -", jpDate: "6/7 (日)", jpTime: "22:00 -", type: "race",
+          broadcasts: { "フジTV NEXT": "21:20", "FOD": "21:20" } },
+      ],
+    },
+    { series: "F1", round: 7, country: "Spain", flag: "🇪🇸", name: "スペインGP（バルセロナ）", date: "6月12日〜14日", weekendType: "通常週末", status: "upcoming", broadcast: "FOD / フジテレビNEXT",
+      sessions: [
+        { name: "FP1", localDate: "6/12 (金)", localTime: "13:30 - 14:30", jpDate: "6/12 (金)", jpTime: "20:30 - 21:30", type: "practice",
+          broadcasts: { "フジTV NEXT": "20:20", "FOD": "20:20" } },
+        { name: "FP2", localDate: "6/12 (金)", localTime: "17:00 - 18:00", jpDate: "6/13 (土)", jpTime: "深夜0:00 - 1:00", type: "practice",
+          broadcasts: { "フジTV NEXT": "深夜23:50", "FOD": "深夜23:50" } },
+        { name: "FP3", localDate: "6/13 (土)", localTime: "12:30 - 13:30", jpDate: "6/13 (土)", jpTime: "19:30 - 20:30", type: "practice",
+          broadcasts: { "フジTV NEXT": "19:20", "FOD": "19:20" } },
+        { name: "予選", localDate: "6/13 (土)", localTime: "16:00 - 17:00", jpDate: "6/13 (土)", jpTime: "23:00 - 24:00", type: "quali",
+          broadcasts: { "フジTV NEXT": "22:50", "FOD": "22:50" } },
+        { name: "決勝（66 LAP）", localDate: "6/14 (日)", localTime: "15:00 -", jpDate: "6/14 (日)", jpTime: "22:00 -", type: "race",
+          broadcasts: { "フジTV NEXT": "21:20", "FOD": "21:20" } },
+      ],
+    },
     { series: "F1", round: 8, country: "Austria", flag: "🇦🇹", name: "オーストリアGP", date: "6月26日〜28日", weekendType: "通常週末", status: "upcoming", broadcast: "FOD / フジテレビNEXT" },
     { series: "F1", round: 9, country: "Great Britain", flag: "🇬🇧", name: "イギリスGP", date: "7月3日〜5日", weekendType: "スプリント週末", status: "upcoming", broadcast: "FOD / フジテレビNEXT" },
     { series: "F1", round: 10, country: "Belgium", flag: "🇧🇪", name: "ベルギーGP", date: "7月17日〜19日", weekendType: "通常週末", status: "upcoming", broadcast: "FOD / フジテレビNEXT" },
@@ -209,7 +251,15 @@ export const schedules: Record<Series, ScheduleItem[]> = {
     { series: "F2", round: 1, country: "Australia", flag: "🇦🇺", name: "メルボルン", date: "3月6日〜8日", weekendType: "通常週末", status: "past", broadcast: "FODプロコース（F1 TV経由）" },
     { series: "F2", round: 2, country: "USA", flag: "🇺🇸", name: "マイアミ", date: "5月1日〜3日", weekendType: "通常週末", status: "past", broadcast: "FODプロコース（F1 TV経由）" },
     { series: "F2", round: 3, country: "Canada", flag: "🇨🇦", name: "モントリオール", date: "5月22日〜24日", weekendType: "通常週末", status: "live", broadcast: "FODプロコース（F1 TV経由）" },
-    { series: "F2", round: 4, country: "Monaco", flag: "🇲🇨", name: "モナコ", date: "6月4日〜7日", weekendType: "通常週末", status: "next", broadcast: "FODプロコース（F1 TV経由）" },
+    { series: "F2", round: 4, country: "Monaco", flag: "🇲🇨", name: "モナコ", date: "6月4日〜7日", weekendType: "通常週末", status: "next", broadcast: "FODプロコース（F1 TV経由）",
+      sessions: [
+        { name: "プラクティス", localDate: "6/4 (木)", localTime: "15:00 - 15:45", jpDate: "6/4 (木)", jpTime: "22:00 - 22:45", type: "practice" },
+        { name: "予選 グループA", localDate: "6/5 (金)", localTime: "15:10 - 15:24", jpDate: "6/5 (金)", jpTime: "22:10 - 22:24", type: "quali" },
+        { name: "予選 グループB", localDate: "6/5 (金)", localTime: "15:34 - 15:48", jpDate: "6/5 (金)", jpTime: "22:34 - 22:48", type: "quali" },
+        { name: "スプリント", localDate: "6/6 (土)", localTime: "14:15 - 15:00", jpDate: "6/6 (土)", jpTime: "21:15 - 22:00", type: "sprint" },
+        { name: "フィーチャー", localDate: "6/7 (日)", localTime: "09:35 - 10:35", jpDate: "6/7 (日)", jpTime: "16:35 - 17:35", type: "race" },
+      ],
+    },
     { series: "F2", round: 5, country: "Spain", flag: "🇪🇸", name: "バルセロナ", date: "6月12日〜14日", weekendType: "通常週末", status: "upcoming", broadcast: "FODプロコース（F1 TV経由）" },
     { series: "F2", round: 6, country: "Austria", flag: "🇦🇹", name: "シュピールベルク", date: "6月26日〜28日", weekendType: "通常週末", status: "upcoming", broadcast: "FODプロコース（F1 TV経由）" },
     { series: "F2", round: 7, country: "Great Britain", flag: "🇬🇧", name: "シルバーストン", date: "7月3日〜5日", weekendType: "通常週末", status: "upcoming", broadcast: "FODプロコース（F1 TV経由）" },
@@ -223,7 +273,15 @@ export const schedules: Record<Series, ScheduleItem[]> = {
   ],
   F3: [
     { series: "F3", round: 1, country: "Australia", flag: "🇦🇺", name: "メルボルン", date: "3月6日〜8日", weekendType: "通常週末", status: "past", broadcast: "FODプロコース（F1 TV経由）" },
-    { series: "F3", round: 2, country: "Monaco", flag: "🇲🇨", name: "モナコ", date: "6月4日〜7日", weekendType: "通常週末", status: "next", broadcast: "FODプロコース（F1 TV経由）" },
+    { series: "F3", round: 2, country: "Monaco", flag: "🇲🇨", name: "モナコ", date: "6月4日〜7日", weekendType: "通常週末", status: "next", broadcast: "FODプロコース（F1 TV経由）",
+      sessions: [
+        { name: "プラクティス", localDate: "6/4 (木)", localTime: "13:25 - 14:10", jpDate: "6/4 (木)", jpTime: "20:25 - 21:10", type: "practice" },
+        { name: "予選 グループA", localDate: "6/5 (金)", localTime: "10:05 - 10:19", jpDate: "6/5 (金)", jpTime: "17:05 - 17:19", type: "quali" },
+        { name: "予選 グループB", localDate: "6/5 (金)", localTime: "11:29 - 11:43", jpDate: "6/5 (金)", jpTime: "18:29 - 18:43", type: "quali" },
+        { name: "スプリント", localDate: "6/6 (土)", localTime: "10:45 - 11:25", jpDate: "6/6 (土)", jpTime: "17:45 - 18:25", type: "sprint" },
+        { name: "フィーチャー", localDate: "6/7 (日)", localTime: "07:55 - 08:40", jpDate: "6/7 (日)", jpTime: "14:55 - 15:40", type: "race" },
+      ],
+    },
     { series: "F3", round: 3, country: "Spain", flag: "🇪🇸", name: "バルセロナ", date: "6月12日〜14日", weekendType: "通常週末", status: "upcoming", broadcast: "FODプロコース（F1 TV経由）" },
     { series: "F3", round: 4, country: "Austria", flag: "🇦🇹", name: "シュピールベルク", date: "6月26日〜28日", weekendType: "通常週末", status: "upcoming", broadcast: "FODプロコース（F1 TV経由）" },
     { series: "F3", round: 5, country: "Great Britain", flag: "🇬🇧", name: "シルバーストン", date: "7月3日〜5日", weekendType: "通常週末", status: "upcoming", broadcast: "FODプロコース（F1 TV経由）" },
@@ -276,7 +334,15 @@ export const schedules: Record<Series, ScheduleItem[]> = {
         sourceUrl: "https://racingnews365.com/2026-indy-500---full-qualifying-results",
       },
     },
-    { series: "INDY", round: 8, country: "USA", flag: "🇺🇸", name: "デトロイト", date: "5月31日", weekendType: "通常週末", status: "next", broadcast: "GAORA SPORTS / GAORAオンデマンド" },
+    { series: "INDY", round: 8, country: "USA", flag: "🇺🇸", name: "デトロイト（Chevrolet GP）", date: "5月29日〜31日", weekendType: "通常週末", status: "next", broadcast: "GAORA SPORTS / GAORAオンデマンド",
+      sessions: [
+        { name: "プラクティス1", localDate: "5/29 (金) ET", localTime: "15:00 -", jpDate: "5/30 (土)", jpTime: "早朝4:00 -", type: "practice" },
+        { name: "プラクティス2", localDate: "5/30 (土) ET", localTime: "09:00 -", jpDate: "5/30 (土)", jpTime: "22:00 -", type: "practice" },
+        { name: "予選", localDate: "5/30 (土) ET", localTime: "13:00 -", jpDate: "5/31 (日)", jpTime: "深夜2:00 -", type: "quali" },
+        { name: "ウォームアップ", localDate: "5/31 (日) ET", localTime: "09:30 -", jpDate: "5/31 (日)", jpTime: "22:30 -", type: "practice" },
+        { name: "決勝（100 LAP）", localDate: "5/31 (日) ET", localTime: "12:30 -", jpDate: "6/1 (月)", jpTime: "深夜1:30 -", type: "race" },
+      ],
+    },
     { series: "INDY", round: 9, country: "USA", flag: "🇺🇸", name: "WWTレースウェイ（Bommarito 500）", date: "6月7日", weekendType: "通常週末", status: "upcoming", broadcast: "GAORA SPORTS / GAORAオンデマンド" },
     { series: "INDY", round: 10, country: "USA", flag: "🇺🇸", name: "ロード・アメリカ（XPEL GP）", date: "6月21日", weekendType: "通常週末", status: "upcoming", broadcast: "GAORA SPORTS / GAORAオンデマンド" },
     { series: "INDY", round: 11, country: "USA", flag: "🇺🇸", name: "ミッドオハイオ（Honda Indy 200）", date: "7月5日", weekendType: "通常週末", status: "upcoming", broadcast: "GAORA SPORTS / GAORAオンデマンド" },
@@ -339,6 +405,42 @@ export const news: NewsItem[] = [
       "https://media.formula1.com/image/upload/t_16by9Centre/c_fill,w_2048/q_auto/v1740000001/trackside-images/2026/F1_Grand_Prix_of_Canada/2278029679.webp",
   },
   {
+    category: "INDY",
+    source: "Motorsport.com",
+    title:
+      "インディ500：ローゼンクヴィストが史上最少差0.0233秒で初優勝、佐藤琢磨はトップ10フィニッシュ",
+    summary:
+      "110回目の伝統のインディ500決勝は、Meyer Shank Racing #60のフェリックス・ローゼンクヴィストが最終ラップでデビッド・マルカスをパスし、わずか0.0233秒差というインディ500史上最少差で初優勝。3度ウィナーの佐藤琢磨（RLL #75ホンダ・スポット参戦）は終盤の競り合いを粘り強くまとめて10位フィニッシュ、レース後「2027年の再挑戦を検討する」と語った。3位パト・オワード、4位マーカス・アームストロング、5位リヌス・ヴィーケイ、6位パロウ。",
+    date: "2026年5月25日",
+    url: "https://www.motorsport.com/indycar/news/felix-rosenqvist-wins-2026-indy-500-in-closest-ever-finish/10823901/",
+    imageUrl:
+      "https://cdn-7.motorsport.com/images/amp/YE9w3dGY/s6/alex-palou-chip-ganassi-racing.jpg",
+  },
+  {
+    category: "SF",
+    source: "motorsport.com",
+    title:
+      "SF鈴鹿Rd.5：福住仁嶺がポール・トゥ・ウインで今季初優勝、ROOKIE Racing初勝利",
+    summary:
+      "ポールから発進した福住仁嶺（NTT docomo Business ROOKIE）がOTSの応酬を制し、2位岩佐歩夢（TEAM MUGEN）、3位太田格之進（DOCOMO TEAM DANDELION）を抑えてポール・トゥ・ウイン。福住自身の今季初優勝でROOKIE Racingに参戦初勝利をもたらした。岩佐は前日Rd.4のポール獲得→決勝13位ノーポイントの雪辱、太田はランキングリーダーを死守。",
+    date: "2026年5月24日",
+    url: "https://jp.motorsport.com/super-formula/news/2026-sf-r5-race-result/10823691/",
+    imageUrl:
+      "https://cdn-2.motorsport.com/images/amp/0qgP47wY/s6/sacha-fenestraz-vantelin-team-.jpg",
+  },
+  {
+    category: "F2",
+    source: "Pit Debrief",
+    title:
+      "F2カナダ・フィーチャー：M.ステンスホルネが初優勝、宮田 莉朋はリタイア",
+    summary:
+      "モントリオールのF2フィーチャーレースで、Hitech TGRのマルティニウス・ステンスホルネが今季初勝利。2位アレックス・ダン、3位は選手権首位のG.ミニ。宮田 莉朋（Hitech TGR）はレース中盤にピットへ向かいリタイアとなり、悔しいモントリオールデビュー戦に。チームメイトのステンスホルネは表彰台中央でHitechに今季最高の結果をもたらした。",
+    date: "2026年5月25日",
+    url: "https://www.pitdebrief.com/post/2026-f2-canadian-gp-feature-race-results/",
+    imageUrl:
+      "https://cdn.racingnews365.com/2026/Formula-2/Tsolov.jpg?v=1777733213&width=1800&height=945&quality=75&crop=3780%2C1985%2C0%2C267",
+  },
+  {
     category: "F1",
     source: "Formula1.com",
     title:
@@ -373,18 +475,6 @@ export const news: NewsItem[] = [
       "https://media.formula1.com/image/upload/t_16by9Centre/c_lfill,w_2048/q_auto/v1740000001/trackside-images/2026/F1_Grand_Prix_of_Canada___Sprint__Qualifying/2277841936.webp",
   },
   {
-    category: "SF",
-    source: "AUTOSPORT web",
-    title:
-      "SF鈴鹿Rd.5予選：福住仁嶺がポール獲得、岩佐2番手・牧野3番手で日本勢上位独占",
-    summary:
-      "5月24日、鈴鹿で行われた2026年スーパーフォーミュラ第5戦の予選で、福住仁嶺（NTT docomo Business ROOKIE）がポールポジションを獲得。2番手には岩佐歩夢（TEAM MUGEN AUTOBACS、前日Rd.4のポールから決勝13位ノーポイントの雪辱に向け好走）、3番手は牧野任祐（DOCOMO TEAM DANDELION）。Rd.4を制したフェネストラズも上位、太田格之進は9番手(1'44.017)。",
-    date: "2026年5月24日",
-    url: "https://www.as-web.jp/super-formula/1319073",
-    imageUrl:
-      "https://cdn-2.motorsport.com/images/amp/0qgP47wY/s6/sacha-fenestraz-vantelin-team-.jpg",
-  },
-  {
     category: "F3",
     source: "Pit Debrief",
     title:
@@ -395,18 +485,6 @@ export const news: NewsItem[] = [
     url: "https://www.pitdebrief.com/post/kato-confident-ahead-of-monaco-after-encouraging-performance-in-2026-f3-melbourne-opener-with-art/",
     imageUrl:
       "https://i0.wp.com/topnews.jp/wp-content/uploads/2026/05/taitokato_F3test_austria.jpg",
-  },
-  {
-    category: "INDY",
-    source: "RacingNews365",
-    title:
-      "インディ500：パロウが232.348mphで2度目のポール、佐藤琢磨は13番手で決勝へ",
-    summary:
-      "土曜が雨で延期となり日曜決行となったインディ500予選で、IndyCar4度の王者パロウが232.348mphの4周平均で堂々のポール獲得。2位ロッシ（231.990mph）、3位マルカス（231.877mph）。3度のIndy500ウィナー（'17・'20）の佐藤琢磨はスポット参戦としてRahal Letterman Lanigan Racing #75（ホンダ）から13番手で決勝に挑む。決勝は日本時間5/25(月)深夜1:45スタート。",
-    date: "2026年5月18日",
-    url: "https://racingnews365.com/2026-indy-500---full-qualifying-results",
-    imageUrl:
-      "https://cdn.racingnews365.com/2026/Palou.jpg?v=1779057568&width=1800&height=945&quality=75&crop=4269%2C2242%2C0%2C302",
   },
   {
     category: "SF",
@@ -729,10 +807,14 @@ export const recentResults: RaceResult[] = [
   },
   {
     series: "INDY", round: 7, flag: "🇺🇸", gpName: "インディ500 決勝",
-    date: "2026年5月25日（日本時間 月曜 深夜1:45 START）", raceType: "決勝", status: "live",
-    podium: [],
-    note: "本日決勝開催中。日本時間 5/25（月）深夜1:45スタート、佐藤琢磨は13番手から出走。結果は公式発表後に反映します。",
-    sourceUrl: "https://www.indycar.com/Results",
+    date: "2026年5月25日", raceType: "決勝", status: "confirmed",
+    podium: [
+      { pos: 1, driver: "F.ローゼンクヴィスト", team: "Meyer Shank Racing", time: "—" },
+      { pos: 2, driver: "D.マルカス", team: "AJ Foyt Racing", time: "+0.0233s" },
+      { pos: 3, driver: "P.オワード", team: "Arrow McLaren", time: "—" },
+    ],
+    note: "インディ500史上最少差0.0233秒の劇的フィニッシュ。ローゼンクヴィストが最終ラップでマルカスをパスし初優勝。4位M.アームストロング、5位R.ヴィーケイ、6位A.パロウ、7位S.フェルッチ、8位R.グロージャン、9位非公開。佐藤琢磨（RLL #75ホンダ）は13番手スタートから10位入賞、レース後「2027年再挑戦を検討」と語った。",
+    sourceUrl: "https://www.motorsport.com/indycar/news/felix-rosenqvist-wins-2026-indy-500-in-closest-ever-finish/10823901/",
   },
   {
     series: "INDY", round: 6, flag: "🇺🇸", gpName: "インディ500 予選",
@@ -772,4 +854,13 @@ export const seriesLabel: Record<Series, string> = {
   F3: "F3",
   SF: "SUPER FORMULA",
   INDY: "INDYCAR",
+};
+
+/** カード展開時の統合テーブル上で表示する代表的な放送局（最大2局） */
+export const seriesNetworks: Record<Series, string[]> = {
+  F1: ["フジTV NEXT", "FOD"],
+  F2: ["FOD"],
+  F3: ["FOD"],
+  SF: ["ABEMA", "J SPORTS"],
+  INDY: ["GAORA", "オンデマンド"],
 };

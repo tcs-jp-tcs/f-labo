@@ -24,7 +24,13 @@ export default function HomePage() {
     (r) => r.series === "F1" && r.raceType === "決勝" && r.podium.length > 0,
   );
   const sidebarResult = latestF1Race ?? recentResults.find((r) => r.podium.length > 0) ?? recentResults[0];
-  const f1Schedule = schedules.F1.slice(0, 8);
+
+  // 直近3レース：最後のpast + next + その次のupcoming（NEXTを中心に前後を取る）
+  const allF1 = schedules.F1;
+  const nextIndex = allF1.findIndex((r) => r.status === "next" || r.status === "live");
+  const pivot = nextIndex >= 0 ? nextIndex : Math.max(allF1.map((r, i) => (r.status === "past" ? i : -1)).reduce((a, b) => Math.max(a, b), -1) + 1, 0);
+  const startIdx = Math.max(0, pivot - 1);
+  const f1Schedule = allF1.slice(startIdx, startIdx + 3);
   const f1Standings = standings.F1;
 
   return (
@@ -55,9 +61,19 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* News */}
+      <Section>
+        <SectionHeader title="最新ニュース" seeAllHref="/news" seeAllLabel="すべてのニュース →" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+          {restHomeNews.map((n, i) => (
+            <NewsCard key={`${n.category}-${i}`} item={n} />
+          ))}
+        </div>
+      </Section>
+
       {/* Schedule */}
       <Section>
-        <SectionHeader title="F1 レーススケジュール（全22戦）" seeAllHref="/schedule" seeAllLabel="全日程を見る →" />
+        <SectionHeader title="F1 レーススケジュール（直近3戦）" seeAllHref="/schedule" seeAllLabel="全22戦を見る →" />
         <ScheduleList items={f1Schedule} />
       </Section>
 
@@ -71,16 +87,6 @@ export default function HomePage() {
         <div className="grid grid-cols-1 gap-4">
           {thisWeekendBroadcasts.map((w) => (
             <BroadcastTable key={`${w.series}-${w.round}`} weekend={w} />
-          ))}
-        </div>
-      </Section>
-
-      {/* News */}
-      <Section>
-        <SectionHeader title="最新ニュース" seeAllHref="/news" seeAllLabel="すべてのニュース →" />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-          {restHomeNews.map((n, i) => (
-            <NewsCard key={`${n.category}-${i}`} item={n} />
           ))}
         </div>
       </Section>

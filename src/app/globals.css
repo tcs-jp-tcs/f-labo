@@ -34,7 +34,7 @@
 
 html,
 body {
-  background-color: #060606;
+  background-color: #0A0A0A;
   color: var(--color-white-soft);
   font-family: var(--font-noto-sans-jp), "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
   font-weight: 300;
@@ -46,39 +46,58 @@ body {
   position: relative;
 }
 
-/* Carbon fiber weave — repeating diagonal threads layered with a soft
-   diamond highlight. Stays subtle so body text remains readable. */
+/* Carbon fiber weave — interleaved diagonal threads with subtle highlights.
+   Two scales (4px tight weave + 8px chevron blocks) give depth without
+   compromising body-text readability. */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
   background-image:
+    /* Highlight ridges (top-left lit edges of each weave thread) */
     repeating-linear-gradient(
       45deg,
-      rgba(255, 255, 255, 0.022) 0px,
-      rgba(255, 255, 255, 0.022) 1px,
+      rgba(255, 255, 255, 0.06) 0px,
+      rgba(255, 255, 255, 0.06) 1px,
       transparent 1px,
-      transparent 3px
+      transparent 4px
+    ),
+    /* Shadow valleys between threads */
+    repeating-linear-gradient(
+      -45deg,
+      rgba(0, 0, 0, 0.55) 0px,
+      rgba(0, 0, 0, 0.55) 1px,
+      transparent 1px,
+      transparent 4px
+    ),
+    /* Larger chevron weave block alternation (8×8 grid) */
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.018) 0px,
+      rgba(255, 255, 255, 0.018) 4px,
+      transparent 4px,
+      transparent 8px
     ),
     repeating-linear-gradient(
       -45deg,
-      rgba(0, 0, 0, 0.45) 0px,
-      rgba(0, 0, 0, 0.45) 1px,
-      transparent 1px,
-      transparent 3px
+      rgba(255, 255, 255, 0.018) 0px,
+      rgba(255, 255, 255, 0.018) 4px,
+      transparent 4px,
+      transparent 8px
     ),
+    /* Brand color tint at corners */
     radial-gradient(
-      circle at 30% 20%,
-      rgba(225, 6, 0, 0.05) 0,
+      circle at 25% 15%,
+      rgba(225, 6, 0, 0.08) 0,
       transparent 45%
     ),
     radial-gradient(
-      circle at 80% 80%,
-      rgba(0, 170, 255, 0.04) 0,
+      circle at 85% 85%,
+      rgba(0, 170, 255, 0.06) 0,
       transparent 50%
     );
-  background-color: #060606;
-  background-size: 6px 6px, 6px 6px, 100% 100%, 100% 100%;
+  background-color: #0A0A0A;
+  background-size: 4px 4px, 4px 4px, 8px 8px, 8px 8px, 100% 100%, 100% 100%;
   pointer-events: none;
   z-index: 0;
 }
