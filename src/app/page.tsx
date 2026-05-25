@@ -15,7 +15,9 @@ import {
   news,
   standings,
   thisWeekendBroadcasts,
+  seriesLabel,
 } from "@/lib/data";
+import type { Series } from "@/lib/data";
 
 export default function HomePage() {
   const featuredNews = news[0];
@@ -80,15 +82,47 @@ export default function HomePage() {
       {/* Broadcast */}
       <Section>
         <SectionHeader
-          title="📺 今週末の放送予定（フジテレビNEXT / FOD）"
+          title="📺 今週末の放送予定"
           seeAllHref="/schedule"
           seeAllLabel="全放送予定 →"
         />
-        <div className="grid grid-cols-1 gap-4">
-          {thisWeekendBroadcasts.map((w) => (
-            <BroadcastTable key={`${w.series}-${w.round}`} weekend={w} />
-          ))}
-        </div>
+        {thisWeekendBroadcasts.length > 0 ? (
+          <div className="grid grid-cols-1 gap-4">
+            {thisWeekendBroadcasts.map((w) => (
+              <BroadcastTable key={`${w.series}-${w.round}`} weekend={w} />
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-xl border border-white/5 bg-flabo-carbon p-5 space-y-3">
+            <p className="font-display tracking-[0.18em] text-xs text-flabo-grey uppercase">
+              📅 今週末のレースはありません
+            </p>
+            <p className="text-xs text-flabo-grey leading-relaxed">
+              次回レースのあるカテゴリ：
+            </p>
+            <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[0.8rem]">
+              {(Object.keys(schedules) as Series[]).map((s) => {
+                const upcoming = schedules[s].find(
+                  (r) => r.status === "next" || r.status === "upcoming" || r.status === "live",
+                );
+                if (!upcoming) return null;
+                return (
+                  <li
+                    key={s}
+                    className="flex items-center gap-2 px-3 py-2 rounded-md bg-white/[0.03]"
+                  >
+                    <span className="text-base" aria-hidden>{upcoming.flag}</span>
+                    <span className="font-display tracking-[0.18em] text-[0.55rem] text-flabo-grey">
+                      {seriesLabel[s]}
+                    </span>
+                    <span className="font-bold flex-1 truncate">{upcoming.name}</span>
+                    <span className="text-flabo-grey text-[0.7rem]">{upcoming.date}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
       </Section>
 
       {/* Standings */}

@@ -114,6 +114,7 @@ export const schedules: Record<Series, ScheduleItem[]> = {
     { series: "F1", round: 1, country: "Australia", flag: "🇦🇺", name: "オーストラリアGP", date: "3月6日〜8日", weekendType: "通常週末", status: "past", broadcast: "FOD / フジテレビNEXT",
       result: {
         pole: { driver: "G.ラッセル", team: "Mercedes", time: "1:18.518" },
+        fastestLap: { driver: "M.フェルスタッペン", team: "Red Bull", time: "1:22.091" },
         podium: [
           { pos: 1, driver: "G.ラッセル", team: "Mercedes" },
           { pos: 2, driver: "K.アントネッリ", team: "Mercedes" },
@@ -133,6 +134,7 @@ export const schedules: Record<Series, ScheduleItem[]> = {
           ],
         },
         pole: { driver: "K.アントネッリ", team: "Mercedes" },
+        fastestLap: { driver: "K.アントネッリ", team: "Mercedes", time: "1:35.020" },
         podium: [
           { pos: 1, driver: "K.アントネッリ", team: "Mercedes" },
           { pos: 2, driver: "G.ラッセル", team: "Mercedes" },
@@ -144,6 +146,7 @@ export const schedules: Record<Series, ScheduleItem[]> = {
     { series: "F1", round: 3, country: "Japan", flag: "🇯🇵", name: "日本GP", date: "3月27日〜29日", weekendType: "通常週末", status: "past", broadcast: "FOD / フジテレビNEXT",
       result: {
         pole: { driver: "K.アントネッリ", team: "Mercedes" },
+        fastestLap: { driver: "K.アントネッリ", team: "Mercedes", time: "1:32.432" },
         podium: [
           { pos: 1, driver: "K.アントネッリ", team: "Mercedes" },
           { pos: 2, driver: "O.ピアストリ", team: "McLaren" },
@@ -163,6 +166,7 @@ export const schedules: Record<Series, ScheduleItem[]> = {
           ],
         },
         pole: { driver: "K.アントネッリ", team: "Mercedes", time: "1:27.798" },
+        fastestLap: { driver: "L.ノリス", team: "McLaren", time: "1:31.869" },
         podium: [
           { pos: 1, driver: "K.アントネッリ", team: "Mercedes" },
           { pos: 2, driver: "L.ノリス", team: "McLaren" },
@@ -325,13 +329,18 @@ export const schedules: Record<Series, ScheduleItem[]> = {
         sourceUrl: "https://www.motorsport.com/indycar/news/official-race-results-indycar-2026-indy-gp/10819572/",
       },
     },
-    { series: "INDY", round: 7, country: "USA", flag: "🇺🇸", name: "インディ500", date: "5月24日", weekendType: "通常週末", status: "live", broadcast: "GAORA SPORTS / GAORAオンデマンド",
+    { series: "INDY", round: 7, country: "USA", flag: "🇺🇸", name: "インディ500", date: "5月24日", weekendType: "通常週末", status: "past", broadcast: "GAORA SPORTS / GAORAオンデマンド",
       sessions: [
         { name: "決勝（200 LAP）", localDate: "5/24 (日)", localTime: "12:45 ET", jpDate: "5/25 (月)", jpTime: "深夜1:45 〜", type: "race" },
       ],
       result: {
         pole: { driver: "A.パロウ", team: "Chip Ganassi Racing", time: "232.348 mph" },
-        sourceUrl: "https://racingnews365.com/2026-indy-500---full-qualifying-results",
+        podium: [
+          { pos: 1, driver: "F.ローゼンクヴィスト", team: "Meyer Shank Racing" },
+          { pos: 2, driver: "D.マルカス", team: "AJ Foyt Racing" },
+          { pos: 3, driver: "P.オワード", team: "Arrow McLaren" },
+        ],
+        sourceUrl: "https://www.motorsport.com/indycar/news/felix-rosenqvist-wins-2026-indy-500-in-closest-ever-finish/10823901/",
       },
     },
     { series: "INDY", round: 8, country: "USA", flag: "🇺🇸", name: "デトロイト（Chevrolet GP）", date: "5月29日〜31日", weekendType: "通常週末", status: "next", broadcast: "GAORA SPORTS / GAORAオンデマンド",
@@ -356,34 +365,30 @@ export const schedules: Record<Series, ScheduleItem[]> = {
 };
 
 /* ============================
-   今週末の放送予定（フジテレビNEXT 公式時刻＋FOD ライブ配信）
+   今週末の放送予定
+   ★恒久ルール★
+   - 同じ週末に開催される 全カテゴリ（F1/F2/F3/SF/INDY）のレースを必ず網羅すること
+   - 1カテゴリでも漏らさない（前回カナダGP週末でSF鈴鹿Rd.4-5とF2モントリオールが抜けたケースをNGとする）
+   - レースが無い週末は空配列 [] にする → UI側で「今週末のレースはありません」を表示し、
+     次回レースのあるカテゴリ一覧を /schedule から自動で出す
+   - 出典は formula1.com / fiaformula2.com / fiaformula3.com / superformula.net / indycar.com の公式
+     ＋ フジNEXT / GAORA / ABEMA 各公式番組表
    ============================ */
 export const thisWeekendBroadcasts: WeekendBroadcast[] = [
   {
-    series: "F1",
-    round: 5,
-    flag: "🇨🇦",
-    gpName: "カナダGP",
-    weekendType: "スプリント週末",
-    channels: ["フジTV NEXT", "FOD"],
-    note: "決勝レースは日本時間 5/25(月) 早朝5:00スタート。フジテレビNEXT番組表は番組開始時刻を「深夜0:30／早朝H:MM」形式で表示。",
-    sessions: [
-      { session: "FP1", date: "5/23 (土)", jst: "深夜1:20", channels: { "フジTV NEXT": true, FOD: true } },
-      { session: "スプリント予選", date: "5/23 (土)", jst: "早朝5:20", channels: { "フジTV NEXT": true, FOD: true } },
-      { session: "🏁 スプリント", date: "5/24 (日)", jst: "深夜0:30", channels: { "フジTV NEXT": true, FOD: true } },
-      { session: "予選", date: "5/24 (日)", jst: "早朝4:50", channels: { "フジTV NEXT": true, FOD: true } },
-      { session: "🏁 決勝（番組開始4:20 / レース5:00）", date: "5/25 (月)", jst: "早朝4:20", channels: { "フジTV NEXT": true, FOD: true } },
-    ],
-  },
-  {
     series: "INDY",
-    round: 7,
+    round: 8,
     flag: "🇺🇸",
-    gpName: "インディ500",
+    gpName: "デトロイトGP（Chevrolet Grand Prix）",
     weekendType: "通常週末",
     channels: ["GAORA", "GAORAオンデマンド"],
+    note: "ストリート・コース100周。決勝は日本時間 6/1(月) 深夜1:30スタート。GAORA SPORTS／GAORAオンデマンドで全セッション中継。",
     sessions: [
-      { session: "🏁 決勝（200 LAP）", date: "5/25 (月)", jst: "深夜1:45", channels: { GAORA: true, "GAORAオンデマンド": true } },
+      { session: "プラクティス1", date: "5/30 (土)", jst: "早朝4:00 ET 15:00", channels: { GAORA: true, "GAORAオンデマンド": true } },
+      { session: "プラクティス2", date: "5/30 (土)", jst: "22:00 ET 9:00", channels: { GAORA: true, "GAORAオンデマンド": true } },
+      { session: "予選", date: "5/31 (日)", jst: "深夜2:00 ET 13:00", channels: { GAORA: true, "GAORAオンデマンド": true } },
+      { session: "ウォームアップ", date: "5/31 (日)", jst: "22:30 ET 9:30", channels: { GAORA: true, "GAORAオンデマンド": true } },
+      { session: "🏁 決勝（100 LAP）", date: "6/1 (月)", jst: "深夜1:30 ET 12:30", channels: { GAORA: true, "GAORAオンデマンド": true } },
     ],
   },
 ];
@@ -567,7 +572,7 @@ export const standings: Record<
   { drivers: StandingRow[]; teams: StandingRow[]; note?: string }
 > = {
   F1: {
-    note: "2026年カナダGP（Round 5）終了時点。アントネッリが中国・日本・マイアミに続く4連勝でF1史上初のキャリア初4連勝。リード43ポイントに拡大。",
+    note: "2026年カナダGP（Round 5）終了時点・formula1.com公式。アントネッリ4連勝でF1史上初のキャリア初4連勝、リード43ポイントに拡大。",
     drivers: [
       { pos: 1, name: "K.アントネッリ", team: "Mercedes", points: 131 },
       { pos: 2, name: "G.ラッセル", team: "Mercedes", points: 88 },
@@ -576,21 +581,29 @@ export const standings: Record<
       { pos: 5, name: "L.ノリス", team: "McLaren", points: 58 },
       { pos: 6, name: "O.ピアストリ", team: "McLaren", points: 48 },
       { pos: 7, name: "M.フェルスタッペン", team: "Red Bull", points: 43 },
-      { pos: 8, name: "I.ハジャー", team: "Red Bull", points: 11 },
-      { pos: 9, name: "F.コラピント", team: "Alpine", points: 8 },
-      { pos: 10, name: "L.ローソン", team: "Racing Bulls", points: 6 },
+      { pos: 8, name: "P.ガスリー", team: "Alpine", points: 20 },
+      { pos: 9, name: "O.ベアマン", team: "Haas", points: 18 },
+      { pos: 10, name: "L.ローソン", team: "Racing Bulls", points: 16 },
+      { pos: 11, name: "F.コラピント", team: "Alpine", points: 15 },
+      { pos: 12, name: "I.ハジャー", team: "Red Bull", points: 14 },
+      { pos: 13, name: "C.サインツ", team: "Williams", points: 6 },
+      { pos: 14, name: "A.リンドブラッド", team: "Racing Bulls", points: 5 },
+      { pos: 15, name: "G.ボルトレート", team: "Audi", points: 2 },
+      { pos: 16, name: "E.オコン", team: "Haas", points: 1 },
+      { pos: 17, name: "A.アルボン", team: "Williams", points: 1 },
     ],
     teams: [
       { pos: 1, name: "Mercedes", points: 219 },
       { pos: 2, name: "Ferrari", points: 147 },
       { pos: 3, name: "McLaren", points: 106 },
-      { pos: 4, name: "Red Bull", points: 58 },
+      { pos: 4, name: "Red Bull", points: 57 },
       { pos: 5, name: "Alpine", points: 35 },
-      { pos: 6, name: "Racing Bulls", points: 20 },
+      { pos: 6, name: "Racing Bulls", points: 21 },
       { pos: 7, name: "Haas", points: 19 },
-      { pos: 8, name: "Williams", points: 12 },
+      { pos: 8, name: "Williams", points: 7 },
       { pos: 9, name: "Audi", points: 2 },
-      { pos: 10, name: "Aston Martin", points: 0 },
+      { pos: 10, name: "Cadillac", points: 0 },
+      { pos: 11, name: "Aston Martin", points: 0 },
     ],
   },
   F2: {
@@ -631,20 +644,20 @@ export const standings: Record<
     ],
   },
   SF: {
-    note: "2026年第4戦鈴鹿終了後（公式ポイントランキング）。",
+    note: "2026年第5戦鈴鹿終了後（autosport web公式ポイントランキング）。福住が大きく加点し3位浮上、岩佐がフェネストラズから2位を奪取。",
     drivers: [
-      { pos: 1, name: "太田 格之進", points: 41 },
-      { pos: 2, name: "S.フェネストラズ", points: 22.5 },
-      { pos: 3, name: "岩佐 歩夢", points: 20.5 },
-      { pos: 4, name: "松下 信治", points: 16 },
-      { pos: 5, name: "L.ブラウニング", points: 16 },
+      { pos: 1, name: "太田 格之進", team: "DOCOMO TEAM DANDELION", points: 52 },
+      { pos: 2, name: "岩佐 歩夢", team: "TEAM MUGEN AUTOBACS", points: 37.5 },
+      { pos: 3, name: "福住 仁嶺", team: "NTT docomo Business ROOKIE", points: 35 },
+      { pos: 4, name: "S.フェネストラズ", team: "VANTELIN TEAM TOM'S", points: 26.5 },
+      { pos: 5, name: "阪口 晴南", points: 23 },
     ],
     teams: [
-      { pos: 1, name: "VANTELIN TEAM TOM'S", points: 34.5 },
-      { pos: 2, name: "DOCOMO TEAM DANDELION RACING", points: 34 },
-      { pos: 3, name: "SANKI VERTEX PARTNERS CERUMO・INGING", points: 26 },
-      { pos: 4, name: "DELiGHTWORKS RACING", points: 16 },
-      { pos: 5, name: "REALIZE KONDO RACING", points: 16 },
+      { pos: 1, name: "DOCOMO TEAM DANDELION RACING", points: 50 },
+      { pos: 2, name: "VANTELIN TEAM TOM'S", points: 44.5 },
+      { pos: 3, name: "SANKI VERTEX PARTNERS CERUMO・INGING", points: 34 },
+      { pos: 4, name: "NTT docomo Business ROOKIE", points: 32 },
+      { pos: 5, name: "TEAM MUGEN AUTOBACS", points: 27 },
     ],
   },
   INDY: {
