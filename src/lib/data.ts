@@ -401,6 +401,18 @@ export const news: NewsItem[] = [
     category: "F1",
     source: "Formula1.com",
     title:
+      "カナダGP決勝：アントネッリがF1史上初のキャリア初4連勝、ラッセルはリードからリタイア",
+    summary:
+      "ポールスタートのラッセルが序盤に首位を奪い返したが、31周目にパワーロスでリタイア。代わって首位に立ったアントネッリが残りラップを支配し、中国・日本・マイアミに続く4連勝を達成。デビューシーズン4連勝はF1史上初の偉業となった。2位は今季ベストのハミルトン(+10.768)、3位フェルスタッペン(+11.276)、4位ルクレール(+44.151)、5位ハジャー、6位コラピント。ノリスはギアボックストラブルでDNF、ピアストリはアルボン接触のペナルティで11位に沈んだ。アントネッリは選手権リードを43ポイントに拡大。",
+    date: "2026年5月25日",
+    url: "https://www.formula1.com/en/latest/article/live-coverage-formula-1-lenovo-grand-prix-du-canada-2026.7m4KTueNNOQnM0HuMqI1RW",
+    imageUrl:
+      "https://media.formula1.com/image/upload/t_16by9Centre/c_fill,w_2048/q_auto/v1740000001/trackside-images/2026/F1_Grand_Prix_of_Canada/2278029679.webp",
+  },
+  {
+    category: "F1",
+    source: "Formula1.com",
+    title:
       "アントネッリ「勝ち方は望んでいたものじゃない」ラッセルとのバトル、リタイアを語る",
     summary:
       "カナダGPでキャリア初の4連勝を達成し選手権リードを43点に広げたアントネッリは「正直、こんな勝ち方は望んでいなかった。ジョージとのバトルはタフで本当に激しかった。最後までやり合いたかった」とコメント。「お互いミスをしていたし、二人ともギリギリで攻めていた。彼が止まってしまったのは本当に残念」とチームメイトのリタイアに同情。一方で「フェラーリ・レッドブル・マクラーレンが詰めてきているので、自分のやることを続けて、もう一段バーを上げていく」と引き締めも忘れなかった。",
@@ -408,18 +420,6 @@ export const news: NewsItem[] = [
     url: "https://www.formula1.com/en/latest/article/not-really-the-way-i-wanted-to-win-antonelli-gives-verdict-on-tough-russell-battle-after-canada-victory.6DGPBEHsKnyvjHW82nVoNq",
     imageUrl:
       "https://media.formula1.com/image/upload/t_16by9Centre/c_lfill,w_2048/q_auto/v1740000001/trackside-images/2026/F1_Grand_Prix_of_Canada/2278032049.webp",
-  },
-  {
-    category: "F1",
-    source: "Formula1.com",
-    title:
-      "ラッセル「信じられない。誰かが俺にタイトル争いをさせたくないみたいだ」リードからのリタイアに茫然",
-    summary:
-      "30周目にパワーユニットの不調でリードから消えたラッセルは「信じられない。直近5戦のうち3戦で何かが俺に逆らっている。言葉が出ない」と落胆。一方でアントネッリとのバトルは「カートの頃を思い出した。接触なしでハードに、近くで戦えた。あと30周続けたかった」と最大級の賛辞。直後にヘッドレストを車外に投げ捨てた行為はFIAから「危険行為」と判断され、停止処分付きの罰金5,000ユーロを科された。本人は「お恥ずかしい行為だった」と公の謝罪を申し出ている。",
-    date: "2026年5月25日",
-    url: "https://www.formula1.com/en/latest/article/it-feels-like-somebody-doesnt-want-me-to-fight-for-this-championship-russell-in-disbelief-over-canada-retirement.4Hnn3vh7vAhSqt7F1RpL4P",
-    imageUrl:
-      "https://media.formula1.com/image/upload/c_lfill,w_2048/q_auto/v1740000001/fom-website/2026/Canada/16x9%20single%20image%20-%202026-05-24T230727.335.webp",
   },
   {
     category: "F1",
@@ -437,13 +437,13 @@ export const news: NewsItem[] = [
     category: "F1",
     source: "Formula1.com",
     title:
-      "カナダGP決勝：アントネッリがF1史上初のキャリア初4連勝、ラッセルはリードからリタイア",
+      "ラッセル「信じられない。誰かが俺にタイトル争いをさせたくないみたいだ」リードからのリタイアに茫然",
     summary:
-      "ポールスタートのラッセルが序盤に首位を奪い返したが、31周目にパワーロスでリタイア。代わって首位に立ったアントネッリが残りラップを支配し、中国・日本・マイアミに続く4連勝を達成。デビューシーズン4連勝はF1史上初の偉業となった。2位は今季ベストのハミルトン(+10.768)、3位フェルスタッペン(+11.276)、4位ルクレール(+44.151)、5位ハジャー、6位コラピント。ノリスはギアボックストラブルでDNF、ピアストリはアルボン接触のペナルティで11位に沈んだ。アントネッリは選手権リードを43ポイントに拡大。",
+      "30周目にパワーユニットの不調でリードから消えたラッセルは「信じられない。直近5戦のうち3戦で何かが俺に逆らっている。言葉が出ない」と落胆。一方でアントネッリとのバトルは「カートの頃を思い出した。接触なしでハードに、近くで戦えた。あと30周続けたかった」と最大級の賛辞。直後にヘッドレストを車外に投げ捨てた行為はFIAから「危険行為」と判断され、停止処分付きの罰金5,000ユーロを科された。本人は「お恥ずかしい行為だった」と公の謝罪を申し出ている。",
     date: "2026年5月25日",
-    url: "https://www.formula1.com/en/latest/article/live-coverage-formula-1-lenovo-grand-prix-du-canada-2026.7m4KTueNNOQnM0HuMqI1RW",
+    url: "https://www.formula1.com/en/latest/article/it-feels-like-somebody-doesnt-want-me-to-fight-for-this-championship-russell-in-disbelief-over-canada-retirement.4Hnn3vh7vAhSqt7F1RpL4P",
     imageUrl:
-      "https://media.formula1.com/image/upload/t_16by9Centre/c_fill,w_2048/q_auto/v1740000001/trackside-images/2026/F1_Grand_Prix_of_Canada/2278029679.webp",
+      "https://media.formula1.com/image/upload/c_lfill,w_2048/q_auto/v1740000001/fom-website/2026/Canada/16x9%20single%20image%20-%202026-05-24T230727.335.webp",
   },
   {
     category: "INDY",
@@ -458,6 +458,18 @@ export const news: NewsItem[] = [
       "https://cdn-7.motorsport.com/images/amp/YE9w3dGY/s6/alex-palou-chip-ganassi-racing.jpg",
   },
   {
+    category: "INDY",
+    source: "Motorsport.com",
+    title:
+      "ローゼンクヴィスト「最後の1周は夢で何度も走ってきた」史上最少差でつかんだインディ500初制覇",
+    summary:
+      "インディ500初制覇を遂げたフェリックス・ローゼンクヴィスト（Meyer Shank Racing #60）は「あの最後の1周はずっと頭の中で思い描いていた。実際に起きたときは筋肉が覚えていた感じだった」と感慨。「ハイラインを丸々1周フラットで行ったのは初めて、本当にクールな勝ち方だった」とアウト側からのオーバーテイクを振り返り、「マシンはロケットだった。Meyer Shank、ホンダ、パートナー全員に感謝。優勝可能な車を2台揃えてくれたチームに最大限の敬意を」と再生中のMSRを称えた。",
+    date: "2026年5月25日",
+    url: "https://www.motorsport.com/indycar/news/felix-rosenqvist-dreamed-of-this-indy-500-finish-then-made-it-real/10824056/",
+    imageUrl:
+      "https://cdn-6.motorsport.com/images/amp/0qgPjlyY/s1000/felix-rosenqvist-meyer-shank-r.webp",
+  },
+  {
     category: "SF",
     source: "motorsport.com",
     title:
@@ -470,16 +482,64 @@ export const news: NewsItem[] = [
       "https://cdn-2.motorsport.com/images/amp/0qgP47wY/s6/sacha-fenestraz-vantelin-team-.jpg",
   },
   {
-    category: "F2",
-    source: "Pit Debrief",
+    category: "SF",
+    source: "fmotor.jp",
     title:
-      "F2カナダ・フィーチャー：M.ステンスホルネが初優勝、宮田 莉朋はリタイア",
+      "福住仁嶺「モリゾウオーナーからどんなご褒美が待ってるかな」鈴鹿Rd.5優勝コメント",
     summary:
-      "モントリオールのF2フィーチャーレースで、Hitech TGRのマルティニウス・ステンスホルネが今季初勝利。2位アレックス・ダン、3位は選手権首位のG.ミニ。宮田 莉朋（Hitech TGR）はレース中盤にピットへ向かいリタイアとなり、悔しいモントリオールデビュー戦に。チームメイトのステンスホルネは表彰台中央でHitechに今季最高の結果をもたらした。",
-    date: "2026年5月25日",
-    url: "https://www.pitdebrief.com/post/2026-f2-canadian-gp-feature-race-results/",
+      "5年ぶりの優勝でROOKIE Racingに参戦初勝利をもたらした福住仁嶺は「自分自身にとって久しぶりの優勝、チームにとっては今日が初ポール初優勝。チームの皆さんにとって素敵な日になったと思うので、おめでとうという気持ちでいっぱい」と決勝後会見でコメント。「みんなの気持ちが一丸となれたからこそ、この1勝がある。本当にチームのおかげ」と感謝を述べ、オーナーの豊田章男氏（モリゾウ）に触れて「まだ話していないけど、どんなご褒美が待ってるかな。後で連絡します(笑)」とユーモアを交えた。",
+    date: "2026年5月24日",
+    url: "https://www.fmotor.jp/2026-sf-rd5-winners",
     imageUrl:
-      "https://cdn.racingnews365.com/2026/Formula-2/Tsolov.jpg?v=1777733213&width=1800&height=945&quality=75&crop=3780%2C1985%2C0%2C267",
+      "https://cdn-2.motorsport.com/images/amp/0qgP47wY/s6/sacha-fenestraz-vantelin-team-.jpg",
+  },
+  {
+    category: "SF",
+    source: "motorsport.com",
+    title:
+      "SF鈴鹿Rd.4：フェネストラズが14番手から大逆転優勝、岩佐は13位ノーポイント",
+    summary:
+      "予選で岩佐歩夢（TEAM MUGEN）が今季3度目のポールを獲得していたが、決勝は雨絡みの大荒れの展開に。14番手スタートのフェネストラズが小雨タイミングでステイアウトする戦略で一気にトップへ。タイムは1h05'12.423、2位は松下信治（DELiGHTWORKS）+0.760、3位は坪井翔（TOM'S）+1.159。岩佐はSC明けのリスタートとウェット交換が裏目に出て13位ノーポイント。",
+    date: "2026年5月23日",
+    url: "https://jp.motorsport.com/super-formula/news/2026-sf-r4-race-result/10823240/",
+    imageUrl:
+      "https://cdn-2.motorsport.com/images/amp/0qgP47wY/s6/sacha-fenestraz-vantelin-team-.jpg",
+  },
+  {
+    category: "SF",
+    source: "Motorsport.com",
+    title:
+      "フェネストラズ「TOM'Sが俺と坪井をステイアウトさせると主張してくれた」鈴鹿Rd.4逆転V",
+    summary:
+      "14番手スタートから雨絡みの混乱を制したサッシャ・フェネストラズ（TOM'S）は「この結果にとても幸せ。チームが俺と坪井をステイアウトさせると強く主張してくれた」とチームの戦略決断を称賛。「鈴鹿の新しい路面は乾くのがすごく早い。前日のSFLightsセッションでも乾きの速さを確認できていた。TOM'SはSFLightsにもチームを持っているから、その情報を活かしたのが今回のギャンブルにつながったのだと思う」と勝利の鍵を明かした。",
+    date: "2026年5月23日",
+    url: "https://www.motorsport.com/super-formula/news/super-formula-suzuka-sacha-fenestraz-wins-hectic-opening-race/10823278/",
+    imageUrl:
+      "https://cdn-2.motorsport.com/images/amp/0qgP47wY/s6/sacha-fenestraz-vantelin-team-.jpg",
+  },
+  {
+    category: "F2",
+    source: "FIA Formula 2",
+    title:
+      "F2カナダ・フィーチャー：M.ステンスホルネがRodinで初優勝、宮田 莉朋はリタイア",
+    summary:
+      "波乱続きのモントリオールF2フィーチャーレースで、Rodin Motorsportのマルティニウス・ステンスホルネがキャリア初勝利。チームメイトのアレックス・ダンを抑えてRodinに1-2をもたらし、3位は選手権首位のG.ミニ。宮田 莉朋（Hitech TGR）は26周目にデュルクセンの追突でスピンして16番手まで後退、34周目のSC明けにオリバー・ゲーテと接触してリタイアと、悔しいモントリオールデビュー戦になった。",
+    date: "2026年5月25日",
+    url: "https://www.fiaformula2.com/Latest/5S86JJoiKIQWhV19XBbLIJ/feature-race-stenshorne-leads-home-rodin-1-2-in-montreal",
+    imageUrl:
+      "https://res.cloudinary.com/prod-f2f3/ar_16:9,c_fill,dpr_1.0,f_auto,g_auto,h_563,w_1000/v1/f2/global/articles/2026/05_May/GettyImages-2277994353",
+  },
+  {
+    category: "F2",
+    source: "FIA Formula 2",
+    title:
+      "ステンスホルネ「予選から良いペースを持っていた。両日表彰台は格別」F2カナダ初優勝コメント",
+    summary:
+      "モントリオールでF2キャリア初勝利を挙げたマルティニウス・ステンスホルネ（Rodin Motorsport）は「週末はとても良かった。予選から良いペースを持っていた。最初のセッションは思うようにいかなかったけど、それ以外は終始好調」と振り返り、「2日間ともポディウムに上がれたのは格別な気分」と前日のスプリント3位を含めた週末の安定感を強調。Rodinはダンの2位フィニッシュと合わせてチーム今季最高の1-2を達成した。",
+    date: "2026年5月25日",
+    url: "https://www.fiaformula2.com/Latest/5S86JJoiKIQWhV19XBbLIJ/feature-race-stenshorne-leads-home-rodin-1-2-in-montreal",
+    imageUrl:
+      "https://res.cloudinary.com/prod-f2f3/ar_16:9,c_fill,dpr_1.0,f_auto,g_auto,h_563,w_1000/v1/f2/global/articles/2026/05_May/GettyImages-2277994353",
   },
   {
     category: "F1",
@@ -528,16 +588,16 @@ export const news: NewsItem[] = [
       "https://i0.wp.com/topnews.jp/wp-content/uploads/2026/05/taitokato_F3test_austria.jpg",
   },
   {
-    category: "SF",
-    source: "motorsport.com",
+    category: "F1",
+    source: "Sky Sports",
     title:
-      "SF鈴鹿Rd.4：フェネストラズが14番手から大逆転優勝、岩佐は13位ノーポイント",
+      "フェルスタッペン、現行レギュレーションに苦言「メンタル的に持たない」",
     summary:
-      "予選で岩佐歩夢（TEAM MUGEN）が今季3度目のポールを獲得していたが、決勝は雨絡みの大荒れの展開に。14番手スタートのフェネストラズが小雨タイミングでステイアウトする戦略で一気にトップへ。タイムは1h05'12.423、2位は松下信治（DELiGHTWORKS）+0.760、3位は坪井翔（TOM'S）+1.159。岩佐はSC明けのリスタートとウェット交換が裏目に出て13位ノーポイント。",
-    date: "2026年5月23日",
-    url: "https://jp.motorsport.com/super-formula/news/2026-sf-r4-race-result/10823240/",
+      "カナダGPの会場で記者会見に応じたフェルスタッペンは、現行マシンに改めて不満を吐露。「ドライバーがマシンに合わせ続けなければならない状況はメンタル的にもたない」と語った。マイアミ以降は車両アップグレードで進展を見せているが、選手権ではアントネッリから74ポイントビハインドの7位に沈む。",
+    date: "2026年5月22日",
+    url: "https://www.skysports.com/f1/news/12433/13547301/max-verstappen-red-bull-driver-renews-f1-quit-threat-as-he-says-current-regulations-are-not-mentally-doable-at-canadian-gp",
     imageUrl:
-      "https://cdn-2.motorsport.com/images/amp/0qgP47wY/s6/sacha-fenestraz-vantelin-team-.jpg",
+      "https://e0.365dm.com/26/05/1600x900/skysports-f1-max-verstappen_7256904.jpg?20260524020107",
   },
   {
     category: "F2",
@@ -564,18 +624,6 @@ export const news: NewsItem[] = [
       "https://media.formula1.com/image/upload/c_lfill,w_2048/q_auto/v1740000001/fom-website/2026/Miami/16x9%20single%20image%20-%202026-05-03T195302.163.webp",
   },
   {
-    category: "F3",
-    source: "TopNews",
-    title:
-      "F3：ホンダ育成・加藤大翔が開幕戦表彰台、シュピールベルクテストで総合トップ",
-    summary:
-      "ART Grand Prixから2026 FIA F3にステップアップしたホンダ育成・加藤大翔（HFDP）が、開幕戦メルボルンでフィーチャー3位の表彰台を獲得。続くシュピールベルクのインシーズンテストでも2日間総合トップタイム（1分20秒297）を記録。同じくF3に参戦するりー海夏澄（ART）、中村仁（Hitech TGR）、山越陽悠（VAR）と合わせて日本人勢4人がF1直下カテゴリーに揃った歴史的シーズン。",
-    date: "2026年5月22日",
-    url: "https://topnews.jp/2026/05/22/news/f1/drivers/taito-kato/247527.html",
-    imageUrl:
-      "https://i0.wp.com/topnews.jp/wp-content/uploads/2026/05/taitokato_F3test_austria.jpg",
-  },
-  {
     category: "INDY",
     source: "Motorsport.com",
     title: "インディGP：ルンガードが2勝目、パロウは5位でランキング独走",
@@ -585,18 +633,6 @@ export const news: NewsItem[] = [
     url: "https://www.motorsport.com/indycar/news/complete-indycar-championship-standings-after-2026-indy-gp/10819574/",
     imageUrl:
       "https://cdn-7.motorsport.com/images/amp/YE9w3dGY/s6/alex-palou-chip-ganassi-racing.jpg",
-  },
-  {
-    category: "F1",
-    source: "Sky Sports",
-    title:
-      "フェルスタッペン、現行レギュレーションに苦言「メンタル的に持たない」",
-    summary:
-      "カナダGPの会場で記者会見に応じたフェルスタッペンは、現行マシンに改めて不満を吐露。「ドライバーがマシンに合わせ続けなければならない状況はメンタル的にもたない」と語った。マイアミ以降は車両アップグレードで進展を見せているが、選手権ではアントネッリから74ポイントビハインドの7位に沈む。",
-    date: "2026年5月22日",
-    url: "https://www.skysports.com/f1/news/12433/13547301/max-verstappen-red-bull-driver-renews-f1-quit-threat-as-he-says-current-regulations-are-not-mentally-doable-at-canadian-gp",
-    imageUrl:
-      "https://e0.365dm.com/26/05/1600x900/skysports-f1-max-verstappen_7256904.jpg?20260524020107",
   },
 ];
 
