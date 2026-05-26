@@ -74,6 +74,20 @@ export type NewsItem = {
   imageUrl?: string;
 };
 
+export type ReviewCategory = "F1" | "SF";
+
+export type ReviewSummary = {
+  slug: string;
+  category: ReviewCategory;
+  round: number;
+  flag: string;
+  gpName: string;
+  title: string;
+  subtitle: string;
+  excerpt: string;
+  date: string;
+};
+
 export type StandingRow = {
   pos: number;
   name: string;
@@ -949,3 +963,21 @@ export const seriesNetworks: Record<Series, string[]> = {
   SF: ["ABEMA", "J SPORTS"],
   INDY: ["GAORA", "オンデマンド"],
 };
+
+/* ============================
+   REVIEWS （独自レビュー記事）
+   ============================ */
+export const reviews: ReviewSummary[] = [
+  {
+    slug: "canada-gp-2026",
+    category: "F1",
+    round: 5,
+    flag: "🇨🇦",
+    gpName: "カナダGP",
+    title: "2026 F1 第5戦 カナダGP レビュー",
+    subtitle: "史上初の4連勝、そして雨と波乱のモントリオール",
+    excerpt:
+      "アントネッリがキャリア初勝利からの4連勝という、F1史上誰も成し遂げたことのない偉業を達成。チームメイト・ラッセルのリード中のリタイア、マクラーレンの戦略大失敗、そして2人のワールドチャンピオンによる終盤の名バトル——68周に詰め込まれたドラマを総括する。",
+    date: "2026年5月25日",
+  },
+];

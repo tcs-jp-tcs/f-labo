@@ -1,0 +1,53 @@
+import Link from "next/link";
+import type { ReviewSummary } from "@/lib/data";
+
+const CATEGORY_BAR: Record<ReviewSummary["category"], string> = {
+  F1: "bg-flabo-red",
+  SF: "bg-flabo-yellow",
+};
+
+const CATEGORY_CHIP: Record<ReviewSummary["category"], string> = {
+  F1: "bg-flabo-red/15 text-flabo-red",
+  SF: "bg-flabo-yellow/15 text-flabo-yellow",
+};
+
+export default function ReviewCard({ item }: { item: ReviewSummary }) {
+  return (
+    <Link
+      href={`/review/${item.slug}`}
+      className="group flex flex-col rounded-xl border border-white/5 bg-flabo-carbon overflow-hidden transition-all duration-300 hover:border-flabo-red/60 hover:-translate-y-0.5"
+    >
+      <div className={`h-1.5 ${CATEGORY_BAR[item.category]}`} aria-hidden />
+      <div className="p-5 flex flex-col flex-1 gap-2.5">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span
+            className={`font-display tracking-[0.18em] text-[0.55rem] px-1.5 py-0.5 rounded ${CATEGORY_CHIP[item.category]}`}
+          >
+            {item.category}
+          </span>
+          <span className="font-display tracking-[0.18em] text-[0.55rem] text-flabo-grey uppercase">
+            Round {item.round}
+          </span>
+          <span className="font-display tracking-[0.18em] text-[0.55rem] text-flabo-grey">
+            {item.flag} {item.gpName}
+          </span>
+        </div>
+        <h3 className="font-bold text-[1rem] leading-relaxed group-hover:text-flabo-red transition-colors">
+          {item.title}
+        </h3>
+        <p className="text-[0.78rem] leading-relaxed text-flabo-grey -mt-1">
+          {item.subtitle}
+        </p>
+        <p className="text-[0.78rem] leading-relaxed text-white/65 flex-1">
+          {item.excerpt}
+        </p>
+        <div className="mt-1 flex items-center justify-between">
+          <span className="text-[0.7rem] text-flabo-grey">{item.date}</span>
+          <span className="font-display tracking-[0.18em] text-[0.55rem] text-flabo-grey group-hover:text-flabo-red transition-colors">
+            続きを読む →
+          </span>
+        </div>
+      </div>
+    </Link>
+  );
+}

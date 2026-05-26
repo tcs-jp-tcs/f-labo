@@ -1,33 +1,39 @@
-import type { Metadata } from "next";
+"use client";
+
+import { useMemo, useState } from "react";
 import Section from "@/components/Section";
 import SectionHeader from "@/components/SectionHeader";
+import SeriesTabs from "@/components/SeriesTabs";
+import ReviewCard from "@/components/ReviewCard";
+import { reviews } from "@/lib/data";
 
-export const metadata: Metadata = {
-  title: "レースレビュー（準備中）| フォーミュラ研究所（Fラボ）",
-  description:
-    "Fラボの独自レビュー記事は現在準備中です。F1とスーパーフォーミュラを中心に順次公開予定です。",
-};
+const TABS = ["ALL", "F1", "SF"] as const;
+type Tab = (typeof TABS)[number];
 
 export default function ReviewPage() {
+  const [tab, setTab] = useState<Tab>("ALL");
+
+  const filtered = useMemo(() => {
+    if (tab === "ALL") return reviews;
+    return reviews.filter((r) => r.category === tab);
+  }, [tab]);
+
   return (
     <Section>
       <SectionHeader title="レースレビュー" />
-      <div className="rounded-2xl border border-white/5 bg-flabo-carbon p-10 md:p-16 text-center">
-        <div className="font-display tracking-[0.32em] text-flabo-red text-xs uppercase mb-3">
-          Coming Soon
+      <p className="text-flabo-grey text-sm mb-6">
+        Fラボ独自の視点でまとめるレース後の振り返り記事。F1とスーパーフォーミュラを中心に、現地映像・公式記者会見・各種一次情報をもとに執筆しています。
+      </p>
+      <SeriesTabs tabs={TABS} active={tab} onChange={setTab} />
+      {filtered.length === 0 ? (
+        <p className="text-flabo-grey text-sm">該当するレビュー記事はまだありません。</p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+          {filtered.map((r) => (
+            <ReviewCard key={r.slug} item={r} />
+          ))}
         </div>
-        <h2 className="font-display font-black text-2xl md:text-3xl mb-4">
-          レビュー記事は準備中です
-        </h2>
-        <p className="text-white/70 text-sm leading-relaxed max-w-xl mx-auto">
-          Fラボ独自のレビュー記事（F1・スーパーフォーミュラ）は現在準備中です。
-          直近の結果や速報については
-          <a href="/news" className="text-flabo-red hover:underline mx-1">ニュース</a>
-          ／
-          <a href="/results" className="text-flabo-red hover:underline mx-1">レース結果</a>
-          をご覧ください。
-        </p>
-      </div>
+      )}
     </Section>
   );
 }
