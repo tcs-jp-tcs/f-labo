@@ -401,6 +401,42 @@ export const news: NewsItem[] = [
     category: "F1",
     source: "Formula1.com",
     title:
+      "アントネッリ「勝ち方は望んでいたものじゃない」ラッセルとのバトル、リタイアを語る",
+    summary:
+      "カナダGPでキャリア初の4連勝を達成し選手権リードを43点に広げたアントネッリは「正直、こんな勝ち方は望んでいなかった。ジョージとのバトルはタフで本当に激しかった。最後までやり合いたかった」とコメント。「お互いミスをしていたし、二人ともギリギリで攻めていた。彼が止まってしまったのは本当に残念」とチームメイトのリタイアに同情。一方で「フェラーリ・レッドブル・マクラーレンが詰めてきているので、自分のやることを続けて、もう一段バーを上げていく」と引き締めも忘れなかった。",
+    date: "2026年5月25日",
+    url: "https://www.formula1.com/en/latest/article/not-really-the-way-i-wanted-to-win-antonelli-gives-verdict-on-tough-russell-battle-after-canada-victory.6DGPBEHsKnyvjHW82nVoNq",
+    imageUrl:
+      "https://media.formula1.com/image/upload/t_16by9Centre/c_lfill,w_2048/q_auto/v1740000001/trackside-images/2026/F1_Grand_Prix_of_Canada/2278032049.webp",
+  },
+  {
+    category: "F1",
+    source: "Formula1.com",
+    title:
+      "ラッセル「信じられない。誰かが俺にタイトル争いをさせたくないみたいだ」リードからのリタイアに茫然",
+    summary:
+      "30周目にパワーユニットの不調でリードから消えたラッセルは「信じられない。直近5戦のうち3戦で何かが俺に逆らっている。言葉が出ない」と落胆。一方でアントネッリとのバトルは「カートの頃を思い出した。接触なしでハードに、近くで戦えた。あと30周続けたかった」と最大級の賛辞。直後にヘッドレストを車外に投げ捨てた行為はFIAから「危険行為」と判断され、停止処分付きの罰金5,000ユーロを科された。本人は「お恥ずかしい行為だった」と公の謝罪を申し出ている。",
+    date: "2026年5月25日",
+    url: "https://www.formula1.com/en/latest/article/it-feels-like-somebody-doesnt-want-me-to-fight-for-this-championship-russell-in-disbelief-over-canada-retirement.4Hnn3vh7vAhSqt7F1RpL4P",
+    imageUrl:
+      "https://media.formula1.com/image/upload/c_lfill,w_2048/q_auto/v1740000001/fom-website/2026/Canada/16x9%20single%20image%20-%202026-05-24T230727.335.webp",
+  },
+  {
+    category: "F1",
+    source: "Formula1.com",
+    title:
+      "ハミルトン「フェラーリでの最高の一日」モントリオールでフェラーリ加入後ベストの2位",
+    summary:
+      "P5スタートから終盤フェルスタッペンをパスして2位を奪取したハミルトンは「フェラーリ加入後で一番幸せな日だ。表彰台に乗れて、メインレースで初めての2位を獲れた」と感無量。「身も心もとても軽くて、フィジカルもメンタルも絶好調」「望んでいたエンジニアリングチームをついに手にした。マシンも素晴らしいし、自分自身もマシンを深く理解できるようになった」とフェラーリへの感謝を強調。フェラーリ移籍後2度目の表彰台で、ルクレールの4位と合わせてコンストラクターズ2番手を固めた。",
+    date: "2026年5月25日",
+    url: "https://www.formula1.com/en/latest/article/i-feel-very-light-right-now-hamilton-hails-canada-p2-as-happiest-day-at-ferrari-so-far.3RYdn6nDmrEqc84TWA4DB2",
+    imageUrl:
+      "https://media.formula1.com/image/upload/t_16by9North/c_lfill,w_2048/q_auto/v1740000001/trackside-images/2026/F1_Grand_Prix_of_Canada/2278036032.webp",
+  },
+  {
+    category: "F1",
+    source: "Formula1.com",
+    title:
       "カナダGP決勝：アントネッリがF1史上初のキャリア初4連勝、ラッセルはリードからリタイア",
     summary:
       "ポールスタートのラッセルが序盤に首位を奪い返したが、31周目にパワーロスでリタイア。代わって首位に立ったアントネッリが残りラップを支配し、中国・日本・マイアミに続く4連勝を達成。デビューシーズン4連勝はF1史上初の偉業となった。2位は今季ベストのハミルトン(+10.768)、3位フェルスタッペン(+11.276)、4位ルクレール(+44.151)、5位ハジャー、6位コラピント。ノリスはギアボックストラブルでDNF、ピアストリはアルボン接触のペナルティで11位に沈んだ。アントネッリは選手権リードを43ポイントに拡大。",
