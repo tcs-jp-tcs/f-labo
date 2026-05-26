@@ -938,9 +938,6 @@ export const recentResults: RaceResult[] = [
   },
 ];
 
-/* レビューは Coming Soon。データ自体は使わないが互換のため空配列を残す */
-export const reviews: never[] = [];
-
 /* SNS */
 export const sns = {
   x: { handle: "@flabo_jp", url: "https://x.com/flabo_jp" },
