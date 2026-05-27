@@ -4,7 +4,9 @@ import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Section from "@/components/Section";
+import Confetti from "@/components/Confetti";
 import Fireworks from "@/components/Fireworks";
+import PodiumScene from "@/components/PodiumScene";
 import Trophy from "@/components/Trophy";
 import {
   categoryBadge,
@@ -267,6 +269,7 @@ function ResultView({
   return (
     <>
       {rank.tone === "winner" && <Fireworks />}
+      {(rank.tone === "winner" || rank.tone === "podium") && <Confetti />}
       <div className="rounded-2xl border border-white/5 bg-flabo-carbon p-6 md:p-10 text-center space-y-6">
         <p className="font-display tracking-[0.32em] text-[0.65rem] text-flabo-grey">
           RESULT
@@ -290,6 +293,15 @@ function ResultView({
         {rank.tone === "winner" && (
           <div className="pt-2">
             <Trophy rd={quiz.rd} dateLabel={dateLabel} />
+            <p className="mt-3 text-[0.7rem] text-flabo-grey">
+              ※ スクリーンショットで保存できます
+            </p>
+          </div>
+        )}
+
+        {rank.tone === "podium" && (
+          <div className="pt-2">
+            <PodiumScene rd={quiz.rd} dateLabel={dateLabel} />
             <p className="mt-3 text-[0.7rem] text-flabo-grey">
               ※ スクリーンショットで保存できます
             </p>
