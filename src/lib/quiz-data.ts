@@ -121,22 +121,22 @@ export function getRank(correct: number, total: number): Rank {
   if (correct === total)
     return {
       emoji: "🏆",
-      title: "Fラボマスター",
+      title: "ワールドチャンピオン",
       message: "完全制覇！あなたはモータースポーツの生き字引です。",
       tone: "master",
     };
   if (correct >= 3)
     return {
       emoji: "🥈",
-      title: "エキスパート",
-      message: "あと少しでマスター！もう一度挑戦してみよう。",
+      title: "ポディウム獲得",
+      message: "次は頂点を目指せ！もう一度挑戦しよう。",
       tone: "expert",
     };
   if (correct >= 1)
     return {
-      emoji: "🥉",
-      title: "ルーキー",
-      message: "Fラボで勉強しよう！次回はもっと取れるはず。",
+      emoji: "🏁",
+      title: "完走",
+      message: "次は表彰台を目指せ！もう一度挑戦しよう。",
       tone: "rookie",
     };
   return {

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Section from "@/components/Section";
 import Fireworks from "@/components/Fireworks";
-import MasterCertificate from "@/components/MasterCertificate";
+import Trophy from "@/components/Trophy";
 import {
   categoryBadge,
   categoryLabel,
@@ -286,7 +286,7 @@ function ResultView({
 
         {rank.tone === "master" && (
           <div className="pt-2">
-            <MasterCertificate vol={quiz.vol} dateLabel={dateLabel} />
+            <Trophy vol={quiz.vol} dateLabel={dateLabel} />
             <p className="mt-3 text-[0.7rem] text-flabo-grey">
               ※ スクリーンショットで保存できます
             </p>
