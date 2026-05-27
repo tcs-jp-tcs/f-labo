@@ -12,6 +12,7 @@ const NAV = [
   { href: "/results", label: "結果" },
   { href: "/standings", label: "順位表" },
   { href: "/review", label: "レビュー" },
+  { href: "/quiz", label: "検定" },
 ];
 
 export default function Header() {
