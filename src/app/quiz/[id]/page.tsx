@@ -12,6 +12,7 @@ import {
   getQuiz,
   getRank,
   type Quiz,
+  type RankTone,
 } from "@/lib/quiz-data";
 
 type Phase = "question" | "answer" | "result";
@@ -46,9 +47,11 @@ function playFanfare() {
   }
 }
 
-const TONE_ACCENT: Record<ReturnType<typeof getRank>["tone"], string> = {
-  master: "text-flabo-red drop-shadow-[0_0_18px_rgba(225,6,0,0.6)]",
-  expert: "text-flabo-yellow drop-shadow-[0_0_14px_rgba(255,215,0,0.45)]",
+const TONE_ACCENT: Record<RankTone, string> = {
+  winner: "text-flabo-yellow drop-shadow-[0_0_22px_rgba(255,215,0,0.7)]",
+  podium: "text-flabo-red drop-shadow-[0_0_16px_rgba(225,6,0,0.55)]",
+  prize: "text-flabo-yellow drop-shadow-[0_0_12px_rgba(255,215,0,0.4)]",
+  finished: "text-white",
   rookie: "text-white",
   fail: "text-flabo-grey",
 };
@@ -80,7 +83,7 @@ function QuizRunner({ quiz }: { quiz: Quiz }) {
   const rank = phase === "result" ? getRank(correctCount, total) : null;
 
   useEffect(() => {
-    if (rank?.tone === "master") {
+    if (rank?.tone === "winner") {
       playFanfare();
     }
   }, [rank?.tone]);
@@ -263,7 +266,7 @@ function ResultView({
 
   return (
     <>
-      {rank.tone === "master" && <Fireworks />}
+      {rank.tone === "winner" && <Fireworks />}
       <div className="rounded-2xl border border-white/5 bg-flabo-carbon p-6 md:p-10 text-center space-y-6">
         <p className="font-display tracking-[0.32em] text-[0.65rem] text-flabo-grey">
           RESULT
@@ -284,9 +287,9 @@ function ResultView({
           <p className="text-sm text-white/75 leading-relaxed">{rank.message}</p>
         </div>
 
-        {rank.tone === "master" && (
+        {rank.tone === "winner" && (
           <div className="pt-2">
-            <Trophy vol={quiz.vol} dateLabel={dateLabel} />
+            <Trophy rd={quiz.rd} dateLabel={dateLabel} />
             <p className="mt-3 text-[0.7rem] text-flabo-grey">
               ※ スクリーンショットで保存できます
             </p>

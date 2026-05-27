@@ -11,7 +11,7 @@ export type Question = {
 
 export type Quiz = {
   id: string;
-  vol: number;
+  rd: number;
   title: string;
   description: string;
   difficulty: 1 | 2 | 3;
@@ -20,15 +20,15 @@ export type Quiz = {
 
 export const quizzes: Quiz[] = [
   {
-    id: "vol-1",
-    vol: 1,
-    title: "Fラボ検定 Vol.1",
+    id: "rd-1",
+    rd: 1,
+    title: "Fラボ検定 Rd.1",
     description:
       "F1の歴史と豆知識を中心に、インディ500からも1問。玄人にも歯ごたえのある全5問。",
     difficulty: 2,
     questions: [
       {
-        id: "vol-1-q1",
+        id: "rd-1-q1",
         category: "f1",
         question:
           "F1デビュー時、マックス・フェルスタッペンが持っていなかったものは？",
@@ -43,7 +43,7 @@ export const quizzes: Quiz[] = [
           "フェルスタッペンは2015年オーストラリアGPに17歳166日でF1デビュー。当時オランダの運転免許取得年齢は18歳だったため、F1マシンは運転できても一般道は運転できなかった。これを受けてFIAはスーパーライセンスの最低年齢を18歳に引き上げた。",
       },
       {
-        id: "vol-1-q2",
+        id: "rd-1-q2",
         category: "f1",
         question: "F1史上最速のピットストップ世界記録を持つチームは？",
         choices: ["レッドブル", "マクラーレン", "フェラーリ", "メルセデス"],
@@ -52,7 +52,7 @@ export const quizzes: Quiz[] = [
           "2023年カタールGPでマクラーレンがノリスのマシンで1.80秒を記録し、ギネス世界記録に認定された。それまではレッドブルが2019年ブラジルGPで記録した1.82秒が最速だった。",
       },
       {
-        id: "vol-1-q3",
+        id: "rd-1-q3",
         category: "f1",
         question:
           "F1で6輪マシンを実戦投入し、実際に優勝したチームは？",
@@ -62,7 +62,7 @@ export const quizzes: Quiz[] = [
           "ティレルP34は前輪を4本にした6輪車。1976年スウェーデンGPでジョディ・シェクターが優勝し、デパイユが2位でティレル1-2フィニッシュを達成。6輪車がF1で優勝した唯一の例。",
       },
       {
-        id: "vol-1-q4",
+        id: "rd-1-q4",
         category: "f1",
         question:
           "「レースに出ないこと」でフェラーリから巨額の違約金を受け取ったドライバーは？（★★★ 玄人問題）",
@@ -77,7 +77,7 @@ export const quizzes: Quiz[] = [
           "2010年、フェラーリはアロンソを迎えるためライコネンの契約を1年早く終了し、巨額の違約金を支払った。ライコネンはその年レースに出場せず、WRCに転向。その後2012年にロータスからF1に復帰した。",
       },
       {
-        id: "vol-1-q5",
+        id: "rd-1-q5",
         category: "indy",
         question:
           "インディ500で日本人として初めて優勝したドライバーは？",
@@ -110,39 +110,62 @@ export const categoryBadge: Record<QuizCategory, string> = {
   indy: "bg-flabo-yellow/15 text-flabo-yellow",
 };
 
+export type RankTone =
+  | "winner"
+  | "podium"
+  | "prize"
+  | "finished"
+  | "rookie"
+  | "fail";
+
 export type Rank = {
   emoji: string;
   title: string;
   message: string;
-  tone: "master" | "expert" | "rookie" | "fail";
+  tone: RankTone;
 };
 
 export function getRank(correct: number, total: number): Rank {
-  if (correct === total)
+  // Vol.1 is fixed at 5 questions; map scores directly.
+  if (correct >= 5)
     return {
       emoji: "🏆",
-      title: "ワールドチャンピオン",
-      message: "完全制覇！あなたはモータースポーツの生き字引です。",
-      tone: "master",
+      title: "Winner",
+      message: "優勝おめでとう！",
+      tone: "winner",
     };
-  if (correct >= 3)
+  if (correct === 4)
     return {
       emoji: "🥈",
-      title: "ポディウム獲得",
-      message: "次は頂点を目指せ！もう一度挑戦しよう。",
-      tone: "expert",
+      title: "表彰台",
+      message: "次は頂点を目指せ！",
+      tone: "podium",
     };
-  if (correct >= 1)
+  if (correct === 3)
+    return {
+      emoji: "🎖️",
+      title: "入賞",
+      message: "表彰台まであと一歩！",
+      tone: "prize",
+    };
+  if (correct === 2)
     return {
       emoji: "🏁",
       title: "完走",
-      message: "次は表彰台を目指せ！もう一度挑戦しよう。",
+      message: "次は入賞を狙え！",
+      tone: "finished",
+    };
+  if (correct === 1)
+    return {
+      emoji: "🏁",
+      title: "ルーキー",
+      message: "まずは完走を目指そう！",
       tone: "rookie",
     };
   return {
     emoji: "⚡",
     title: "デプロイ不足",
-    message: "チャージして再挑戦！ニュースとレビューでしっかり予習しよう。",
+    message: "チャージして再挑戦！",
     tone: "fail",
   };
 }

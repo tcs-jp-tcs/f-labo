@@ -15,7 +15,7 @@ export default function QuizCard({ item }: { item: Quiz }) {
       <div className="p-5 flex flex-col flex-1 gap-3">
         <div className="flex items-center gap-2 flex-wrap">
           <span className="font-display tracking-[0.18em] text-[0.55rem] px-1.5 py-0.5 rounded bg-flabo-red/15 text-flabo-red">
-            VOL.{item.vol}
+            RD.{item.rd}
           </span>
           <span className="font-display tracking-[0.18em] text-[0.55rem] text-flabo-grey">
             {item.questions.length}問

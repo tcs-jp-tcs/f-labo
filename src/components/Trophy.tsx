@@ -1,14 +1,14 @@
 type Props = {
-  vol: number;
+  rd: number;
   dateLabel: string;
 };
 
-export default function Trophy({ vol, dateLabel }: Props) {
+export default function Trophy({ rd, dateLabel }: Props) {
   return (
     <div
       className="relative mx-auto w-full max-w-md rounded-2xl border-2 border-flabo-yellow bg-gradient-to-br from-[#1a1407] via-[#3a2a08] to-[#1a1407] p-6 shadow-[0_0_70px_rgba(255,215,0,0.4)] overflow-hidden"
       role="img"
-      aria-label={`Fラボ検定 Vol.${vol} ワールドチャンピオン トロフィー`}
+      aria-label={`Fラボ検定 Rd.${rd} Winner トロフィー`}
     >
       <div
         aria-hidden
@@ -26,7 +26,7 @@ export default function Trophy({ vol, dateLabel }: Props) {
 
       <div className="relative z-10 text-center space-y-3">
         <p className="font-display tracking-[0.32em] text-[0.6rem] text-flabo-yellow">
-          WORLD CHAMPION TROPHY
+          WINNER TROPHY
         </p>
 
         <div className="flex justify-center">
@@ -132,10 +132,10 @@ export default function Trophy({ vol, dateLabel }: Props) {
         </div>
 
         <p className="text-xl font-bold text-flabo-yellow drop-shadow-[0_0_12px_rgba(255,215,0,0.6)]">
-          Fラボ検定 Vol.{vol} ワールドチャンピオン
+          Fラボ検定 Rd.{rd} Winner
         </p>
         <p className="text-sm text-white/85 leading-relaxed">
-          全問正解おめでとう！
+          優勝おめでとう！
         </p>
 
         <div className="flex items-center justify-center gap-3 pt-2 text-[0.7rem] font-display tracking-[0.18em] text-flabo-grey">
