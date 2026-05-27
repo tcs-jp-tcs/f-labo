@@ -460,6 +460,42 @@ export const news: NewsItem[] = [
       "https://media.formula1.com/image/upload/c_lfill,w_2048/q_auto/v1740000001/fom-website/2026/Canada/16x9%20single%20image%20-%202026-05-24T230727.335.webp",
   },
   {
+    category: "F1",
+    source: "motorsport.com",
+    title:
+      "ラルフ・シューマッハ「アントネッリはフェルスタッペンの後継者になれる」",
+    summary:
+      "ラルフ・シューマッハがカナダGPでのアントネッリとラッセルのバトルを「エピックなデュエル」と評価。「19歳とは思えないほど落ち着いて成熟した対応を見せた」「若くしてこれだけ状況をコントロールし、ミスから学べるのは並大抵じゃない」と冷静さを称賛し、「これが続けば、本当にマックス・フェルスタッペンの後継者を手にすることになるかもしれない」と語った。チームメイトのラッセルに絶えず圧力をかけ続け4連勝を達成したアントネッリへの賛辞となった。",
+    date: "2026年5月25日",
+    url: "https://www.motorsport.com/f1/news/ralf-schumacher-claims-kimi-antonelli-could-become-f1s-next-max-verstappen/10823998/",
+    imageUrl:
+      "https://cdn-1.motorsport.com/images/amp/0ZqA4yN6/s1000/andrea-kimi-antonelli-mercedes.webp",
+  },
+  {
+    category: "F1",
+    source: "motorsport.com",
+    title:
+      "ラッセル、ヘッドレスト投げ捨てでFIAから罰金＋公の謝罪",
+    summary:
+      "カナダGPでパワーユニット故障によりリードからリタイアしたラッセルが、感情のままヘッドレストをコース上へ投げ捨てた行為について、FIAから5,000ユーロの罰金（12ヶ月の執行猶予付き）を科された。本人はSNSで「マーシャルとFIAの仕事を、必要以上に大変にしてしまった。あの瞬間は感情が抑えきれなかった。本当に申し訳ない」と公に謝罪。FIAステュワードに対しても「お恥ずかしい行為だった」と認め、自ら公開謝罪を申し出たという。",
+    date: "2026年5月25日",
+    url: "https://www.motorsport.com/f1/news/george-russell-issues-fia-apology-after-canadian-gp-fine/10824143/",
+    imageUrl:
+      "https://cdn-6.motorsport.com/images/amp/YpbP5kX0/s2/george-russell-mercedes.jpg",
+  },
+  {
+    category: "F1",
+    source: "autosport.com",
+    title:
+      "ラッセル「2026年レギュレーションは変えるべきじゃない」アントネッリとの名バトルを称賛",
+    summary:
+      "リードからのリタイアという悔しい結果に終わったラッセルだが、アントネッリとのバトルは「ここ数年で味わったことがないような最高の戦いだった。本当に大好きだった」と絶賛。批判の多い2026年の新エンジン規則についても「この新しいパワーユニットがあるからこそ、こんなバトルが可能になる」と擁護し、ルール変更には明確に反対する姿勢を示した。メルセデスが新規則への批判を抑えるよう他チームを説得した数少ない陣営の一つであることも報じられている。",
+    date: "2026年5月25日",
+    url: "https://www.autosport.com/f1/news/why-george-russell-doesnt-want-to-see-the-2026-f1-rules-changed/10824151/",
+    imageUrl:
+      "https://cdn-3.motorsport.com/images/amp/0ZqA4546/s1000/george-russell-mercedes.webp",
+  },
+  {
     category: "INDY",
     source: "Motorsport.com",
     title:
@@ -578,6 +614,7 @@ export const news: NewsItem[] = [
     imageUrl:
       "https://cdn.racingnews365.com/2026/Formula-2/Tsolov.jpg?v=1777733213&width=1800&height=945&quality=75&crop=3780%2C1985%2C0%2C267",
   },
+  /* ARCHIVED 2026-05-27: F1上限9件超過のため最古を退避
   {
     category: "F1",
     source: "Formula1.com",
@@ -589,6 +626,7 @@ export const news: NewsItem[] = [
     imageUrl:
       "https://media.formula1.com/image/upload/t_16by9Centre/c_lfill,w_2048/q_auto/v1740000001/trackside-images/2026/F1_Grand_Prix_of_Canada___Sprint__Qualifying/2277841936.webp",
   },
+  */
   {
     category: "F3",
     source: "Pit Debrief",
@@ -601,6 +639,7 @@ export const news: NewsItem[] = [
     imageUrl:
       "https://i0.wp.com/topnews.jp/wp-content/uploads/2026/05/taitokato_F3test_austria.jpg",
   },
+  /* ARCHIVED 2026-05-27: F1上限9件超過のため最古を退避
   {
     category: "F1",
     source: "Sky Sports",
@@ -613,6 +652,7 @@ export const news: NewsItem[] = [
     imageUrl:
       "https://e0.365dm.com/26/05/1600x900/skysports-f1-max-verstappen_7256904.jpg?20260524020107",
   },
+  */
   {
     category: "F2",
     source: "FIA Formula 2",
@@ -625,6 +665,7 @@ export const news: NewsItem[] = [
     imageUrl:
       "https://res.cloudinary.com/prod-f2f3/image/upload/ar_16:9,dpr_1.0,c_fill,f_auto,g_auto,q_auto,w_980/v1777980338/f2/global/articles/2026/05_May/GettyImages-2274301399",
   },
+  /* ARCHIVED 2026-05-27: F1上限9件超過のため最古を退避
   {
     category: "F1",
     source: "Formula1.com",
@@ -637,6 +678,7 @@ export const news: NewsItem[] = [
     imageUrl:
       "https://media.formula1.com/image/upload/c_lfill,w_2048/q_auto/v1740000001/fom-website/2026/Miami/16x9%20single%20image%20-%202026-05-03T195302.163.webp",
   },
+  */
   {
     category: "INDY",
     source: "Motorsport.com",
