@@ -41,10 +41,24 @@ export default function HomePage() {
       <section className="max-w-[1280px] mx-auto px-6 pt-8 pb-4 relative z-[1]">
         <div className="text-center mb-8 flex flex-col items-center">
           <MainLogo width={260} />
-          <h2 className="font-bold text-lg md:text-xl mt-2 text-white">
+          <h2
+            className="mt-2 text-5xl md:text-6xl"
+            style={{
+              fontFamily: "var(--font-mplus-1p), sans-serif",
+              fontWeight: 900,
+              letterSpacing: "0.08em",
+              backgroundImage:
+                "linear-gradient(135deg, #ffffff 0%, #E10600 50%, #ff4444 100%)",
+              WebkitBackgroundClip: "text",
+              backgroundClip: "text",
+              color: "transparent",
+              WebkitTextFillColor: "transparent",
+              filter: "drop-shadow(0 0 30px rgba(225,6,0,0.4))",
+            }}
+          >
             フォーミュラ研究所
           </h2>
-          <p className="text-xs md:text-sm text-flabo-grey mt-1">
+          <p className="text-xs md:text-sm text-flabo-grey mt-2">
             F1・F2・F3・スーパーフォーミュラ・インディカー
           </p>
         </div>
