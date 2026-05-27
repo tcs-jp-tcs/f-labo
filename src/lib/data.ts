@@ -413,18 +413,6 @@ export const thisWeekendBroadcasts: WeekendBroadcast[] = [
 export const news: NewsItem[] = [
   {
     category: "F1",
-    source: "Formula1.com",
-    title:
-      "カナダGP決勝：アントネッリがF1史上初のキャリア初4連勝、ラッセルはリードからリタイア",
-    summary:
-      "ポールスタートのラッセルが序盤に首位を奪い返したが、31周目にパワーロスでリタイア。代わって首位に立ったアントネッリが残りラップを支配し、中国・日本・マイアミに続く4連勝を達成。デビューシーズン4連勝はF1史上初の偉業となった。2位は今季ベストのハミルトン(+10.768)、3位フェルスタッペン(+11.276)、4位ルクレール(+44.151)、5位ハジャー、6位コラピント。ノリスはギアボックストラブルでDNF、ピアストリはアルボン接触のペナルティで11位に沈んだ。アントネッリは選手権リードを43ポイントに拡大。",
-    date: "2026年5月25日",
-    url: "https://www.formula1.com/en/latest/article/live-coverage-formula-1-lenovo-grand-prix-du-canada-2026.7m4KTueNNOQnM0HuMqI1RW",
-    imageUrl:
-      "https://media.formula1.com/image/upload/t_16by9Centre/c_fill,w_2048/q_auto/v1740000001/trackside-images/2026/F1_Grand_Prix_of_Canada/2278029679.webp",
-  },
-  {
-    category: "F1",
     source: "motorsport.com",
     title:
       "ラルフ・シューマッハ「アントネッリはフェルスタッペンの後継者になれる」",
@@ -434,6 +422,18 @@ export const news: NewsItem[] = [
     url: "https://www.motorsport.com/f1/news/ralf-schumacher-claims-kimi-antonelli-could-become-f1s-next-max-verstappen/10823998/",
     imageUrl:
       "https://cdn-1.motorsport.com/images/amp/0ZqA4yN6/s1000/andrea-kimi-antonelli-mercedes.webp",
+  },
+  {
+    category: "F1",
+    source: "Formula1.com",
+    title:
+      "カナダGP決勝：アントネッリがF1史上初のキャリア初4連勝、ラッセルはリードからリタイア",
+    summary:
+      "ポールスタートのラッセルが序盤に首位を奪い返したが、31周目にパワーロスでリタイア。代わって首位に立ったアントネッリが残りラップを支配し、中国・日本・マイアミに続く4連勝を達成。デビューシーズン4連勝はF1史上初の偉業となった。2位は今季ベストのハミルトン(+10.768)、3位フェルスタッペン(+11.276)、4位ルクレール(+44.151)、5位ハジャー、6位コラピント。ノリスはギアボックストラブルでDNF、ピアストリはアルボン接触のペナルティで11位に沈んだ。アントネッリは選手権リードを43ポイントに拡大。",
+    date: "2026年5月25日",
+    url: "https://www.formula1.com/en/latest/article/live-coverage-formula-1-lenovo-grand-prix-du-canada-2026.7m4KTueNNOQnM0HuMqI1RW",
+    imageUrl:
+      "https://media.formula1.com/image/upload/t_16by9Centre/c_fill,w_2048/q_auto/v1740000001/trackside-images/2026/F1_Grand_Prix_of_Canada/2278029679.webp",
   },
   {
     category: "F1",
