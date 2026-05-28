@@ -22,7 +22,7 @@ export default function ReviewPage() {
     <Section>
       <SectionHeader title="レースレビュー" />
       <p className="text-flabo-grey text-sm mb-6">
-        Fラボ独自の視点でまとめるレース後の振り返り記事。F1とスーパーフォーミュラを中心に、現地映像・公式記者会見・各種一次情報をもとに執筆しています。
+        Fラボ独自の視点でまとめるレース後の振り返り記事。
       </p>
       <SeriesTabs tabs={TABS} active={tab} onChange={setTab} />
       {filtered.length === 0 ? (

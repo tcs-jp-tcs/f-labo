@@ -422,7 +422,7 @@ export const news: NewsItem[] = [
     date: "2026年5月26日",
     url: "https://www.motorsport.com/f1/news/mercedes-knows-it-may-have-to-turn-russell-antonelli-fight-down-a-notch/10824231/",
     imageUrl:
-      "https://cdn-1.motorsport.com/images/amp/0ZqA4yN6/s1000/andrea-kimi-antonelli-mercedes.webp",
+      "https://cdn-5.motorsport.com/images/amp/2GdwQvVY/s6/andrea-kimi-antonelli-mercedes-2.jpg",
   },
   {
     category: "F1",
