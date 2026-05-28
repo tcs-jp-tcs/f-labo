@@ -49,6 +49,7 @@ export type ScheduleItem = {
 export type BroadcastSession = {
   session: string;
   date: string;
+  localTime?: string;
   jst: string;
   channels: Record<string, boolean>;
 };
@@ -398,11 +399,11 @@ export const thisWeekendBroadcasts: WeekendBroadcast[] = [
     channels: ["GAORA", "GAORAオンデマンド"],
     note: "ストリート・コース100周。決勝は日本時間 6/1(月) 深夜1:30スタート。GAORA SPORTS／GAORAオンデマンドで全セッション中継。",
     sessions: [
-      { session: "プラクティス1", date: "5/30 (土)", jst: "早朝4:00 ET 15:00", channels: { GAORA: true, "GAORAオンデマンド": true } },
-      { session: "プラクティス2", date: "5/30 (土)", jst: "22:00 ET 9:00", channels: { GAORA: true, "GAORAオンデマンド": true } },
-      { session: "予選", date: "5/31 (日)", jst: "深夜2:00 ET 13:00", channels: { GAORA: true, "GAORAオンデマンド": true } },
-      { session: "ウォームアップ", date: "5/31 (日)", jst: "22:30 ET 9:30", channels: { GAORA: true, "GAORAオンデマンド": true } },
-      { session: "🏁 決勝（100 LAP）", date: "6/1 (月)", jst: "深夜1:30 ET 12:30", channels: { GAORA: true, "GAORAオンデマンド": true } },
+      { session: "プラクティス1", date: "5/30 (土)", localTime: "15:00", jst: "早朝4:00", channels: { GAORA: true, "GAORAオンデマンド": true } },
+      { session: "プラクティス2", date: "5/30 (土)", localTime: "09:00", jst: "22:00", channels: { GAORA: true, "GAORAオンデマンド": true } },
+      { session: "予選", date: "5/31 (日)", localTime: "13:00", jst: "深夜2:00", channels: { GAORA: true, "GAORAオンデマンド": true } },
+      { session: "ウォームアップ", date: "5/31 (日)", localTime: "09:30", jst: "22:30", channels: { GAORA: true, "GAORAオンデマンド": true } },
+      { session: "🏁 決勝（100 LAP）", date: "6/1 (月)", localTime: "12:30", jst: "深夜1:30", channels: { GAORA: true, "GAORAオンデマンド": true } },
     ],
   },
 ];
@@ -415,6 +416,43 @@ export const news: NewsItem[] = [
     category: "F1",
     source: "motorsport.com",
     title:
+      "ウォルフ「アントネッリvsラッセルのバトルをトーンダウンさせる可能性」2016年ロズベルグ再来を警戒",
+    summary:
+      "カナダGPでチーム内バトルが激化したメルセデス。スプリントでの接触、決勝24周目のシケインでの接触を経て、トト・ウォルフ代表は「ペースアドバンテージがない場面では戦いをトーンダウンさせる必要があるかもしれない」と発言。2016年ハミルトンvsロズベルグの再来は避けたい意向で、ラッセルとアントネッリの“自由な戦い”に一定の線引きを示唆。「2人とも素晴らしいレースを見せたが、チームに損失を生むような戦いを続けるわけにはいかない」と説明した。",
+    date: "2026年5月26日",
+    url: "https://www.motorsport.com/f1/news/mercedes-knows-it-may-have-to-turn-russell-antonelli-fight-down-a-notch/10824231/",
+    imageUrl:
+      "https://cdn-1.motorsport.com/images/amp/0ZqA4yN6/s1000/andrea-kimi-antonelli-mercedes.webp",
+  },
+  {
+    category: "F1",
+    source: "Formula1.com",
+    title:
+      "ロス・ブラウン、MotoGPプラマック・レーシング取締役に就任。Liberty Media傘下で“横展開”",
+    summary:
+      "F1で22のワールドタイトル獲得に貢献した名将ロス・ブラウンが、MotoGPのプラマック・レーシング（ヤマハサテライト）の取締役に就任することが発表された。チーム代表ゲンマ・カンピノーティの戦略アドバイザーとして活動する。MotoGPもLiberty Mediaの傘下に入ったことが背景にあり、F1での経験を二輪世界選手権に持ち込む形となる。ブラウンはベネトン、フェラーリ、ホンダ、ブラウンGP、メルセデスでチーム代表や技術ディレクターを歴任した伝説的人物。",
+    date: "2026年5月26日",
+    url: "https://www.formula1.com/en/latest/article/f1-legend-brawn-makes-motorsport-return-with-motogp-team-role.67HZiRZRy1m5sNZxfYq1Fh",
+    imageUrl:
+      "https://media.formula1.com/image/upload/c_lfill,w_2048/q_auto/v1740000001/fom-website/2026/Miscellaneous/Ross-Brawn.webp",
+  },
+  {
+    category: "F1",
+    source: "The Race",
+    title:
+      "ルクレール「フェラーリPUは馬力で劣る」カナダGPは「F1キャリアで最悪の週末」",
+    summary:
+      "カナダGPで4位ながら週末を通して苦戦したルクレールが、レース後に「最後の15周はトップから1〜1.5秒落ちのペースで走るしかなかった」「予選は壁に当たるかP8かというギリギリだった。F1キャリアで最悪の週末」と告白。フェラーリのパワーユニットについて「メルセデス、レッドブルに対して馬力で明確に劣っている」と認めた。同じマシンでハミルトンが2位を獲得した中、自身の不調と車両特性のミスマッチに苦悩する内容となった。",
+    date: "2026年5月25日",
+    url: "https://www.the-race.com/formula-1/f1-2026-canadian-grand-prix-everything-we-learned/",
+    imageUrl:
+      "https://cdn-3.motorsport.com/images/amp/0ZqA4546/s1000/charles-leclerc-ferrari.webp",
+  },
+  /* ARCHIVED 2026-05-28: F1上限超過につき退避
+  {
+    category: "F1",
+    source: "motorsport.com",
+    title:
       "ラルフ・シューマッハ「アントネッリはフェルスタッペンの後継者になれる」",
     summary:
       "ラルフ・シューマッハがカナダGPでのアントネッリとラッセルのバトルを「エピックなデュエル」と評価。「19歳とは思えないほど落ち着いて成熟した対応を見せた」「若くしてこれだけ状況をコントロールし、ミスから学べるのは並大抵じゃない」と冷静さを称賛し、「これが続けば、本当にマックス・フェルスタッペンの後継者を手にすることになるかもしれない」と語った。チームメイトのラッセルに絶えず圧力をかけ続け4連勝を達成したアントネッリへの賛辞となった。",
@@ -423,6 +461,7 @@ export const news: NewsItem[] = [
     imageUrl:
       "https://cdn-1.motorsport.com/images/amp/0ZqA4yN6/s1000/andrea-kimi-antonelli-mercedes.webp",
   },
+  */
   {
     category: "F1",
     source: "Formula1.com",
@@ -435,6 +474,7 @@ export const news: NewsItem[] = [
     imageUrl:
       "https://media.formula1.com/image/upload/t_16by9Centre/c_fill,w_2048/q_auto/v1740000001/trackside-images/2026/F1_Grand_Prix_of_Canada/2278029679.webp",
   },
+  /* ARCHIVED 2026-05-28: F1上限超過につき退避
   {
     category: "F1",
     source: "motorsport.com",
@@ -459,6 +499,7 @@ export const news: NewsItem[] = [
     imageUrl:
       "https://cdn-3.motorsport.com/images/amp/0ZqA4546/s1000/george-russell-mercedes.webp",
   },
+  */
   {
     category: "F1",
     source: "Formula1.com",
@@ -471,6 +512,7 @@ export const news: NewsItem[] = [
     imageUrl:
       "https://media.formula1.com/image/upload/t_16by9Centre/c_lfill,w_2048/q_auto/v1740000001/trackside-images/2026/F1_Grand_Prix_of_Canada/2278032049.webp",
   },
+  /* ARCHIVED 2026-05-28: F1上限超過につき退避
   {
     category: "F1",
     source: "Formula1.com",
@@ -483,6 +525,7 @@ export const news: NewsItem[] = [
     imageUrl:
       "https://media.formula1.com/image/upload/t_16by9North/c_lfill,w_2048/q_auto/v1740000001/trackside-images/2026/F1_Grand_Prix_of_Canada/2278036032.webp",
   },
+  */
   {
     category: "F1",
     source: "Formula1.com",
@@ -521,6 +564,18 @@ export const news: NewsItem[] = [
   },
   {
     category: "SF",
+    source: "as-web.jp",
+    title:
+      "SF鈴鹿Rd.5：野中誠太がRd.4の130Rクラッシュから即日復帰で完走。「突然リヤが抜けて恐ろしかった」精密検査経て翌日Rd.5へ",
+    summary:
+      "5月23日の鈴鹿Rd.4で130R進入直前にリヤウイングが脱落しスピン→バリアに激突した野中誠太（KCMG）。左足を痛めて精密検査を受けたが、翌24日のRd.5にレース復帰し完走を果たした。本人はレース後「身体は大丈夫。突然リヤが抜けて本当に恐ろしかった。それでも翌日に戻ってこられて良かった」とコメント。KCMGはRd.4/Rd.5でも野中の継続起用を発表しており、第6戦以降のシート確保に向けて存在感を残す週末となった。Rd.5の優勝は福住仁嶺（NTT docomo Business ROOKIE）、2位岩佐歩夢、3位太田格之進。",
+    date: "2026年5月24日",
+    url: "https://www.as-web.jp/super-formula/1318823",
+    imageUrl:
+      "https://cdn-2.motorsport.com/images/amp/0qgP47wY/s6/sacha-fenestraz-vantelin-team-.jpg",
+  },
+  {
+    category: "SF",
     source: "motorsport.com",
     title:
       "SF鈴鹿Rd.5：福住仁嶺がポール・トゥ・ウインで今季初優勝、ROOKIE Racing初勝利",
@@ -540,6 +595,18 @@ export const news: NewsItem[] = [
       "5年ぶりの優勝でROOKIE Racingに参戦初勝利をもたらした福住仁嶺は「自分自身にとって久しぶりの優勝、チームにとっては今日が初ポール初優勝。チームの皆さんにとって素敵な日になったと思うので、おめでとうという気持ちでいっぱい」と決勝後会見でコメント。「みんなの気持ちが一丸となれたからこそ、この1勝がある。本当にチームのおかげ」と感謝を述べ、オーナーの豊田章男氏（モリゾウ）に触れて「まだ話していないけど、どんなご褒美が待ってるかな。後で連絡します(笑)」とユーモアを交えた。",
     date: "2026年5月24日",
     url: "https://www.fmotor.jp/2026-sf-rd5-winners",
+    imageUrl:
+      "https://cdn-2.motorsport.com/images/amp/0qgP47wY/s6/sacha-fenestraz-vantelin-team-.jpg",
+  },
+  {
+    category: "SF",
+    source: "as-web.jp",
+    title:
+      "SF鈴鹿Rd.4：復帰の松下信治が2位表彰台、DELiGHTWORKSにデビューイヤー初表彰台「ロジックなし、勘です」",
+    summary:
+      "5月23日の鈴鹿Rd.4は途中で小雨が舞う大波乱の展開。13番手スタートの松下信治（DELiGHTWORKS RACING）が、ドライ継続のステイアウト戦略でじわじわとポジションを上げ、2セーフティカー絡みの混乱を切り抜けて2位フィニッシュ。今季SFに復帰した松下にとっては、新生DELiGHTWORKSに参戦初年度初表彰台をもたらす象徴的な結果となった。決勝後の会見では「明確なロジックはなくて……勘です」とユーモアたっぷりにタイヤ戦略を振り返り、エンジニアとの土壇場のやりとりが勝負を分けたと明かした。優勝は14番手から逆転したS.フェネストラズ（TOM'S）、3位は坪井翔。",
+    date: "2026年5月23日",
+    url: "https://www.as-web.jp/super-formula/1318820",
     imageUrl:
       "https://cdn-2.motorsport.com/images/amp/0qgP47wY/s6/sacha-fenestraz-vantelin-team-.jpg",
   },
@@ -591,6 +658,7 @@ export const news: NewsItem[] = [
     imageUrl:
       "https://res.cloudinary.com/prod-f2f3/ar_16:9,c_fill,dpr_1.0,f_auto,g_auto,h_563,w_1000/v1/f2/global/articles/2026/05_May/GettyImages-2277994353",
   },
+  /* ARCHIVED 2026-05-28: F1上限超過につき退避
   {
     category: "F1",
     source: "Formula1.com",
@@ -603,6 +671,7 @@ export const news: NewsItem[] = [
     imageUrl:
       "https://media.formula1.com/image/upload/t_16by9Centre/c_lfill,w_2048/q_auto/v1740000001/trackside-images/2026/F1_Grand_Prix_of_Canada___Sprint__Qualifying/2277884971.webp",
   },
+  */
   {
     category: "F2",
     source: "RacingNews365",

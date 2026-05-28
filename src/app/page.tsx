@@ -96,9 +96,9 @@ export default function HomePage() {
       {/* Broadcast */}
       <Section>
         <SectionHeader
-          title="📺 今週末の放送予定"
+          title="📺 今週のレース予定"
           seeAllHref="/schedule"
-          seeAllLabel="全放送予定 →"
+          seeAllLabel="スケジュール →"
         />
         {thisWeekendBroadcasts.length > 0 ? (
           <div className="grid grid-cols-1 gap-4">
