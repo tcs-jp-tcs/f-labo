@@ -24,12 +24,7 @@ export default function NewsCard({ item }: { item: NewsItem }) {
   return (
     <div className="group flex flex-col rounded-xl border border-white/5 bg-flabo-carbon overflow-hidden transition-all duration-300 hover:border-flabo-red/60 hover:-translate-y-0.5">
       <div className={`h-1.5 ${CATEGORY_BAR[item.category]}`} aria-hidden />
-      <a
-        href={item.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="p-5 flex flex-col flex-1 gap-2.5"
-      >
+      <div className="p-5 flex flex-col flex-1 gap-2.5">
         <div className="flex items-center gap-2 flex-wrap">
           <span
             className={`font-display tracking-[0.18em] text-[0.55rem] px-1.5 py-0.5 rounded ${CATEGORY_CHIP[item.category]}`}
@@ -46,21 +41,28 @@ export default function NewsCard({ item }: { item: NewsItem }) {
         <p className="text-[0.78rem] leading-relaxed text-white/65 flex-1">
           {item.summary}
         </p>
-        <div className="mt-1 flex items-center justify-between">
+        <div className="mt-1 flex items-center justify-between gap-3">
           <span className="text-[0.7rem] text-flabo-grey">{item.date}</span>
-          <span className="font-display tracking-[0.18em] text-[0.55rem] text-flabo-grey group-hover:text-flabo-red transition-colors">
-            元記事 ↗
-          </span>
+          <div className="flex items-center gap-3 font-display tracking-[0.18em] text-[0.55rem]">
+            {hasTranslation && (
+              <Link
+                href={`/news/${item.id}`}
+                className="text-flabo-grey hover:text-flabo-red transition-colors"
+              >
+                翻訳を読む ↗
+              </Link>
+            )}
+            <a
+              href={item.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-flabo-grey hover:text-flabo-red transition-colors"
+            >
+              元記事を読む ↗
+            </a>
+          </div>
         </div>
-      </a>
-      {hasTranslation && (
-        <Link
-          href={`/news/${item.id}`}
-          className="flex items-center justify-center gap-1.5 px-5 py-2.5 border-t border-white/5 bg-flabo-red/10 text-flabo-red font-display tracking-[0.18em] text-[0.6rem] hover:bg-flabo-red/20 transition-colors"
-        >
-          翻訳を読む →
-        </Link>
-      )}
+      </div>
     </div>
   );
 }
