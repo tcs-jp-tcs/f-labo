@@ -19,6 +19,9 @@ import {
 import type { Series } from "@/lib/data";
 import { getActiveNews } from "@/lib/news";
 
+// ホームのニュース（ヒーロー＋最新3件）をSupabaseの最新状態で反映（静的化させない）
+export const revalidate = 0;
+
 export default async function HomePage() {
   const homeNews = await getActiveNews();
   const featuredNews = homeNews[0];

@@ -46,7 +46,7 @@ export default async function NewsDetailPage({
         {/* commentary: 冒頭の注記ボックス */}
         {isCommentary && (
           <div className="mb-8 rounded-xl border border-white/10 bg-flabo-carbon p-4 text-[0.82rem] leading-relaxed text-white/75">
-            📝 この記事は {item.source} の報道をもとに、Fラボが独自に要点をまとめた解説です。全文は
+            📝 この記事は {item.source} の記事をもとに、Fラボが独自に要点をまとめた解説です。全文は
             <a
               href={item.url}
               target="_blank"
