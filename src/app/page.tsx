@@ -12,16 +12,17 @@ import MainLogo from "@/components/MainLogo";
 import {
   recentResults,
   schedules,
-  news,
   standings,
   thisWeekendBroadcasts,
   seriesLabel,
 } from "@/lib/data";
 import type { Series } from "@/lib/data";
+import { getActiveNews } from "@/lib/news";
 
-export default function HomePage() {
-  const featuredNews = news[0];
-  const restHomeNews = news.slice(1, 4);
+export default async function HomePage() {
+  const homeNews = await getActiveNews();
+  const featuredNews = homeNews[0];
+  const restHomeNews = homeNews.slice(1, 4);
   const latestF1Race = recentResults.find(
     (r) => r.series === "F1" && r.raceType === "決勝" && r.podium.length > 0,
   );
@@ -63,7 +64,7 @@ export default function HomePage() {
           </p>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-5">
-          <HeroFeature item={featuredNews} />
+          {featuredNews && <HeroFeature item={featuredNews} />}
           <div className="flex flex-col gap-3.5">
             <PodiumCard
               title={`🏆 ${sidebarResult.gpName}${
