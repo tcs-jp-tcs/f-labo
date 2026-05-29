@@ -65,7 +65,11 @@ export type WeekendBroadcast = {
   note?: string;
 };
 
+export type NewsContentType = "translation" | "commentary";
+
 export type NewsItem = {
+  /** Supabase の行ID（DB取得時のみ存在）。/news/[id] 導線に使用 */
+  id?: number;
   category: Series | "F2/F3";
   source: string;
   title: string;
@@ -73,6 +77,10 @@ export type NewsItem = {
   date: string;
   url: string;
   imageUrl?: string;
+  /** 翻訳/解説の全文（Markdown）。入っている記事だけ「翻訳を読む」導線を出す */
+  translationBody?: string;
+  /** 'translation'=公式PRの全文翻訳 / 'commentary'=商業メディアをもとにした独自解説 */
+  contentType?: NewsContentType;
 };
 
 export type ReviewCategory = "F1" | "SF";

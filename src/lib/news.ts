@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { supabase } from "@/lib/supabase";
-import type { NewsItem } from "@/lib/data";
+import type { NewsContentType, NewsItem } from "@/lib/data";
 
 /**
  * Supabase news テーブルから記事を取得するデータアクセス層。
@@ -12,6 +12,7 @@ import type { NewsItem } from "@/lib/data";
 
 /** DB の news 行（読み取りに使うカラムのみ） */
 type NewsRow = {
+  id: number;
   category: string;
   title: string;
   summary: string | null;
@@ -19,6 +20,8 @@ type NewsRow = {
   source_url: string | null;
   thumbnail_url: string | null;
   published_at: string | null;
+  translation_body: string | null;
+  content_type: string | null;
 };
 
 /** published_at(ISO) → 表示用「2026年5月26日」(JST) に整形 */
@@ -37,7 +40,12 @@ function formatJpDate(iso: string | null): string {
 
 /** DB 行 → 既存の NewsItem 型に変換 */
 function toNewsItem(row: NewsRow): NewsItem {
+  const contentType =
+    row.content_type === "translation" || row.content_type === "commentary"
+      ? (row.content_type as NewsContentType)
+      : undefined;
   return {
+    id: row.id,
     category: row.category as NewsItem["category"],
     source: row.source_name ?? "",
     title: row.title,
@@ -45,11 +53,13 @@ function toNewsItem(row: NewsRow): NewsItem {
     date: formatJpDate(row.published_at),
     url: row.source_url ?? "",
     imageUrl: row.thumbnail_url ?? undefined,
+    translationBody: row.translation_body ?? undefined,
+    contentType,
   };
 }
 
 const SELECT_COLUMNS =
-  "category, title, summary, source_name, source_url, thumbnail_url, published_at";
+  "id, category, title, summary, source_name, source_url, thumbnail_url, published_at, translation_body, content_type";
 
 /**
  * archived 状態を指定して記事を取得（published_at DESC、同日内は登録順）。
@@ -91,3 +101,19 @@ export const getActiveNews = cache(
 export const getArchivedNews = cache(
   (category?: string): Promise<NewsItem[]> => fetchNews(true, category),
 );
+
+/** id 指定で記事1件を取得（無ければ null） */
+export const getNewsById = cache(async (id: number): Promise<NewsItem | null> => {
+  if (!Number.isFinite(id)) return null;
+  const { data, error } = await supabase
+    .from("news")
+    .select(SELECT_COLUMNS)
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) {
+    console.error("[news] getNewsById failed:", error.message);
+    return null;
+  }
+  return data ? toNewsItem(data as NewsRow) : null;
+});
