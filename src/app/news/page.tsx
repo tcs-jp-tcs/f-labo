@@ -8,7 +8,11 @@ export default async function NewsPage() {
 
   return (
     <Section>
-      <SectionHeader title="ニュース" />
+      <SectionHeader
+        title="ニュース"
+        seeAllHref="/news/archive"
+        seeAllLabel="アーカイブを見る →"
+      />
       <NewsList items={items} />
     </Section>
   );
