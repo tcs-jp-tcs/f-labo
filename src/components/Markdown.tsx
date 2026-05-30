@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
  * 依存ゼロの軽量 Markdown レンダラ。
  * レビュー記事（/review）本文のタイポグラフィに合わせたスタイルで描画する。
  * 対応: 見出し(#/##/###)、段落、箇条書き(- / *)、番号付き(1.)、引用(>)、
- *       水平線(---)、強調(**bold**)、リンク([text](url))。
+ *       水平線(---)、強調(**bold**)、リンク([text](url))、テーブル(| a | b |)。
  */
 
 /** インライン: **bold** と [text](url) を解釈 */
@@ -185,6 +185,60 @@ export default function Markdown({ content }: { content: string }) {
             <li key={idx}>{renderInline(it, `ol-${key}-${idx}`)}</li>
           ))}
         </ol>,
+      );
+      continue;
+    }
+
+    // テーブル（| a | b | の行 + 2行目が区切り | --- | --- |）
+    if (
+      /^\|.*\|$/.test(t) &&
+      i + 1 < lines.length &&
+      /^\|[\s:|-]+\|$/.test(lines[i + 1].trim())
+    ) {
+      flushPara();
+      const parseRow = (line: string): string[] =>
+        line
+          .trim()
+          .replace(/^\|/, "")
+          .replace(/\|$/, "")
+          .split("|")
+          .map((c) => c.trim());
+      const headers = parseRow(lines[i]);
+      i += 2; // ヘッダ行と区切り行をスキップ
+      const rows: string[][] = [];
+      while (i < lines.length && /^\|.*\|$/.test(lines[i].trim())) {
+        rows.push(parseRow(lines[i]));
+        i++;
+      }
+      const tKey = key++;
+      blocks.push(
+        <div
+          key={`tbl-${tKey}`}
+          className="rounded-xl border border-white/5 bg-flabo-carbon overflow-x-auto"
+        >
+          <table className="w-full text-[0.82rem]">
+            <thead className="text-flabo-grey font-display tracking-[0.12em] text-[0.6rem] uppercase">
+              <tr className="border-b border-white/5">
+                {headers.map((h, hi) => (
+                  <th key={hi} className="px-3 py-2 text-left">
+                    {renderInline(h, `th-${tKey}-${hi}`)}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((cells, ri) => (
+                <tr key={ri} className="border-b border-white/5 last:border-b-0">
+                  {cells.map((c, ci) => (
+                    <td key={ci} className="px-3 py-2 text-white/80">
+                      {renderInline(c, `td-${tKey}-${ri}-${ci}`)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>,
       );
       continue;
     }

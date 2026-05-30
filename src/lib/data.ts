@@ -97,6 +97,12 @@ export type ReviewSummary = {
   date: string;
 };
 
+/** 個別レビューページ用（一覧サマリー + Markdown 本文） */
+export type Review = ReviewSummary & {
+  /** 本文（Markdown）。Supabase reviews テーブルから取得 */
+  body: string;
+};
+
 export type StandingRow = {
   pos: number;
   name: string;

@@ -1,22 +1,13 @@
-"use client";
-
-import { useMemo, useState } from "react";
 import Section from "@/components/Section";
 import SectionHeader from "@/components/SectionHeader";
-import SeriesTabs from "@/components/SeriesTabs";
-import ReviewCard from "@/components/ReviewCard";
-import { reviews } from "@/lib/data";
+import ReviewBrowser from "@/components/ReviewBrowser";
+import { getActiveReviews } from "@/lib/reviews";
 
-const TABS = ["ALL", "F1", "SF"] as const;
-type Tab = (typeof TABS)[number];
+// レビューはSupabaseの最新状態を常に反映（静的化させない）
+export const revalidate = 0;
 
-export default function ReviewPage() {
-  const [tab, setTab] = useState<Tab>("ALL");
-
-  const filtered = useMemo(() => {
-    if (tab === "ALL") return reviews;
-    return reviews.filter((r) => r.category === tab);
-  }, [tab]);
+export default async function ReviewPage() {
+  const items = await getActiveReviews();
 
   return (
     <Section>
@@ -24,16 +15,7 @@ export default function ReviewPage() {
       <p className="text-flabo-grey text-sm mb-6">
         Fラボ独自の視点でまとめるレース後の振り返り記事。
       </p>
-      <SeriesTabs tabs={TABS} active={tab} onChange={setTab} />
-      {filtered.length === 0 ? (
-        <p className="text-flabo-grey text-sm">該当するレビュー記事はまだありません。</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
-          {filtered.map((r) => (
-            <ReviewCard key={r.slug} item={r} />
-          ))}
-        </div>
-      )}
+      <ReviewBrowser items={items} />
     </Section>
   );
 }
