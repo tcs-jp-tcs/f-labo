@@ -1,4 +1,13 @@
-import { seriesLabel, type WeekendBroadcast } from "@/lib/data";
+import { seriesLabel, type Series, type WeekendBroadcast } from "@/lib/data";
+
+// カテゴリバッジ配色：/news のカテゴリチップ（NewsCard）と統一（F1赤 / F2・F3青 / SF黄 / INDY緑）
+const SERIES_CHIP: Record<Series, string> = {
+  F1: "bg-flabo-red/15 text-flabo-red",
+  F2: "bg-flabo-blue/15 text-flabo-blue",
+  F3: "bg-flabo-blue/15 text-flabo-blue",
+  SF: "bg-flabo-yellow/15 text-flabo-yellow",
+  INDY: "bg-flabo-green/15 text-flabo-green",
+};
 
 export default function BroadcastTable({ weekend }: { weekend: WeekendBroadcast }) {
   const cols = weekend.channels.length;
@@ -17,8 +26,8 @@ export default function BroadcastTable({ weekend }: { weekend: WeekendBroadcast 
     <div className="rounded-xl border border-white/5 bg-flabo-carbon overflow-hidden">
       <div className="px-5 py-4 flex flex-col gap-2 md:flex-row md:items-center md:justify-between border-b border-white/5 bg-gradient-to-r from-flabo-red/10 to-transparent">
         <span className="font-bold text-base flex items-center gap-2 flex-wrap">
-          {/* カテゴリバッジ：/news のカテゴリタブと同じ flabo-red 系で統一 */}
-          <span className="font-display tracking-[0.18em] text-[0.6rem] rounded-md px-2 py-0.5 bg-flabo-red text-white shrink-0">
+          {/* カテゴリバッジ：/news のカテゴリチップと同じシリーズ別配色で統一 */}
+          <span className={`font-display tracking-[0.18em] text-[0.6rem] rounded-md px-2 py-0.5 shrink-0 ${SERIES_CHIP[weekend.series]}`}>
             {seriesLabel[weekend.series]}
           </span>
           <span aria-hidden>{weekend.flag}</span> {weekend.gpName} — Round {weekend.round}
