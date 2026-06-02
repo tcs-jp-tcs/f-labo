@@ -459,13 +459,12 @@ export const thisWeekendBroadcasts: WeekendBroadcast[] = [
     gpName: "ボママリート500（WWT Raceway / Gateway）",
     weekendType: "通常週末",
     channels: ["GAORA", "GAORAオンデマンド"],
-    note: "1周1.25マイルのオーバル。決勝は日本時間 6/8(月) 午前10:00スタート。公式indycar.comはET表記で掲載、会場（イリノイ州マディソン）は中部時間（CT＝ET−1時間）。表は現地(CT)／日本時間。決勝は現地6/7(日)20:00（ET 21:00）。",
+    note: "1周1.25マイルのオーバル。練習・予選・ハイライン練習は現地6/6(土)、決勝のみ現地6/7(日)20:00 CT（=ET21:00）開催。会場（イリノイ州マディソン）は中部時間で日本＝CT＋14時間のため、土曜セッションは日本6/7(日)、決勝は日本6/8(月)午前10:00。出典：WWT Raceway公式 weekend schedule。",
     sessions: [
-      { session: "プラクティス1", date: "6/7 (日)", localTime: "11:30", jst: "深夜1:30", channels: { GAORA: true, "GAORAオンデマンド": true } },
-      { session: "予選", date: "6/7 (日)", localTime: "15:30", jst: "早朝5:30", channels: { GAORA: true, "GAORAオンデマンド": true } },
-      { session: "ハイライン・プラクティス", date: "6/7 (日)", localTime: "19:00", jst: "午前9:00", channels: { GAORA: true, "GAORAオンデマンド": true } },
-      { session: "最終プラクティス", date: "6/7 (日)", localTime: "20:00", jst: "午前10:00", channels: { GAORA: true, "GAORAオンデマンド": true } },
-      { session: "🏁 決勝", date: "6/8 (月)", localTime: "20:00", jst: "午前10:00", channels: { GAORA: true, "GAORAオンデマンド": true } },
+      { session: "プラクティス1", date: "6/7 (日)", localTime: "6/6(土) 11:30", jst: "深夜1:30", channels: { GAORA: true, "GAORAオンデマンド": true } },
+      { session: "予選", date: "6/7 (日)", localTime: "6/6(土) 15:35", jst: "早朝5:35", channels: { GAORA: true, "GAORAオンデマンド": true } },
+      { session: "ハイライン・プラクティス", date: "6/7 (日)", localTime: "6/6(土) 19:05", jst: "午前9:05", channels: { GAORA: true, "GAORAオンデマンド": true } },
+      { session: "🏁 決勝", date: "6/8 (月)", localTime: "6/7(日) 20:00", jst: "午前10:00", channels: { GAORA: true, "GAORAオンデマンド": true } },
     ],
   },
 ];
