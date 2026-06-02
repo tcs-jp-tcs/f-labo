@@ -250,7 +250,7 @@ export const schedules: Record<Series, ScheduleItem[]> = {
           broadcasts: { "フジTV NEXT": "21:20", "FOD": "21:20" } },
       ],
     },
-    { series: "F1", round: 7, country: "Spain", flag: "🇪🇸", name: "スペインGP（バルセロナ）", date: "6月12日〜14日", weekendType: "通常週末", status: "upcoming", broadcast: "FOD / フジテレビNEXT",
+    { series: "F1", round: 7, country: "Spain", flag: "🇪🇸", name: "バルセロナ・カタルーニャGP", date: "6月12日〜14日", weekendType: "通常週末", status: "upcoming", broadcast: "FOD / フジテレビNEXT",
       sessions: [
         { name: "FP1", localDate: "6/12 (金)", localTime: "13:30 - 14:30", jpDate: "6/12 (金)", jpTime: "20:30 - 21:30", type: "practice",
           broadcasts: { "フジTV NEXT": "20:20", "FOD": "20:20" } },
@@ -890,6 +890,17 @@ export const standings: Record<
    RESULTS
    ============================ */
 export const recentResults: RaceResult[] = [
+  {
+    series: "INDY", round: 8, flag: "🇺🇸", gpName: "デトロイトGP",
+    date: "2026年5月31日（日本時間 6/1 早朝）", raceType: "決勝", status: "confirmed",
+    podium: [
+      { pos: 1, driver: "A.パロウ", team: "Chip Ganassi Racing", time: "—" },
+      { pos: 2, driver: "K.カークウッド", team: "Andretti Global", time: "+3.0584" },
+      { pos: 3, driver: "G.レイホール", team: "Rahal Letterman Lanigan", time: "+5.1803" },
+    ],
+    note: "ポール：パロウ（1:01.9017）。パロウは100周中71周をリードし、終盤の連続フルコースコーション／リスタートを制して今季4勝目（通算23勝目）。4位オワード、5位ルンガード、6位ローゼンクヴィスト（インディ500覇者）。パロウは選手権首位をカークウッドに62点差へ拡大、レイホールは2020年以来となる今季3度目の表彰台。",
+    sourceUrl: "https://www.indycar.com/results/ntt-indycar-series/2026/chevrolet-detroit-grand-prix/race",
+  },
   {
     series: "F1", round: 5, flag: "🇨🇦", gpName: "カナダGP",
     date: "2026年5月25日（日本時間 月曜 早朝）", raceType: "決勝", status: "confirmed",

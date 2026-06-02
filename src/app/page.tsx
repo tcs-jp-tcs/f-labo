@@ -26,10 +26,11 @@ export default async function HomePage() {
   const homeNews = await getActiveNews();
   const featuredNews = homeNews[0];
   const restHomeNews = homeNews.slice(1, 4);
-  const latestF1Race = recentResults.find(
-    (r) => r.series === "F1" && r.raceType === "決勝" && r.podium.length > 0,
+  // 直近の本戦（決勝／フィーチャー）を最優先で表示。recentResults は新しい順に並べる運用。
+  const latestRace = recentResults.find(
+    (r) => (r.raceType === "決勝" || r.raceType === "フィーチャー") && r.podium.length > 0,
   );
-  const sidebarResult = latestF1Race ?? recentResults.find((r) => r.podium.length > 0) ?? recentResults[0];
+  const sidebarResult = latestRace ?? recentResults.find((r) => r.podium.length > 0) ?? recentResults[0];
 
   // 直近3レース：最後のpast + next + その次のupcoming（NEXTを中心に前後を取る）
   const allF1 = schedules.F1;
