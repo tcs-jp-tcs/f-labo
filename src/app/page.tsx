@@ -9,21 +9,26 @@ import BroadcastTable from "@/components/BroadcastTable";
 import SectionHeader from "@/components/SectionHeader";
 import Section from "@/components/Section";
 import MainLogo from "@/components/MainLogo";
-import {
-  recentResults,
-  schedules,
-  standings,
-  thisWeekendBroadcasts,
-  seriesLabel,
-} from "@/lib/data";
+import { seriesLabel } from "@/lib/data";
 import type { Series } from "@/lib/data";
 import { getActiveNews } from "@/lib/news";
+import { getRecentResults } from "@/lib/results";
+import { getSchedules } from "@/lib/schedules";
+import { getStandings } from "@/lib/standings";
+import { getThisWeekendBroadcasts } from "@/lib/broadcasts";
 
 // ホームのニュース（ヒーロー＋最新3件）をSupabaseの最新状態で反映（静的化させない）
 export const revalidate = 0;
 
 export default async function HomePage() {
   const homeNews = await getActiveNews();
+  const [recentResults, schedules, standings, thisWeekendBroadcasts] =
+    await Promise.all([
+      getRecentResults(),
+      getSchedules(),
+      getStandings(),
+      getThisWeekendBroadcasts(),
+    ]);
   const featuredNews = homeNews[0];
   const restHomeNews = homeNews.slice(1, 4);
   // 直近の本戦（決勝／フィーチャー）を最優先で表示。recentResults は新しい順に並べる運用。

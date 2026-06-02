@@ -1,9 +1,13 @@
 import Section from "@/components/Section";
 import SectionHeader from "@/components/SectionHeader";
 import PodiumCard from "@/components/PodiumCard";
-import { recentResults, seriesLabel } from "@/lib/data";
+import { seriesLabel } from "@/lib/data";
+import { getRecentResults } from "@/lib/results";
 
-export default function ResultsPage() {
+export const revalidate = 0;
+
+export default async function ResultsPage() {
+  const recentResults = await getRecentResults();
   return (
     <Section>
       <SectionHeader title="レース結果" />
