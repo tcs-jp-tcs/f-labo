@@ -1,4 +1,5 @@
 import type { PodiumRow } from "@/lib/data";
+import CardHeader from "./CardHeader";
 
 const POS_BORDER = [
   "border-l-flabo-yellow",
@@ -16,10 +17,12 @@ export default function PodiumCard({
   note?: string;
 }) {
   return (
-    <div className="rounded-xl border border-white/5 bg-flabo-carbon p-5">
-      <h3 className="font-display tracking-[0.24em] text-[0.65rem] uppercase text-flabo-grey mb-3 flex items-center gap-1.5 flex-wrap">
-        {title}
-      </h3>
+    <div className="rounded-xl border border-white/5 bg-flabo-carbon overflow-hidden">
+      <CardHeader />
+      <div className="p-5">
+        <h3 className="font-display tracking-[0.24em] text-[0.65rem] uppercase text-flabo-grey mb-3 flex items-center gap-1.5 flex-wrap">
+          {title}
+        </h3>
       {podium.length > 0 ? (
         <div className="flex flex-col gap-1.5">
           {podium.map((row, i) => (
@@ -47,11 +50,12 @@ export default function PodiumCard({
           結果待ち
         </p>
       )}
-      {note && (
-        <p className="text-[0.65rem] text-flabo-grey leading-relaxed mt-3 border-t border-white/5 pt-3">
-          {note}
-        </p>
-      )}
+        {note && (
+          <p className="text-[0.65rem] text-flabo-grey leading-relaxed mt-3 border-t border-white/5 pt-3">
+            {note}
+          </p>
+        )}
+      </div>
     </div>
   );
 }

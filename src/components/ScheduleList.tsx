@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { seriesNetworks } from "@/lib/data";
 import type { ScheduleItem, ScheduleResult, ScheduleSession } from "@/lib/data";
+import CardHeader from "./CardHeader";
 
 const STATUS_BADGE: Record<NonNullable<ScheduleItem["status"]>, { label: string; cls: string }> = {
   live: { label: "LIVE", cls: "text-flabo-green bg-flabo-green/15 animate-pulse" },
@@ -95,33 +96,36 @@ export default function ScheduleList({ items }: { items: ScheduleItem[] }) {
               type="button"
               onClick={() => setOpenIndex(isOpen ? -1 : i)}
               aria-expanded={isOpen}
-              className={`w-full text-left relative overflow-hidden rounded-xl border p-5 transition-all duration-300 ${
+              className={`w-full text-left relative overflow-hidden rounded-xl border transition-all duration-300 ${
                 isHighlight
                   ? "bg-gradient-to-br from-flabo-red/10 to-flabo-carbon border-flabo-red"
                   : "bg-flabo-carbon border-white/5 hover:border-flabo-red hover:-translate-y-0.5"
               } ${item.status === "past" ? "opacity-80" : ""} ${isOpen ? "rounded-b-none" : ""}`}
             >
-              {badge && badge.label && (
-                <span className={`absolute top-2.5 right-2.5 font-display font-bold tracking-[0.18em] text-[0.5rem] px-1.5 py-0.5 rounded ${badge.cls}`}>
-                  {badge.label}
-                </span>
-              )}
-              <div className="font-display tracking-[0.18em] text-[0.55rem] text-flabo-grey mb-2">
-                {item.roundLabel ?? `ROUND ${item.round}`}
-                {item.weekendType === "スプリント週末" && (
-                  <span className="ml-2 text-flabo-yellow">SPRINT</span>
+              <CardHeader category={item.series} />
+              <div className="relative p-5">
+                {badge && badge.label && (
+                  <span className={`absolute top-3 right-3 font-display font-bold tracking-[0.18em] text-[0.5rem] px-1.5 py-0.5 rounded ${badge.cls}`}>
+                    {badge.label}
+                  </span>
                 )}
-              </div>
-              <div className="text-xl mb-2.5" aria-hidden>
-                {item.flag}
-              </div>
-              <div className="font-black text-base leading-tight mb-1">{item.name}</div>
-              <div className="text-xs text-flabo-grey">{item.date}</div>
-              <div className="mt-2 text-[0.65rem] text-flabo-green flex items-center gap-1">
-                ✓ {item.broadcast}
-              </div>
-              <div className="mt-3 text-[0.55rem] font-display tracking-[0.18em] text-flabo-grey">
-                {isOpen ? "閉じる ▲" : "詳細を見る ▼"}
+                <div className="font-display tracking-[0.18em] text-[0.55rem] text-flabo-grey mb-2">
+                  {item.roundLabel ?? `ROUND ${item.round}`}
+                  {item.weekendType === "スプリント週末" && (
+                    <span className="ml-2 text-flabo-yellow">SPRINT</span>
+                  )}
+                </div>
+                <div className="text-xl mb-2.5" aria-hidden>
+                  {item.flag}
+                </div>
+                <div className="font-black text-base leading-tight mb-1">{item.name}</div>
+                <div className="text-xs text-flabo-grey">{item.date}</div>
+                <div className="mt-2 text-[0.65rem] text-flabo-green flex items-center gap-1">
+                  ✓ {item.broadcast}
+                </div>
+                <div className="mt-3 text-[0.55rem] font-display tracking-[0.18em] text-flabo-grey">
+                  {isOpen ? "閉じる ▲" : "詳細を見る ▼"}
+                </div>
               </div>
             </button>
 

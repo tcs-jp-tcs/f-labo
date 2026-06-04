@@ -1,4 +1,5 @@
 import type { StandingRow } from "@/lib/data";
+import CardHeader from "./CardHeader";
 
 export default function StandingsCard({
   title,
@@ -26,11 +27,13 @@ export default function StandingsCard({
   };
 
   return (
-    <div className="rounded-xl border border-white/5 bg-flabo-carbon p-5">
-      <h3 className="font-display tracking-[0.24em] text-[0.65rem] uppercase text-flabo-grey mb-3.5">
-        {title}
-      </h3>
-      {rows.map((row) => (
+    <div className="rounded-xl border border-white/5 bg-flabo-carbon overflow-hidden">
+      <CardHeader />
+      <div className="p-5">
+        <h3 className="font-display tracking-[0.24em] text-[0.65rem] uppercase text-flabo-grey mb-3.5">
+          {title}
+        </h3>
+        {rows.map((row) => (
         <div
           key={`${row.pos}-${row.name}`}
           className="flex items-center py-2 border-b border-white/5 last:border-b-0"
@@ -50,7 +53,8 @@ export default function StandingsCard({
             <span className="text-[0.55rem] text-flabo-grey ml-1">pts</span>
           </span>
         </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }

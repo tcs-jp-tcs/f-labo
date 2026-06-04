@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Quiz } from "@/lib/quiz-data";
+import CardHeader from "./CardHeader";
 
 function stars(n: number) {
   return "★".repeat(n) + "☆".repeat(3 - n);
@@ -11,7 +12,7 @@ export default function QuizCard({ item }: { item: Quiz }) {
       href={`/quiz/${item.id}`}
       className="group flex flex-col rounded-xl border border-white/5 bg-flabo-carbon overflow-hidden transition-all duration-300 hover:border-flabo-red/60 hover:-translate-y-0.5"
     >
-      <div className="h-1.5 bg-flabo-red" aria-hidden />
+      <CardHeader label="Fラボ検定" />
       <div className="p-5 flex flex-col flex-1 gap-3">
         <div className="flex items-center gap-2 flex-wrap">
           <span className="font-display tracking-[0.18em] text-[0.55rem] px-1.5 py-0.5 rounded bg-flabo-red/15 text-flabo-red">
