@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 /**
- * ホームの最新動画（YouTube Short）カード。
+ * ホームの人気動画（YouTube Short）カード。
  * インライン再生はせず、サムネ＋▶オーバーレイのクリック可能カード（B案）。
  * タップで YouTube（アプリ or ブラウザ）の Shorts を開く。
  */
@@ -19,13 +19,13 @@ export default function VideoCard() {
   return (
     <div className="mx-auto w-full max-w-[320px]">
       <div className="font-display tracking-[0.24em] text-[0.65rem] uppercase text-flabo-grey mb-2">
-        ▶ 最新動画
+        ▶ 人気動画
       </div>
       <a
         href={SHORTS_URL}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="最新動画を YouTube で見る"
+        aria-label="人気動画を YouTube で見る"
         className="group block relative overflow-hidden rounded-xl border border-white/5 bg-flabo-carbon aspect-[9/16] transition-all duration-300 hover:border-flabo-red/60 hover:-translate-y-0.5"
       >
         {/* サムネ（自動サムネは16:9なので cover で縦カードに収める） */}
@@ -33,7 +33,7 @@ export default function VideoCard() {
         <img
           src={thumb}
           onError={() => setThumb((cur) => (cur === THUMB_HQ ? cur : THUMB_HQ))}
-          alt="最新動画のサムネイル"
+          alt="人気動画のサムネイル"
           className="absolute inset-0 w-full h-full object-cover"
         />
         {/* コントラスト用グラデーション（赤×黒の世界観） */}
