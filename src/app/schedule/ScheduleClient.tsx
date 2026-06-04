@@ -71,7 +71,7 @@ export default function ScheduleClient({ schedules, broadcasts }: Props) {
           </div>
         )}
         <p className="text-[0.7rem] text-flabo-grey mt-4 leading-relaxed">
-          時間表記は日本時間（深夜0:30／早朝4:50形式）。F1は2026年からフジテレビ独占（FOD / フジテレビNEXT / フジテレビNEXTsmart）、
+          時間表記は日本時間（0:30／早朝4:50形式）。F1は2026年からフジテレビ独占（FOD / フジテレビNEXT / フジテレビNEXTsmart）、
           スーパーフォーミュラはABEMA（決勝無料）/ J SPORTS / SFgo、
           インディカーはGAORA SPORTS / GAORAオンデマンド、
           F2・F3はFODプロコース以上（F1 TV経由）で視聴可能です。
