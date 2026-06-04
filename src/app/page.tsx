@@ -122,7 +122,7 @@ export default async function HomePage() {
           seeAllLabel="全スケジュールを見る →"
         />
         {weekendItems.length > 0 ? (
-          <ScheduleList items={weekendItems} />
+          <ScheduleList items={weekendItems} variant="weekend" />
         ) : (
           <div className="rounded-xl border border-white/5 bg-flabo-carbon p-5 space-y-3">
             <p className="font-display tracking-[0.18em] text-xs text-flabo-grey uppercase">

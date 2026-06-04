@@ -79,16 +79,30 @@ function FastestLapInline({ fl }: { fl: NonNullable<ScheduleResult["fastestLap"]
   );
 }
 
-export default function ScheduleList({ items }: { items: ScheduleItem[] }) {
+export default function ScheduleList({
+  items,
+  variant = "season",
+}: {
+  items: ScheduleItem[];
+  /**
+   * "season"（既定・/schedule）: NEXT/PASTバッジ表示・NEXT/LIVEを赤枠で強調。
+   * "weekend"（今週のレース予定）: バッジ非表示・赤枠は「開いているカード」だけ
+   *   （全カードが今週なのでNEXT強調は無意味。選択中カードの表示として枠を出す）。
+   */
+  variant?: "season" | "weekend";
+}) {
   const initial = items.findIndex((i) => i.status === "live" || i.status === "next");
   const [openIndex, setOpenIndex] = useState<number>(initial >= 0 ? initial : -1);
+  const isWeekend = variant === "weekend";
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
       {items.map((item, i) => {
         const isOpen = openIndex === i;
-        const badge = item.status ? STATUS_BADGE[item.status] : null;
-        const isHighlight = item.status === "live" || item.status === "next";
+        const badge = !isWeekend && item.status ? STATUS_BADGE[item.status] : null;
+        const isHighlight = isWeekend
+          ? isOpen
+          : item.status === "live" || item.status === "next";
         const networks = item.networks ?? seriesNetworks[item.series] ?? [];
         return (
           <div key={`${item.series}-${item.round}`} className="flex flex-col">
