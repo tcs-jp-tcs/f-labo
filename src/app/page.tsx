@@ -3,6 +3,7 @@ import HeroFeature from "@/components/HeroFeature";
 import PodiumCard from "@/components/PodiumCard";
 import SnsCard from "@/components/SnsCard";
 import VideoCard from "@/components/VideoCard";
+import AmazonPromo from "@/components/AmazonPromo";
 import ScheduleList from "@/components/ScheduleList";
 import NewsCard from "@/components/NewsCard";
 import StandingsCard from "@/components/StandingsCard";
@@ -108,6 +109,11 @@ export default async function HomePage() {
       {/* Latest video (YouTube Short) — FOLLOW US の直下・最新ニュースの上 */}
       <Section className="py-6">
         <VideoCard />
+      </Section>
+
+      {/* Amazon アソシエイト プロモ（最新動画 と 最新ニュース の間） */}
+      <Section className="py-6">
+        <AmazonPromo />
       </Section>
 
       {/* News */}
