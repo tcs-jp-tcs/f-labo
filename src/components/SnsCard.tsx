@@ -1,15 +1,12 @@
 import { sns } from "@/lib/data";
 import { XLogo, InstagramLogo, YouTubeLogo } from "./SnsIcons";
-import CardHeader from "./CardHeader";
 
 export default function SnsCard() {
   return (
-    <div className="rounded-xl border border-white/5 bg-flabo-carbon overflow-hidden">
-      <CardHeader />
-      <div className="p-5 flex flex-col gap-2">
-        <h3 className="font-display tracking-[0.24em] text-[0.65rem] uppercase text-flabo-grey mb-1">
-          📱 Follow Us
-        </h3>
+    <div className="rounded-xl border border-white/5 bg-flabo-carbon p-5 flex flex-col gap-2">
+      <h3 className="font-display tracking-[0.24em] text-[0.65rem] uppercase text-flabo-grey mb-1">
+        📱 Follow Us
+      </h3>
       <a
         href={sns.x.url}
         target="_blank"
@@ -46,7 +43,6 @@ export default function SnsCard() {
         </span>
         <span>{sns.youtube.handle}</span>
       </a>
-      </div>
     </div>
   );
 }

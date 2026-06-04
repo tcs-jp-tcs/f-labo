@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Orbitron, Noto_Sans_JP, M_PLUS_1p } from "next/font/google";
+import { Orbitron, Noto_Sans_JP, M_PLUS_1p, Chakra_Petch } from "next/font/google";
 import Script from "next/script";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -27,6 +27,14 @@ const mPlus1p = M_PLUS_1p({
   variable: "--font-mplus-1p",
   subsets: ["latin"],
   weight: ["900"],
+  display: "swap",
+});
+
+// カードヘッダーのカテゴリーラベル（ワードマーク）専用
+const chakraPetch = Chakra_Petch({
+  variable: "--font-chakra",
+  subsets: ["latin"],
+  weight: ["700"],
   display: "swap",
 });
 
@@ -83,7 +91,7 @@ export default function RootLayout({
   return (
     <html
       lang="ja"
-      className={`${orbitron.variable} ${notoSansJp.variable} ${mPlus1p.variable} h-full antialiased`}
+      className={`${orbitron.variable} ${notoSansJp.variable} ${mPlus1p.variable} ${chakraPetch.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         {/* Google Analytics 4 */}

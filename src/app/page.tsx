@@ -97,6 +97,7 @@ export default async function HomePage() {
               } 結果`}
               podium={sidebarResult.podium}
               note={sidebarResult.note}
+              category={sidebarResult.series}
             />
             <SnsCard />
           </div>

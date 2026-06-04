@@ -41,6 +41,7 @@ export default async function ResultsPage() {
               }
               podium={r.podium}
               note={r.note}
+              category={r.series}
             />
             {r.sourceUrl && (
               <a

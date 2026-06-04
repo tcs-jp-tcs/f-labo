@@ -1,5 +1,5 @@
 import type { PodiumRow } from "@/lib/data";
-import CardHeader from "./CardHeader";
+import CardHeader, { type CardCategory } from "./CardHeader";
 
 const POS_BORDER = [
   "border-l-flabo-yellow",
@@ -11,14 +11,17 @@ export default function PodiumCard({
   title,
   podium,
   note,
+  category,
 }: {
   title: React.ReactNode;
   podium: PodiumRow[];
   note?: string;
+  /** 結果のシリーズ。指定するとそのシリーズ色・ラベルのヘッダーになる */
+  category?: CardCategory;
 }) {
   return (
     <div className="rounded-xl border border-white/5 bg-flabo-carbon overflow-hidden">
-      <CardHeader />
+      <CardHeader category={category} />
       <div className="p-5">
         <h3 className="font-display tracking-[0.24em] text-[0.65rem] uppercase text-flabo-grey mb-3 flex items-center gap-1.5 flex-wrap">
           {title}
