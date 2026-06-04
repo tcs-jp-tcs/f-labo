@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { sns } from "@/lib/data";
-import { XLogo, InstagramLogo } from "./SnsIcons";
+import { XLogo, InstagramLogo, YouTubeLogo } from "./SnsIcons";
 
 export default function Footer() {
   return (
@@ -62,6 +62,15 @@ export default function Footer() {
           >
             <InstagramLogo className="h-3.5 w-3.5" />
             <span>Instagram {sns.instagram.handle}</span>
+          </a>
+          <a
+            href={sns.youtube.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 text-flabo-grey hover:text-white text-xs transition-colors"
+          >
+            <YouTubeLogo className="h-3.5 w-3.5" />
+            <span>YouTube {sns.youtube.handle}</span>
           </a>
         </div>
       </div>
