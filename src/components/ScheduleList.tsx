@@ -159,8 +159,10 @@ export default function ScheduleList({
                             <th className="text-left py-1 px-1 font-normal">現地</th>
                             <th className="text-left py-1 px-1 font-normal text-flabo-green">日本</th>
                             {networks.map((n) => (
-                              <th key={n} className="text-center py-1 px-1 font-normal">{n}</th>
+                              <th key={n} className="text-center py-1 px-1 font-normal whitespace-nowrap">{n}</th>
                             ))}
+                            {/* 右の余白を吸収し、放送列を中央寄りに保つスペーサー列 */}
+                            <th aria-hidden className="w-full" />
                           </tr>
                         </thead>
                         <tbody>
@@ -196,6 +198,7 @@ export default function ScheduleList({
                                   </td>
                                 );
                               })}
+                              <td aria-hidden className="w-full" />
                             </tr>
                           ))}
                         </tbody>
