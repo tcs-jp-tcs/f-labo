@@ -2,6 +2,7 @@ import Link from "next/link";
 import HeroFeature from "@/components/HeroFeature";
 import PodiumCard from "@/components/PodiumCard";
 import SnsCard from "@/components/SnsCard";
+import VideoCard from "@/components/VideoCard";
 import ScheduleList from "@/components/ScheduleList";
 import NewsCard from "@/components/NewsCard";
 import StandingsCard from "@/components/StandingsCard";
@@ -103,6 +104,11 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Latest video (YouTube Short) — FOLLOW US の直下・最新ニュースの上 */}
+      <Section className="py-6">
+        <VideoCard />
+      </Section>
 
       {/* News */}
       <Section>
