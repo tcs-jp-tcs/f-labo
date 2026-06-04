@@ -159,7 +159,7 @@ export default function ScheduleList({
                             <th className="text-left py-1 px-1 font-normal">現地</th>
                             <th className="text-left py-1 px-1 font-normal text-flabo-green">日本</th>
                             {networks.map((n) => (
-                              <th key={n} className="text-left py-1 px-1 font-normal">{n}</th>
+                              <th key={n} className="text-center py-1 px-1 font-normal">{n}</th>
                             ))}
                           </tr>
                         </thead>
@@ -187,8 +187,12 @@ export default function ScheduleList({
                               {networks.map((n) => {
                                 const t = s.broadcasts?.[n];
                                 return (
-                                  <td key={n} className="py-1.5 px-1 whitespace-nowrap font-display">
-                                    {t ? <span className="text-white">{t}</span> : <span className="text-flabo-grey/40">—</span>}
+                                  <td key={n} className="py-1.5 px-1 whitespace-nowrap font-display text-center align-middle">
+                                    {t ? (
+                                      <span className={t === "○" ? "text-white text-[0.95rem] leading-none" : "text-white"}>{t}</span>
+                                    ) : (
+                                      <span className="text-flabo-grey/40">—</span>
+                                    )}
                                   </td>
                                 );
                               })}
