@@ -1,6 +1,12 @@
 import { cache } from "react";
 import { supabase } from "@/lib/supabase";
-import type { BroadcastSession, Series, WeekendBroadcast } from "@/lib/data";
+import type {
+  BroadcastSession,
+  ScheduleItem,
+  ScheduleSession,
+  Series,
+  WeekendBroadcast,
+} from "@/lib/data";
 
 /**
  * Supabase weekend_broadcasts テーブルから今週末の放送予定を取得するデータアクセス層。
@@ -57,3 +63,58 @@ export const getThisWeekendBroadcasts = cache(
     );
   },
 );
+
+/** セッション名からセッション種別（バッジ色）を推定 */
+const SESSION_TYPE_RULES: Array<[RegExp, NonNullable<ScheduleSession["type"]>]> = [
+  [/決勝|レース|race|フィーチャー|feature/i, "race"],
+  [/スプリント|sprint/i, "sprint"],
+  [/予選|ポール|quali/i, "quali"],
+];
+
+function inferSessionType(name: string): ScheduleSession["type"] {
+  for (const [re, type] of SESSION_TYPE_RULES) {
+    if (re.test(name)) return type;
+  }
+  return "practice";
+}
+
+/**
+ * weekend_broadcasts 行を ScheduleList 用の ScheduleItem に変換する。
+ * schedules テーブルに該当ラウンドの詳細が無いシリーズ（例: INDY の今週末ラウンド）を、
+ * トップの「今週のレース予定」展開カードで表示するためのフォールバック。
+ * 放送局列は ✓ 表示（番組開始時刻は weekend_broadcasts に保持していないため）。
+ */
+export function weekendBroadcastToScheduleItem(w: WeekendBroadcast): ScheduleItem {
+  const sessions: ScheduleSession[] = w.sessions.map((s) => ({
+    name: s.session,
+    type: inferSessionType(s.session),
+    jpDate: s.date,
+    jpTime: s.jst,
+    localDate: s.date,
+    localTime: s.localTime ?? "",
+    broadcasts: Object.fromEntries(
+      w.channels.filter((c) => s.channels?.[c]).map((c) => [c, "✓"]),
+    ),
+  }));
+  const dates = w.sessions.map((s) => s.date).filter(Boolean);
+  const date =
+    dates.length === 0
+      ? ""
+      : dates[0] === dates[dates.length - 1]
+        ? dates[0]
+        : `${dates[0]}〜${dates[dates.length - 1]}`;
+  return {
+    series: w.series,
+    round: w.round,
+    roundLabel: `ROUND ${w.round}`,
+    country: w.gpName,
+    flag: w.flag,
+    name: w.gpName,
+    date,
+    weekendType: w.weekendType,
+    status: "next",
+    broadcast: w.channels.join(" / "),
+    networks: w.channels,
+    sessions,
+  };
+}

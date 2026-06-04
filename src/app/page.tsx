@@ -5,17 +5,22 @@ import SnsCard from "@/components/SnsCard";
 import ScheduleList from "@/components/ScheduleList";
 import NewsCard from "@/components/NewsCard";
 import StandingsCard from "@/components/StandingsCard";
-import BroadcastTable from "@/components/BroadcastTable";
 import SectionHeader from "@/components/SectionHeader";
 import Section from "@/components/Section";
 import MainLogo from "@/components/MainLogo";
 import { seriesLabel } from "@/lib/data";
-import type { Series } from "@/lib/data";
+import type { ScheduleItem, Series } from "@/lib/data";
 import { getActiveNews } from "@/lib/news";
 import { getRecentResults } from "@/lib/results";
 import { getSchedules } from "@/lib/schedules";
 import { getStandings } from "@/lib/standings";
-import { getThisWeekendBroadcasts } from "@/lib/broadcasts";
+import {
+  getThisWeekendBroadcasts,
+  weekendBroadcastToScheduleItem,
+} from "@/lib/broadcasts";
+
+// トップ「今週のレース予定」のカード並び順（優先度順）
+const SERIES_PRIORITY: Series[] = ["F1", "F2", "F3", "SF", "INDY"];
 
 // ホームのニュース（ヒーロー＋最新3件）をSupabaseの最新状態で反映（静的化させない）
 export const revalidate = 0;
@@ -37,12 +42,23 @@ export default async function HomePage() {
   );
   const sidebarResult = latestRace ?? recentResults.find((r) => r.podium.length > 0) ?? recentResults[0];
 
-  // 直近3レース：最後のpast + next + その次のupcoming（NEXTを中心に前後を取る）
-  const allF1 = schedules.F1;
-  const nextIndex = allF1.findIndex((r) => r.status === "next" || r.status === "live");
-  const pivot = nextIndex >= 0 ? nextIndex : Math.max(allF1.map((r, i) => (r.status === "past" ? i : -1)).reduce((a, b) => Math.max(a, b), -1) + 1, 0);
-  const startIdx = Math.max(0, pivot - 1);
-  const f1Schedule = allF1.slice(startIdx, startIdx + 3);
+  // 今週のレース予定：今週末にレースがあるシリーズを weekend_broadcasts
+  // （週次でメンテされる今週末リスト）から取得し、優先度順（F1→F2→F3→SF→INDY）に並べる。
+  // schedules に同ラウンドの詳細セッションが揃っていればリッチなデータを優先し、
+  // 無いラウンド（例: INDY）は weekend_broadcasts から変換して同じ展開カードで表示。
+  // 先頭カード（最優先シリーズ）のみ NEXT として初期展開し、他は閉じた状態にする。
+  const weekendItems: ScheduleItem[] = thisWeekendBroadcasts
+    .map((w) => {
+      const rich = schedules[w.series]?.find(
+        (s) => s.round === w.round && s.sessions && s.sessions.length > 0,
+      );
+      return rich ?? weekendBroadcastToScheduleItem(w);
+    })
+    .sort(
+      (a, b) =>
+        SERIES_PRIORITY.indexOf(a.series) - SERIES_PRIORITY.indexOf(b.series),
+    )
+    .map((item, i) => ({ ...item, status: i === 0 ? ("next" as const) : undefined }));
   const f1Standings = standings.F1;
 
   return (
@@ -97,25 +113,15 @@ export default async function HomePage() {
         </div>
       </Section>
 
-      {/* Schedule */}
-      <Section>
-        <SectionHeader title="F1 レーススケジュール（直近3戦）" seeAllHref="/schedule" seeAllLabel="全22戦を見る →" />
-        <ScheduleList items={f1Schedule} />
-      </Section>
-
-      {/* Broadcast */}
+      {/* This Weekend — 今週のレース予定（展開カードに一本化） */}
       <Section>
         <SectionHeader
           title="📺 今週のレース予定"
           seeAllHref="/schedule"
-          seeAllLabel="スケジュール →"
+          seeAllLabel="全スケジュールを見る →"
         />
-        {thisWeekendBroadcasts.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4">
-            {thisWeekendBroadcasts.map((w) => (
-              <BroadcastTable key={`${w.series}-${w.round}`} weekend={w} />
-            ))}
-          </div>
+        {weekendItems.length > 0 ? (
+          <ScheduleList items={weekendItems} />
         ) : (
           <div className="rounded-xl border border-white/5 bg-flabo-carbon p-5 space-y-3">
             <p className="font-display tracking-[0.18em] text-xs text-flabo-grey uppercase">
