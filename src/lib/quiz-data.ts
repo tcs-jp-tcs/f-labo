@@ -119,7 +119,7 @@ export const quizzes: Quiz[] = [
         id: "rd-2-q3",
         category: "f1",
         question:
-          "2010年、23歳でF1史上最年少のワールドチャンピオンになったドライバーは？",
+          "23歳でF1史上最年少のワールドチャンピオンになったドライバーは？",
         choices: ["L.ハミルトン", "F.アロンソ", "M.フェルスタッペン", "S.ベッテル"],
         correctIndex: 3,
         explanation:
