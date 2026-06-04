@@ -5,7 +5,7 @@
  * リンクURLはこの1定数で管理。キーワードを差し替える場合は k= の値を変更する。
  * tag（tcsjptcs-22）は確定済み・変更不可。
  */
-const AMAZON_URL = "https://www.amazon.co.jp/s?k=F1&tag=tcsjptcs-22";
+const AMAZON_URL = "https://www.amazon.co.jp/s?k=モナコ+F1&tag=tcsjptcs-22";
 
 export default function AmazonPromo() {
   return (
@@ -14,7 +14,7 @@ export default function AmazonPromo() {
         href={AMAZON_URL}
         target="_blank"
         rel="sponsored nofollow noopener"
-        aria-label="AmazonでF1グッズを探す（外部サイト・PR）"
+        aria-label="モナコGP特集 AmazonでF1グッズを探す（外部サイト・PR）"
         className="group block rounded-xl border border-flabo-red/40 bg-gradient-to-r from-flabo-red/20 via-flabo-carbon to-flabo-carbon px-5 py-5 md:px-7 md:py-6 transition-all duration-300 hover:border-flabo-red hover:-translate-y-0.5 hover:shadow-lg hover:shadow-flabo-red/20"
       >
         <div className="flex flex-col gap-3.5 md:flex-row md:items-center md:justify-between">
@@ -23,7 +23,7 @@ export default function AmazonPromo() {
               PR · Amazon
             </div>
             <h3 className="font-black text-lg md:text-xl leading-tight">
-              🏁 AmazonでF1グッズを探す
+              🏁 モナコGP特集｜AmazonでF1グッズを探す
             </h3>
             <p className="text-[0.8rem] text-white/65 mt-1.5">
               ミニカー・キャップ・ウェア・書籍など、最新グッズをチェック。
