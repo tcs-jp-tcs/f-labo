@@ -83,7 +83,7 @@ export default function BroadcastTable({ weekend }: { weekend: WeekendBroadcast 
                   s.channels[c] ? "text-flabo-green" : "text-white/15"
                 }`}
               >
-                {s.channels[c] ? "✓" : "—"}
+                {s.channels[c] ? "○" : "—"}
               </span>
             ))}
           </div>

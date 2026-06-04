@@ -135,7 +135,7 @@ export default function ScheduleList({
                 <div className="font-black text-base leading-tight mb-1">{item.name}</div>
                 <div className="text-xs text-flabo-grey">{item.date}</div>
                 <div className="mt-2 text-[0.65rem] text-flabo-green flex items-center gap-1">
-                  ✓ {item.broadcast}
+                  ○ {item.broadcast}
                 </div>
                 <div className="mt-3 text-[0.55rem] font-display tracking-[0.18em] text-flabo-grey">
                   {isOpen ? "閉じる ▲" : "詳細を見る ▼"}

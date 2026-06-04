@@ -82,7 +82,7 @@ function inferSessionType(name: string): ScheduleSession["type"] {
  * weekend_broadcasts 行を ScheduleList 用の ScheduleItem に変換する。
  * schedules テーブルに該当ラウンドの詳細が無いシリーズ（例: INDY の今週末ラウンド）を、
  * トップの「今週のレース予定」展開カードで表示するためのフォールバック。
- * 放送局列は ✓ 表示（番組開始時刻は weekend_broadcasts に保持していないため）。
+ * 放送局列は ○ 表示（番組開始時刻は weekend_broadcasts に保持していないため）。
  */
 export function weekendBroadcastToScheduleItem(w: WeekendBroadcast): ScheduleItem {
   const sessions: ScheduleSession[] = w.sessions.map((s) => ({
@@ -93,7 +93,7 @@ export function weekendBroadcastToScheduleItem(w: WeekendBroadcast): ScheduleIte
     localDate: s.date,
     localTime: s.localTime ?? "",
     broadcasts: Object.fromEntries(
-      w.channels.filter((c) => s.channels?.[c]).map((c) => [c, "✓"]),
+      w.channels.filter((c) => s.channels?.[c]).map((c) => [c, "○"]),
     ),
   }));
   const dates = w.sessions.map((s) => s.date).filter(Boolean);
