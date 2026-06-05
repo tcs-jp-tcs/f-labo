@@ -24,6 +24,11 @@ import {
 // トップ「今週のレース予定」のカード並び順（優先度順）
 const SERIES_PRIORITY: Series[] = ["F1", "F2", "F3", "SF", "INDY"];
 
+// 【応急処置】YouTubeチャンネル削除（ポリシー誤検知・再審査請求中）に伴い、
+// ホームの「人気動画」セクション（YouTube Short埋め込み）を一旦非表示にする。
+// チャンネル復活時は true に戻すだけで元通り表示される。
+const SHOW_YOUTUBE_SECTION = false;
+
 // ホームのニュース（ヒーロー＋最新3件）をSupabaseの最新状態で反映（静的化させない）
 export const revalidate = 0;
 
@@ -105,9 +110,12 @@ export default async function HomePage() {
       </section>
 
       {/* Latest video (YouTube Short) — FOLLOW US の直下・最新ニュースの上 */}
-      <Section className="py-6">
-        <VideoCard />
-      </Section>
+      {/* 【応急処置】YouTubeチャンネル復活までセクションごと非表示（SHOW_YOUTUBE_SECTION） */}
+      {SHOW_YOUTUBE_SECTION && (
+        <Section className="py-6">
+          <VideoCard />
+        </Section>
+      )}
 
       {/* Amazon アソシエイト プロモ（最新動画 と 最新ニュース の間） */}
       <Section className="py-6">
