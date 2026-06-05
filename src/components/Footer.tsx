@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { sns } from "@/lib/data";
-import { XLogo, InstagramLogo, YouTubeLogo } from "./SnsIcons";
+// 【応急処置】YouTubeチャンネル復活までフッターのYouTubeリンクを非表示にするため YouTubeLogo は一旦外す
+import { XLogo, InstagramLogo } from "./SnsIcons";
 
 export default function Footer() {
   return (
@@ -63,6 +64,9 @@ export default function Footer() {
             <InstagramLogo className="h-3.5 w-3.5" />
             <span>Instagram {sns.instagram.handle}</span>
           </a>
+          {/* 【応急処置】YouTubeチャンネル削除（ポリシー誤検知・再審査請求中）により死にリンクと
+              なったため一旦非表示。チャンネル復活時はこのコメントアウトを解除し、
+              import の YouTubeLogo も戻すこと。
           <a
             href={sns.youtube.url}
             target="_blank"
@@ -72,6 +76,7 @@ export default function Footer() {
             <YouTubeLogo className="h-3.5 w-3.5" />
             <span>YouTube {sns.youtube.handle}</span>
           </a>
+          */}
         </div>
       </div>
       <div className="mt-6 pt-4 border-t border-white/5 text-[0.65rem] text-white/25 text-center">
