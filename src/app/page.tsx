@@ -38,11 +38,9 @@ export default async function HomePage() {
     ]);
   const featuredNews = homeNews[0];
   const restHomeNews = homeNews.slice(1, 4);
-  // 直近の本戦（決勝／フィーチャー）を最優先で表示。recentResults は新しい順に並べる運用。
-  const latestRace = recentResults.find(
-    (r) => (r.raceType === "決勝" || r.raceType === "フィーチャー") && r.podium.length > 0,
-  );
-  const sidebarResult = latestRace ?? recentResults.find((r) => r.podium.length > 0) ?? recentResults[0];
+  // 結果ページと同じ基準：display_order 昇順の先頭（display_order=0 の最新1件）を
+  // race_type で除外せず表示する。FP1/FP2/FP3・予選・スプリント・決勝いずれも対象。
+  const sidebarResult = recentResults[0];
 
   // 今週のレース予定：今週末にレースがあるシリーズを weekend_broadcasts
   // （週次でメンテされる今週末リスト）から取得し、優先度順（F1→F2→F3→SF→INDY）に並べる。
