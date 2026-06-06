@@ -487,6 +487,7 @@ export const news: NewsItem[] = [
 export const sns = {
   x: { handle: "@flabo_jp", url: "https://x.com/flabo_jp" },
   instagram: { handle: "@flabo.jp", url: "https://instagram.com/flabo.jp" },
+  tiktok: { handle: "@flabo.jp", url: "https://www.tiktok.com/@flabo.jp" },
   youtube: { handle: "@flabo_jp", url: "https://www.youtube.com/@flabo_jp" },
 };
 

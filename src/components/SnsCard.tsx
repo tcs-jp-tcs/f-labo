@@ -1,6 +1,6 @@
 import { sns } from "@/lib/data";
 // 【応急処置】YouTubeチャンネル復活までYouTubeアイコンを非表示にするため YouTubeLogo は一旦外す
-import { XLogo, InstagramLogo } from "./SnsIcons";
+import { XLogo, InstagramLogo, TikTokLogo } from "./SnsIcons";
 
 export default function SnsCard() {
   return (
@@ -31,6 +31,18 @@ export default function SnsCard() {
           <InstagramLogo className="h-4 w-4 text-white" />
         </span>
         <span>{sns.instagram.handle}</span>
+      </a>
+      <a
+        href={sns.tiktok.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`TikTok ${sns.tiktok.handle}`}
+        className="flex items-center gap-3 px-3 py-2 rounded-md bg-white/[0.04] text-white text-sm hover:bg-white/10 transition-colors"
+      >
+        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-black">
+          <TikTokLogo className="h-4 w-4 text-white" />
+        </span>
+        <span>{sns.tiktok.handle}</span>
       </a>
       {/* 【応急処置】YouTubeチャンネル削除（ポリシー誤検知・再審査請求中）により死にリンクと
           なったため、YouTubeアイコン／リンクを一旦非表示（X / Instagram の2つ並びに）。

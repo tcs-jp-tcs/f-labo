@@ -3,6 +3,7 @@ import HeroFeature from "@/components/HeroFeature";
 import PodiumCard from "@/components/PodiumCard";
 import SnsCard from "@/components/SnsCard";
 import VideoCard from "@/components/VideoCard";
+import TikTokEmbed from "@/components/TikTokEmbed";
 import AmazonPromo from "@/components/AmazonPromo";
 import ScheduleList from "@/components/ScheduleList";
 import NewsCard from "@/components/NewsCard";
@@ -117,7 +118,12 @@ export default async function HomePage() {
         </Section>
       )}
 
-      {/* Amazon アソシエイト プロモ（最新動画 と 最新ニュース の間） */}
+      {/* TikTok 埋め込み（代表作・MONACO GP）— 動画 と 最新ニュース の間（Amazonバナーの上） */}
+      <Section className="py-6">
+        <TikTokEmbed />
+      </Section>
+
+      {/* Amazon アソシエイト プロモ（動画 と 最新ニュース の間） */}
       <Section className="py-6">
         <AmazonPromo />
       </Section>

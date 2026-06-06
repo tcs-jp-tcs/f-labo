@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { sns } from "@/lib/data";
 // 【応急処置】YouTubeチャンネル復活までフッターのYouTubeリンクを非表示にするため YouTubeLogo は一旦外す
-import { XLogo, InstagramLogo } from "./SnsIcons";
+import { XLogo, InstagramLogo, TikTokLogo } from "./SnsIcons";
 
 export default function Footer() {
   return (
@@ -63,6 +63,15 @@ export default function Footer() {
           >
             <InstagramLogo className="h-3.5 w-3.5" />
             <span>Instagram {sns.instagram.handle}</span>
+          </a>
+          <a
+            href={sns.tiktok.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 text-flabo-grey hover:text-white text-xs transition-colors"
+          >
+            <TikTokLogo className="h-3.5 w-3.5" />
+            <span>TikTok {sns.tiktok.handle}</span>
           </a>
           {/* 【応急処置】YouTubeチャンネル削除（ポリシー誤検知・再審査請求中）により死にリンクと
               なったため一旦非表示。チャンネル復活時はこのコメントアウトを解除し、

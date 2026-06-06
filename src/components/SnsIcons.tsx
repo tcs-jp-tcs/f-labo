@@ -1,3 +1,23 @@
+/**
+ * TikTok glyph — single-color music-note logo (official mark shape).
+ * Use with currentColor so it matches the X / Instagram icons (white on black).
+ */
+export function TikTokLogo({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden
+      focusable="false"
+      className={className}
+    >
+      <path
+        fill="currentColor"
+        d="M16.5 2.25h-2.94v12.96a2.43 2.43 0 1 1-1.7-2.32V9.86a5.47 5.47 0 1 0 4.64 5.41V8.7a6.62 6.62 0 0 0 3.86 1.24V6.99a3.78 3.78 0 0 1-2.69-1.16 3.78 3.78 0 0 1-1.07-2.34c-.02-.41-.02-.83-.1-1.24Z"
+      />
+    </svg>
+  );
+}
+
 export function XLogo({ className = "" }: { className?: string }) {
   return (
     <svg
