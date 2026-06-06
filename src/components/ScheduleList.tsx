@@ -5,6 +5,23 @@ import { seriesNetworks } from "@/lib/data";
 import type { ScheduleItem, ScheduleResult, ScheduleSession } from "@/lib/data";
 import CardHeader from "./CardHeader";
 
+/**
+ * 放送統合テーブルの列ヘッダー（放送局名）を決定する。
+ * 各セッションの broadcasts オブジェクトのキーを初出順で集約して列にする
+ * （F1: FOD/フジTV NEXT、F2・F3: F1 TV のように実態に合わせて動的化）。
+ * broadcasts が未設定の行は networks → seriesNetworks の従来フォールバックを使う。
+ */
+function resolveNetworks(item: ScheduleItem): string[] {
+  const seen: string[] = [];
+  for (const s of item.sessions ?? []) {
+    for (const key of Object.keys(s.broadcasts ?? {})) {
+      if (!seen.includes(key)) seen.push(key);
+    }
+  }
+  if (seen.length > 0) return seen;
+  return item.networks ?? seriesNetworks[item.series] ?? [];
+}
+
 const STATUS_BADGE: Record<NonNullable<ScheduleItem["status"]>, { label: string; cls: string }> = {
   live: { label: "LIVE", cls: "text-flabo-green bg-flabo-green/15 animate-pulse" },
   next: { label: "NEXT", cls: "text-flabo-red bg-flabo-red/15" },
@@ -103,7 +120,7 @@ export default function ScheduleList({
         const isHighlight = isWeekend
           ? isOpen
           : item.status === "live" || item.status === "next";
-        const networks = item.networks ?? seriesNetworks[item.series] ?? [];
+        const networks = resolveNetworks(item);
         return (
           <div key={`${item.series}-${item.round}`} className="flex flex-col">
             <button
