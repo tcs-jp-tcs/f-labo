@@ -5,7 +5,8 @@ import SeriesTabs from "@/components/SeriesTabs";
 import ReviewCard from "@/components/ReviewCard";
 import type { ReviewSummary } from "@/lib/data";
 
-const TABS = ["ALL", "F1", "SF"] as const;
+// "SF" はSFのレビュー記事を追加したら復活させる（現状F1のみ）
+const TABS = ["ALL", "F1"] as const;
 type Tab = (typeof TABS)[number];
 
 export default function ReviewBrowser({ items }: { items: ReviewSummary[] }) {
