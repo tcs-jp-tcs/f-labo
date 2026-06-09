@@ -54,7 +54,7 @@ export default function PodiumCard({
         </p>
       )}
         {note && (
-          <p className="text-[0.65rem] text-flabo-grey leading-relaxed mt-3 border-t border-white/5 pt-3">
+          <p className="text-[0.65rem] text-white leading-relaxed mt-3 border-t border-white/5 pt-3">
             {note}
           </p>
         )}
