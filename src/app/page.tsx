@@ -3,7 +3,7 @@ import HeroFeature from "@/components/HeroFeature";
 import PodiumCard from "@/components/PodiumCard";
 import SnsCard from "@/components/SnsCard";
 import VideoCard from "@/components/VideoCard";
-import TikTokEmbed from "@/components/TikTokEmbed";
+import EmbedList from "@/components/EmbedList";
 import AmazonPromo from "@/components/AmazonPromo";
 import ScheduleList from "@/components/ScheduleList";
 import NewsCard from "@/components/NewsCard";
@@ -14,6 +14,7 @@ import MainLogo from "@/components/MainLogo";
 import { seriesLabel } from "@/lib/data";
 import type { ScheduleItem, Series } from "@/lib/data";
 import { getActiveNews } from "@/lib/news";
+import { getActiveEmbeds } from "@/lib/embeds";
 import { getRecentResults } from "@/lib/results";
 import { getSchedules, selectWeekendItems } from "@/lib/schedules";
 import { getStandings } from "@/lib/standings";
@@ -28,10 +29,11 @@ export const revalidate = 0;
 
 export default async function HomePage() {
   const homeNews = await getActiveNews();
-  const [recentResults, schedules, standings] = await Promise.all([
+  const [recentResults, schedules, standings, embeds] = await Promise.all([
     getRecentResults(),
     getSchedules(),
     getStandings(),
+    getActiveEmbeds(),
   ]);
   const featuredNews = homeNews[0];
   const restHomeNews = homeNews.slice(1, 4);
@@ -99,10 +101,13 @@ export default async function HomePage() {
         </Section>
       )}
 
-      {/* TikTok 埋め込み（代表作・MONACO GP）— 動画 と 最新ニュース の間（Amazonバナーの上） */}
-      <Section className="py-6">
-        <TikTokEmbed />
-      </Section>
+      {/* 動画埋め込み（DB: embeds テーブル駆動）— 動画 と 最新ニュース の間（Amazonバナーの上）。
+          active=true の行を display_order 順に TikTok/Instagram 出し分けで表示。差し替えはDBのみ。 */}
+      {embeds.length > 0 && (
+        <Section className="py-6">
+          <EmbedList embeds={embeds} />
+        </Section>
+      )}
 
       {/* Amazon アソシエイト プロモ（動画 と 最新ニュース の間） */}
       <Section className="py-6">

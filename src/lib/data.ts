@@ -67,6 +67,18 @@ export type WeekendBroadcast = {
   note?: string;
 };
 
+/** 動画埋め込み（DB: embeds テーブル）。コード書き換えなしで差し替え可能。 */
+export type EmbedPlatform = "tiktok" | "instagram";
+
+export type Embed = {
+  id: number;
+  platform: EmbedPlatform;
+  /** TikTok: 動画ページURL（/video/{id}）/ Instagram: リール・投稿のパーマリンク */
+  url: string;
+  active: boolean;
+  displayOrder: number;
+};
+
 export type NewsContentType = "translation" | "commentary";
 
 export type NewsItem = {
