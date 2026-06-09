@@ -15,15 +15,8 @@ import { seriesLabel } from "@/lib/data";
 import type { ScheduleItem, Series } from "@/lib/data";
 import { getActiveNews } from "@/lib/news";
 import { getRecentResults } from "@/lib/results";
-import { getSchedules } from "@/lib/schedules";
+import { getSchedules, selectWeekendItems } from "@/lib/schedules";
 import { getStandings } from "@/lib/standings";
-import {
-  getThisWeekendBroadcasts,
-  weekendBroadcastToScheduleItem,
-} from "@/lib/broadcasts";
-
-// トップ「今週のレース予定」のカード並び順（優先度順）
-const SERIES_PRIORITY: Series[] = ["F1", "F2", "F3", "SF", "INDY"];
 
 // 【応急処置】YouTubeチャンネル削除（ポリシー誤検知・再審査請求中）に伴い、
 // ホームの「人気動画」セクション（YouTube Short埋め込み）を一旦非表示にする。
@@ -35,36 +28,24 @@ export const revalidate = 0;
 
 export default async function HomePage() {
   const homeNews = await getActiveNews();
-  const [recentResults, schedules, standings, thisWeekendBroadcasts] =
-    await Promise.all([
-      getRecentResults(),
-      getSchedules(),
-      getStandings(),
-      getThisWeekendBroadcasts(),
-    ]);
+  const [recentResults, schedules, standings] = await Promise.all([
+    getRecentResults(),
+    getSchedules(),
+    getStandings(),
+  ]);
   const featuredNews = homeNews[0];
   const restHomeNews = homeNews.slice(1, 4);
   // 結果ページと同じ基準：display_order 昇順の先頭（display_order=0 の最新1件）を
   // race_type で除外せず表示する。FP1/FP2/FP3・予選・スプリント・決勝いずれも対象。
   const sidebarResult = recentResults[0];
 
-  // 今週のレース予定：今週末にレースがあるシリーズを weekend_broadcasts
-  // （週次でメンテされる今週末リスト）から取得し、優先度順（F1→F2→F3→SF→INDY）に並べる。
-  // schedules に同ラウンドの詳細セッションが揃っていればリッチなデータを優先し、
-  // 無いラウンド（例: INDY）は weekend_broadcasts から変換して同じ展開カードで表示。
+  // 今週のレース予定：schedules の is_weekend=true を単一ソースとして優先度順
+  // （F1→F2→F3→SF→INDY）で取得する。今週末セットの切替は schedules の is_weekend を
+  // 立て替えるだけでよい（旧 weekend_broadcasts テーブルは廃止）。
   // 先頭カード（最優先シリーズ）のみ NEXT として初期展開し、他は閉じた状態にする。
-  const weekendItems: ScheduleItem[] = thisWeekendBroadcasts
-    .map((w) => {
-      const rich = schedules[w.series]?.find(
-        (s) => s.round === w.round && s.sessions && s.sessions.length > 0,
-      );
-      return rich ?? weekendBroadcastToScheduleItem(w);
-    })
-    .sort(
-      (a, b) =>
-        SERIES_PRIORITY.indexOf(a.series) - SERIES_PRIORITY.indexOf(b.series),
-    )
-    .map((item, i) => ({ ...item, status: i === 0 ? ("next" as const) : undefined }));
+  const weekendItems: ScheduleItem[] = selectWeekendItems(schedules).map(
+    (item, i) => ({ ...item, status: i === 0 ? ("next" as const) : undefined }),
+  );
   const f1Standings = standings.F1;
 
   return (

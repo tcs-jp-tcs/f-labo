@@ -39,6 +39,8 @@ export type ScheduleItem = {
   date: string;
   weekendType: "通常週末" | "スプリント週末";
   status?: "next" | "past" | "upcoming" | "live";
+  /** トップ「今週のレース予定」/ スケジュール「今週末の放送予定」に出す今週末フラグ（DB: is_weekend） */
+  isWeekend?: boolean;
   broadcast: string;
   /** カード展開時の統合テーブルで列ヘッダとして使う放送局名（最大2局推奨） */
   networks?: string[];

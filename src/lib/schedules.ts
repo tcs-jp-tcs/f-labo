@@ -1,10 +1,12 @@
 import { cache } from "react";
 import { supabase } from "@/lib/supabase";
 import type {
+  BroadcastSession,
   ScheduleItem,
   ScheduleResult,
   ScheduleSession,
   Series,
+  WeekendBroadcast,
 } from "@/lib/data";
 
 /**
@@ -13,11 +15,17 @@ import type {
  * news.ts / reviews.ts と同じパターン。
  *
  * テーブルカラム: id, series, round, round_label, country, flag, name, date,
- *                 weekend_type, status, broadcast, networks(jsonb), sessions(jsonb),
- *                 result(jsonb), created_at, updated_at
+ *                 weekend_type, status, is_weekend, broadcast, networks(jsonb),
+ *                 sessions(jsonb), result(jsonb), created_at, updated_at
+ *
+ * is_weekend: トップ「今週のレース予定」/ スケジュール「今週末の放送予定」に出す今週末フラグ。
+ *             旧 weekend_broadcasts テーブルを廃止し、schedules 一本で管理する単一ソース。
  */
 
 const SERIES_KEYS: Series[] = ["F1", "F2", "F3", "SF", "INDY"];
+
+/** トップ/スケジュールの今週末カードの並び順（優先度順） */
+const SERIES_PRIORITY: Series[] = ["F1", "F2", "F3", "SF", "INDY"];
 
 /** DB の schedules 行（読み取りに使うカラムのみ） */
 type ScheduleRow = {
@@ -30,6 +38,7 @@ type ScheduleRow = {
   date: string;
   weekend_type: string;
   status: string | null;
+  is_weekend: boolean | null;
   broadcast: string;
   networks: string[] | null;
   sessions: ScheduleSession[] | null;
@@ -37,7 +46,7 @@ type ScheduleRow = {
 };
 
 const SELECT_COLUMNS =
-  "series, round, round_label, country, flag, name, date, weekend_type, status, broadcast, networks, sessions, result";
+  "series, round, round_label, country, flag, name, date, weekend_type, status, is_weekend, broadcast, networks, sessions, result";
 
 /** 全 Series キーを空配列で埋めた Record を生成 */
 function emptyRecord(): Record<Series, ScheduleItem[]> {
@@ -56,6 +65,7 @@ function toScheduleItem(row: ScheduleRow): ScheduleItem {
     date: row.date,
     weekendType: row.weekend_type as ScheduleItem["weekendType"],
     status: (row.status as ScheduleItem["status"]) ?? undefined,
+    isWeekend: row.is_weekend ?? false,
     broadcast: row.broadcast,
     networks: row.networks ?? undefined,
     sessions: row.sessions ?? undefined,
@@ -87,3 +97,55 @@ export const getSchedules = cache(
     return grouped;
   },
 );
+
+/**
+ * 今週末（is_weekend=true）のレースを優先度順（F1→F2→F3→SF→INDY）で抽出する。
+ * トップ「今週のレース予定」とスケジュール「今週末の放送予定」の単一ソース。
+ * 今週末セットを切り替えるときは schedules の is_weekend を立て替えるだけでよい。
+ */
+export function selectWeekendItems(
+  schedules: Record<Series, ScheduleItem[]>,
+): ScheduleItem[] {
+  return SERIES_PRIORITY.flatMap((s) =>
+    schedules[s].filter((r) => r.isWeekend),
+  );
+}
+
+/**
+ * ScheduleItem → 放送統合表（BroadcastTable）用の WeekendBroadcast に変換する。
+ * 旧 weekend_broadcasts テーブルの代わりに、schedules.sessions（放送局→開始時刻を保持）
+ * から放送局列と ○ 表示を導出する。weekendBroadcastToScheduleItem の逆変換にあたる。
+ */
+export function scheduleItemToWeekendBroadcast(
+  item: ScheduleItem,
+): WeekendBroadcast {
+  const sessions = item.sessions ?? [];
+  // 放送局列：各セッションの broadcasts キーを初出順で集約（networks をフォールバック）
+  const channels: string[] = [];
+  for (const s of sessions) {
+    for (const ch of Object.keys(s.broadcasts ?? {})) {
+      if (!channels.includes(ch)) channels.push(ch);
+    }
+  }
+  if (channels.length === 0 && item.networks) channels.push(...item.networks);
+
+  const broadcastSessions: BroadcastSession[] = sessions.map((s) => ({
+    session: s.name,
+    date: s.jpDate,
+    localTime: s.localTime || undefined,
+    jst: s.jpTime,
+    channels: Object.fromEntries(
+      channels.map((ch) => [ch, Boolean(s.broadcasts?.[ch])]),
+    ),
+  }));
+
+  return {
+    series: item.series,
+    round: item.round,
+    flag: item.flag,
+    gpName: item.name,
+    weekendType: item.weekendType,
+    channels,
+    sessions: broadcastSessions,
+  };
+}
