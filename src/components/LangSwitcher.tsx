@@ -161,6 +161,8 @@ export default function LangSwitcher() {
   const [query, setQuery] = useState("");
   // スタンドアロン(PWA)起動かどうか。SSR とのズレを避けるためマウント後に判定。
   const [standalone, setStandalone] = useState(false);
+  // standalone 案内の開閉（既定は閉＝邪魔にならないようアイコンに格納）。
+  const [noticeOpen, setNoticeOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -263,11 +265,46 @@ export default function LangSwitcher() {
           />
           <div className="absolute right-0 z-[70] mt-2 w-[min(92vw,320px)] overflow-hidden rounded-xl border border-white/10 bg-flabo-carbon shadow-2xl shadow-black/60">
             {standalone && (
-              <div className="border-b border-flabo-red/30 bg-flabo-red/10 px-3 py-2 text-[0.7rem] leading-relaxed text-flabo-text">
-                📱 ホーム画面アプリでは言語切替が使えません。
-                <span className="text-flabo-grey">
-                  Chrome（動作確認済み）でサイトを開くとご利用いただけます。
-                </span>
+              <div className="border-b border-flabo-red/30 bg-flabo-red/10">
+                <button
+                  type="button"
+                  onClick={() => setNoticeOpen((v) => !v)}
+                  aria-expanded={noticeOpen}
+                  className="flex w-full items-center gap-2 px-3 py-2 text-left"
+                >
+                  <span
+                    aria-hidden
+                    className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-flabo-red text-[0.7rem] font-bold text-white"
+                  >
+                    ⓘ
+                  </span>
+                  <span className="flex-1 text-[0.7rem] font-medium text-flabo-text">
+                    言語切替について / About
+                  </span>
+                  <span aria-hidden className="text-[0.6rem] text-flabo-grey">
+                    {noticeOpen ? "▲" : "▼"}
+                  </span>
+                </button>
+                {noticeOpen && (
+                  <div className="space-y-2 px-3 pb-2.5 text-[0.68rem] leading-relaxed text-flabo-text">
+                    <p>
+                      📱 ホーム画面アプリでは言語切替を使えません。Chromeブラウザで開いてください。
+                      <span className="mt-0.5 block text-flabo-grey">
+                        （Chromeブラウザでは言語切り替えがご利用いただけます。動作確認済み）
+                      </span>
+                    </p>
+                    <p className="border-t border-white/10 pt-2">
+                      {
+                        "📱 Language switching isn't available in the home-screen app. Please open the site in Chrome."
+                      }
+                      <span className="mt-0.5 block text-flabo-grey">
+                        {
+                          "(Language switching works in the Chrome browser — verified.)"
+                        }
+                      </span>
+                    </p>
+                  </div>
+                )}
               </div>
             )}
             <div className="border-b border-white/10 p-2">
