@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import TestBanner from "@/components/TestBanner";
 import LangProvider from "@/components/LangProvider";
+import StandaloneDebug from "@/components/StandaloneDebug";
 import "./globals.css";
 
 const GA_ID = "G-WVP9R50FW5";
@@ -147,6 +148,8 @@ export default function RootLayout({
           <main className="flex-1 relative z-[1]">{children}</main>
           <Footer />
           <div className="kerb-stripe" aria-hidden />
+          {/* 一時的な診断オーバーレイ（standalone専用）。原因特定後に撤去する。 */}
+          <StandaloneDebug />
         </LangProvider>
       </body>
     </html>
