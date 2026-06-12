@@ -5,7 +5,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import TestBanner from "@/components/TestBanner";
 import LangProvider from "@/components/LangProvider";
-import StandaloneDebug from "@/components/StandaloneDebug";
 import "./globals.css";
 
 const GA_ID = "G-WVP9R50FW5";
@@ -130,24 +129,20 @@ export default function RootLayout({
         />
         {/* Google翻訳ウィジェット（非表示コンテナ）。combo は LangSwitcher 経由で操作 */}
         <div id="google_translate_element" className="hidden" />
-        {/* element.js を beforeInteractive（初期HTMLへ静的挿入＝パーサー挿入スクリプト）で
-            読ませる。afterInteractive の動的注入は standalone(PWA) webview で実行されず
-            window.google が未定義になるため。init はコンテナ生成を待って堅牢化。 */}
-        <Script id="google-translate-init" strategy="beforeInteractive">
+        {/* 通常ブラウザ・アプリ内ブラウザ向けの Google翻訳ウィジェット。
+            ※ iOS スタンドアロン(PWA)起動では webview が element.js の実行をブロックするため
+              翻訳は機能しない（読込方式 after/before どちらでも不可＝仕様レベルの制約）。
+              スタンドアロン時は LangSwitcher が案内を出してブラウザ起動を促す。 */}
+        <Script id="google-translate-init" strategy="afterInteractive">
           {`
             window.googleTranslateElementInit = function() {
-              (function make() {
-                if (!window.google || !google.translate || !document.getElementById('google_translate_element')) {
-                  return window.setTimeout(make, 50);
-                }
-                new google.translate.TranslateElement({ pageLanguage: 'ja', autoDisplay: false }, 'google_translate_element');
-              })();
+              new google.translate.TranslateElement({ pageLanguage: 'ja', autoDisplay: false }, 'google_translate_element');
             };
           `}
         </Script>
         <Script
           src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
-          strategy="beforeInteractive"
+          strategy="afterInteractive"
         />
         <LangProvider>
           <TestBanner />
@@ -156,8 +151,6 @@ export default function RootLayout({
           <main className="flex-1 relative z-[1]">{children}</main>
           <Footer />
           <div className="kerb-stripe" aria-hidden />
-          {/* 一時的な診断オーバーレイ（standalone専用）。原因特定後に撤去する。 */}
-          <StandaloneDebug />
         </LangProvider>
       </body>
     </html>

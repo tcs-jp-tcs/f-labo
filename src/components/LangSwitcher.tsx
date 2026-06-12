@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useLang } from "./LangProvider";
+import { isStandalone, useLang } from "./LangProvider";
 
 type Language = { code: string; native: string; en: string };
 
@@ -159,7 +159,13 @@ export default function LangSwitcher() {
   const { lang, setLang } = useLang();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  // スタンドアロン(PWA)起動かどうか。SSR とのズレを避けるためマウント後に判定。
+  const [standalone, setStandalone] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setStandalone(isStandalone());
+  }, []);
 
   const current = ALL_BY_CODE.get(lang) ?? PRIMARY[0];
 
@@ -256,6 +262,14 @@ export default function LangSwitcher() {
             aria-hidden
           />
           <div className="absolute right-0 z-[70] mt-2 w-[min(92vw,320px)] overflow-hidden rounded-xl border border-white/10 bg-flabo-carbon shadow-2xl shadow-black/60">
+            {standalone && (
+              <div className="border-b border-flabo-red/30 bg-flabo-red/10 px-3 py-2 text-[0.7rem] leading-relaxed text-flabo-text">
+                📱 ホーム画面アプリでは言語切替が使えません。
+                <span className="text-flabo-grey">
+                  Safari や Chrome でサイトを開くとご利用いただけます。
+                </span>
+              </div>
+            )}
             <div className="border-b border-white/10 p-2">
               <input
                 type="text"
