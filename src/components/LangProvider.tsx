@@ -81,6 +81,49 @@ function applyDirAndLang(code: string) {
   document.documentElement.lang = code;
 }
 
+/**
+ * スタンドアロン（ホーム画面に追加した PWA）起動かどうか。
+ * iOS Safari は navigator.standalone、その他は display-mode: standalone。
+ * この環境では location.reload() / cookie が通常ブラウザと別挙動になり
+ * cookie 書込→reload 方式が効かないため、combo 即時翻訳にフォールバックする。
+ */
+function isStandalone(): boolean {
+  if (typeof window === "undefined") return false;
+  const iosStandalone =
+    (window.navigator as Navigator & { standalone?: boolean }).standalone ===
+    true;
+  const displayModeStandalone =
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(display-mode: standalone)").matches;
+  return iosStandalone || displayModeStandalone;
+}
+
+/**
+ * goog-te-combo を直接操作してリロードせずに翻訳する（スタンドアロン用フォールバック）。
+ * combo がまだ無い場合に備えて短時間ポーリングする。
+ * ja（原文復帰）は Google ネイティブの「原文表示」= 空オプション("")を選択。
+ */
+function applyComboWhenReady(code: string) {
+  if (typeof document === "undefined") return;
+  const comboValue = code === DEFAULT_LANG ? "" : code;
+  let attempts = 0;
+  const tryApply = () => {
+    const combo = document.querySelector(
+      "select.goog-te-combo"
+    ) as HTMLSelectElement | null;
+    if (combo) {
+      combo.value = comboValue;
+      combo.dispatchEvent(new Event("change"));
+      return;
+    }
+    attempts += 1;
+    if (attempts < 40) {
+      window.setTimeout(tryApply, 150);
+    }
+  };
+  tryApply();
+}
+
 export default function LangProvider({
   children,
 }: {
@@ -104,15 +147,24 @@ export default function LangProvider({
     if (resolved !== DEFAULT_LANG) {
       setLangState(resolved);
       applyDirAndLang(resolved);
+      // スタンドアロンでは Google の cookie 自動翻訳が効かない場合があるため、
+      // 再起動後も state と表示を一致させるよう combo で翻訳を強制適用する。
+      // 通常ブラウザは Google が cookie を読んで自動翻訳するため何もしない。
+      if (isStandalone()) {
+        applyComboWhenReady(resolved);
+      }
     }
   }, []);
 
-  // 言語変更: cookie を書き換えてからフルリロード。
-  // リロード後に Google が cookie を読んで決定的に翻訳する（combo の即時操作は
-  // 原文復帰が不安定＝ボタンと中身がズレる原因だったため廃止）。
+  // 言語変更:
+  // - 通常ブラウザ: cookie を書き換えてフルリロード。リロード後に Google が cookie を
+  //   読んで決定的に翻訳する（ボタン表示と実際の表示言語が必ず一致・検証済み）。
+  // - スタンドアロン(PWA)起動: reload/cookie が別挙動で効かないため、combo を直接
+  //   操作してリロードせずに即時翻訳するフォールバックに切替（cookie/localStorage と
+  //   React state も更新し、ボタン表示と state を同期させる）。
   const setLang = useCallback(
     (code: string) => {
-      if (code === lang) return; // 同じ言語なら何もしない（無駄なリロード防止）
+      if (code === lang) return; // 同じ言語なら何もしない（無駄なリロード/再翻訳防止）
       try {
         if (code === DEFAULT_LANG) localStorage.removeItem(STORAGE_KEY);
         else localStorage.setItem(STORAGE_KEY, code);
@@ -121,6 +173,14 @@ export default function LangProvider({
       }
       writeGoogTransCookie(code);
       applyDirAndLang(code);
+
+      if (isStandalone()) {
+        // reload に頼らずその場で翻訳。React state も更新してボタン表示を一致させる。
+        setLangState(code);
+        applyComboWhenReady(code);
+        return;
+      }
+
       // cookie を確実に反映させるためフルリロード（言語切替＝唯一の真実は cookie）。
       window.location.reload();
     },
