@@ -98,29 +98,71 @@ function isStandalone(): boolean {
   return iosStandalone || displayModeStandalone;
 }
 
+type GoogleTranslateGlobal = {
+  google?: { translate?: unknown };
+  googleTranslateElementInit?: () => void;
+};
+
+// 最後にリクエストされた言語。遅れて combo が現れたときに最新要求だけ適用するための番兵。
+let pendingComboLang: string | null = null;
+
 /**
  * goog-te-combo を直接操作してリロードせずに翻訳する（スタンドアロン用フォールバック）。
- * combo がまだ無い場合に備えて短時間ポーリングする。
+ * スタンドアロンでは combo が生成されない／init が遅れることがあるため、
+ *  - combo が無く Google API があるときは googleTranslateElementInit() で再生成を試みる
+ *  - 最大 ~18 秒ポーリング
+ *  - change は bubbles:true で発火（Google のハンドラを確実に起動）
  * ja（原文復帰）は Google ネイティブの「原文表示」= 空オプション("")を選択。
  */
 function applyComboWhenReady(code: string) {
   if (typeof document === "undefined") return;
+  pendingComboLang = code;
   const comboValue = code === DEFAULT_LANG ? "" : code;
   let attempts = 0;
+  const MAX_ATTEMPTS = 120; // 120 × 150ms = 18s
+
   const tryApply = () => {
+    // より新しい言語リクエストが来ていたら、この試行は破棄
+    if (pendingComboLang !== code) return;
+
     const combo = document.querySelector(
       "select.goog-te-combo"
     ) as HTMLSelectElement | null;
-    if (combo) {
+
+    // ja（原文復帰）は value="" を直接適用。それ以外は対象 option の生成を待つ。
+    const optionReady =
+      comboValue === "" || combo?.querySelector(`option[value="${comboValue}"]`);
+    if (combo && optionReady) {
       combo.value = comboValue;
-      combo.dispatchEvent(new Event("change"));
+      combo.dispatchEvent(new Event("change", { bubbles: true }));
+      pendingComboLang = null;
       return;
     }
+
+    // combo がまだ無い: Google API が読めていればウィジェットを（再）生成して combo を作る
+    const w = window as unknown as GoogleTranslateGlobal;
+    const container = document.getElementById("google_translate_element");
+    if (
+      !combo &&
+      w.google &&
+      w.google.translate &&
+      typeof w.googleTranslateElementInit === "function" &&
+      container &&
+      container.childElementCount === 0
+    ) {
+      try {
+        w.googleTranslateElementInit();
+      } catch {
+        /* 再生成失敗は次の試行で再評価 */
+      }
+    }
+
     attempts += 1;
-    if (attempts < 40) {
+    if (attempts < MAX_ATTEMPTS) {
       window.setTimeout(tryApply, 150);
     }
   };
+
   tryApply();
 }
 
