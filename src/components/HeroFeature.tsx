@@ -54,17 +54,9 @@ export default function HeroFeature({ item }: { item: NewsItem }) {
                 href={`/news/${item.id}`}
                 className="inline-flex items-center gap-2 text-flabo-red font-display font-bold uppercase tracking-[0.18em] text-xs hover:gap-3 transition-all"
               >
-                翻訳を読む ↗
+                Fラボ解説 ↗
               </Link>
             )}
-            <a
-              href={item.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-flabo-red font-display font-bold uppercase tracking-[0.18em] text-xs hover:gap-3 transition-all"
-            >
-              元記事を読む ↗
-            </a>
           </div>
         </div>
       </div>

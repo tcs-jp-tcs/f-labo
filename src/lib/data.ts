@@ -91,7 +91,7 @@ export type NewsItem = {
   date: string;
   url: string;
   imageUrl?: string;
-  /** 翻訳/解説の全文（Markdown）。入っている記事だけ「翻訳を読む」導線を出す */
+  /** 翻訳/解説の全文（Markdown）。入っている記事だけ「Fラボ解説」導線を出す */
   translationBody?: string;
   /** 'translation'=公式PRの全文翻訳 / 'commentary'=商業メディアをもとにした独自解説 */
   contentType?: NewsContentType;

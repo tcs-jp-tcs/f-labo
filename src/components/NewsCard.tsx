@@ -27,17 +27,9 @@ export default function NewsCard({ item }: { item: NewsItem }) {
                 href={`/news/${item.id}`}
                 className="text-flabo-grey hover:text-flabo-red transition-colors"
               >
-                翻訳を読む ↗
+                Fラボ解説 ↗
               </Link>
             )}
-            <a
-              href={item.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-flabo-grey hover:text-flabo-red transition-colors"
-            >
-              元記事を読む ↗
-            </a>
           </div>
         </div>
       </div>
