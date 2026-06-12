@@ -130,16 +130,24 @@ export default function RootLayout({
         />
         {/* Google翻訳ウィジェット（非表示コンテナ）。combo は LangSwitcher 経由で操作 */}
         <div id="google_translate_element" className="hidden" />
-        <Script id="google-translate-init" strategy="afterInteractive">
+        {/* element.js を beforeInteractive（初期HTMLへ静的挿入＝パーサー挿入スクリプト）で
+            読ませる。afterInteractive の動的注入は standalone(PWA) webview で実行されず
+            window.google が未定義になるため。init はコンテナ生成を待って堅牢化。 */}
+        <Script id="google-translate-init" strategy="beforeInteractive">
           {`
             window.googleTranslateElementInit = function() {
-              new google.translate.TranslateElement({ pageLanguage: 'ja', autoDisplay: false }, 'google_translate_element');
+              (function make() {
+                if (!window.google || !google.translate || !document.getElementById('google_translate_element')) {
+                  return window.setTimeout(make, 50);
+                }
+                new google.translate.TranslateElement({ pageLanguage: 'ja', autoDisplay: false }, 'google_translate_element');
+              })();
             };
           `}
         </Script>
         <Script
           src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
-          strategy="afterInteractive"
+          strategy="beforeInteractive"
         />
         <LangProvider>
           <TestBanner />
