@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import HeaderLogo from "./HeaderLogo";
+import LangSwitcher from "./LangSwitcher";
 
 const NAV = [
   { href: "/", label: "ホーム" },
@@ -28,33 +29,36 @@ export default function Header() {
         <Link href="/" aria-label="Fラボ ホーム" onClick={() => setOpen(false)}>
           <HeaderLogo width={96} />
         </Link>
-        <nav className="hidden md:flex">
-          {NAV.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`relative px-3.5 py-5 font-display font-bold uppercase tracking-[0.18em] text-[0.7rem] transition-colors ${
-                isActive(item.href)
-                  ? "text-white"
-                  : "text-flabo-grey hover:text-white"
-              }`}
-            >
-              {item.label}
-              {isActive(item.href) && (
-                <span className="absolute left-3.5 right-3.5 bottom-0 h-[2px] bg-flabo-red" />
-              )}
-            </Link>
-          ))}
-        </nav>
-        <button
-          type="button"
-          className="md:hidden text-white text-2xl px-2 py-1"
-          aria-label="メニュー"
-          aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
-        >
-          {open ? "✕" : "☰"}
-        </button>
+        <div className="flex items-center gap-1.5">
+          <nav className="hidden md:flex">
+            {NAV.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`relative px-3.5 py-5 font-display font-bold uppercase tracking-[0.18em] text-[0.7rem] transition-colors ${
+                  isActive(item.href)
+                    ? "text-white"
+                    : "text-flabo-grey hover:text-white"
+                }`}
+              >
+                {item.label}
+                {isActive(item.href) && (
+                  <span className="absolute left-3.5 right-3.5 bottom-0 h-[2px] bg-flabo-red" />
+                )}
+              </Link>
+            ))}
+          </nav>
+          <LangSwitcher />
+          <button
+            type="button"
+            className="md:hidden text-white text-2xl px-2 py-1"
+            aria-label="メニュー"
+            aria-expanded={open}
+            onClick={() => setOpen((v) => !v)}
+          >
+            {open ? "✕" : "☰"}
+          </button>
+        </div>
       </div>
       {open && (
         <div className="md:hidden bg-flabo-dark border-b border-white/5 flex flex-col">

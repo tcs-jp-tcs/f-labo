@@ -136,3 +136,39 @@ body::before {
   background: radial-gradient(circle, rgba(225, 6, 0, 0.12) 0%, transparent 70%);
   pointer-events: none;
 }
+
+/* ===== Google翻訳 既定UIの隠蔽 ===== */
+.goog-te-banner-frame,
+.skiptranslate iframe,
+#goog-gt-tt,
+.goog-te-balloon-frame {
+  display: none !important;
+}
+
+/* 上部バナーによる body ずれを防止 */
+body {
+  top: 0 !important;
+  position: relative;
+}
+
+.goog-te-gadget,
+.goog-logo-link {
+  display: none !important;
+}
+.goog-te-gadget {
+  font-size: 0 !important;
+}
+
+/* 翻訳されたテキストノードのハイライト背景を無効化（デザイン保護） */
+.goog-text-highlight {
+  background: none !important;
+  box-shadow: none !important;
+}
+
+/* ===== RTL 最小対応 =====
+   テキスト方向は html[dir="rtl"] で自動反映される。
+   固定背景（カーボン/チェッカー）は方向に依存しないため調整不要。
+   致命的な崩れが出た場合のみ、ここに最小修正を追記する。 */
+html[dir="rtl"] body {
+  text-align: right;
+}

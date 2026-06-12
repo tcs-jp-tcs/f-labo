@@ -4,6 +4,7 @@ import Script from "next/script";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import TestBanner from "@/components/TestBanner";
+import LangProvider from "@/components/LangProvider";
 import "./globals.css";
 
 const GA_ID = "G-WVP9R50FW5";
@@ -94,6 +95,18 @@ export default function RootLayout({
       className={`${orbitron.variable} ${notoSansJp.variable} ${mPlus1p.variable} ${chakraPetch.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        {/* React安定化パッチ: Google翻訳×React の removeChild/insertBefore クラッシュを
+            ハイドレーション前にガード（子でないノード操作を no-op 化） */}
+        <Script id="gt-removechild-guard" strategy="beforeInteractive">
+          {`
+            if (typeof Node === 'function' && Node.prototype) {
+              const _r = Node.prototype.removeChild;
+              Node.prototype.removeChild = function(c){ if(c && c.parentNode !== this){ return c; } return _r.apply(this, arguments); };
+              const _i = Node.prototype.insertBefore;
+              Node.prototype.insertBefore = function(n, ref){ if(ref && ref.parentNode !== this){ return n; } return _i.apply(this, arguments); };
+            }
+          `}
+        </Script>
         {/* Google Analytics 4 */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
@@ -114,12 +127,27 @@ export default function RootLayout({
           strategy="afterInteractive"
           crossOrigin="anonymous"
         />
-        <TestBanner />
-        <div className="kerb-stripe relative z-[101]" aria-hidden />
-        <Header />
-        <main className="flex-1 relative z-[1]">{children}</main>
-        <Footer />
-        <div className="kerb-stripe" aria-hidden />
+        {/* Google翻訳ウィジェット（非表示コンテナ）。combo は LangSwitcher 経由で操作 */}
+        <div id="google_translate_element" className="hidden" />
+        <Script id="google-translate-init" strategy="afterInteractive">
+          {`
+            window.googleTranslateElementInit = function() {
+              new google.translate.TranslateElement({ pageLanguage: 'ja', autoDisplay: false }, 'google_translate_element');
+            };
+          `}
+        </Script>
+        <Script
+          src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+          strategy="afterInteractive"
+        />
+        <LangProvider>
+          <TestBanner />
+          <div className="kerb-stripe relative z-[101]" aria-hidden />
+          <Header />
+          <main className="flex-1 relative z-[1]">{children}</main>
+          <Footer />
+          <div className="kerb-stripe" aria-hidden />
+        </LangProvider>
       </body>
     </html>
   );
