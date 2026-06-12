@@ -266,7 +266,7 @@ export default function LangSwitcher() {
               <div className="border-b border-flabo-red/30 bg-flabo-red/10 px-3 py-2 text-[0.7rem] leading-relaxed text-flabo-text">
                 📱 ホーム画面アプリでは言語切替が使えません。
                 <span className="text-flabo-grey">
-                  Safari や Chrome でサイトを開くとご利用いただけます。
+                  Chrome（動作確認済み）でサイトを開くとご利用いただけます。
                 </span>
               </div>
             )}
