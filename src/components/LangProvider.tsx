@@ -38,45 +38,41 @@ export function useLang() {
   return useContext(LangContext);
 }
 
-// googtrans cookie を /ja/<code> 形式で書き込み（無印ホスト + .ホスト 両方に永続化）。
-// ja のときは削除して翻訳をオフに戻す。
+/**
+ * googtrans cookie を読み、翻訳先の言語コードを返す（例 "/ja/hi" → "hi"）。
+ * cookie が無い／原文(ja)のときは DEFAULT_LANG。
+ * Google翻訳ウィジェットはこの cookie を読んでロード時に自動翻訳するため、
+ * cookie を「いま実際に表示されている言語」の唯一の真実として扱う。
+ */
+function readGoogTransLang(): string {
+  if (typeof document === "undefined") return DEFAULT_LANG;
+  const m = document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/);
+  if (!m) return DEFAULT_LANG;
+  const parts = decodeURIComponent(m[1]).split("/").filter(Boolean); // ["ja","hi"]
+  const target = parts[parts.length - 1];
+  return target && target !== DEFAULT_LANG ? target : DEFAULT_LANG;
+}
+
+/**
+ * googtrans cookie を /ja/<code> 形式で書き込み（無印ホスト + ホスト + .ホスト の
+ * 3 バリアントに書く＝どの形でセットされていても確実に上書き／削除できるように）。
+ * ja のときは全バリアントを失効させて翻訳をオフ（原文）に戻す。
+ */
 function writeGoogTransCookie(code: string) {
   if (typeof document === "undefined") return;
   const host = window.location.hostname;
+  const domains = ["", `domain=${host};`, `domain=.${host};`];
   if (code === DEFAULT_LANG) {
     const expired = "expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    document.cookie = `googtrans=;path=/;${expired}`;
-    document.cookie = `googtrans=;path=/;domain=${host};${expired}`;
-    document.cookie = `googtrans=;path=/;domain=.${host};${expired}`;
+    for (const d of domains) {
+      document.cookie = `googtrans=;path=/;${d}${expired}`;
+    }
     return;
   }
   const value = `/ja/${code}`;
-  document.cookie = `googtrans=${value};path=/`;
-  document.cookie = `googtrans=${value};path=/;domain=${host}`;
-  document.cookie = `googtrans=${value};path=/;domain=.${host}`;
-}
-
-// goog-te-combo がまだ無い場合に備え、短時間ポーリングして value をセット→change で即時翻訳。
-// ja（原文復帰）は combo の空オプション("")を選択することで原文へ戻す。
-function applyComboWhenReady(code: string) {
-  if (typeof document === "undefined") return;
-  const comboValue = code === DEFAULT_LANG ? "" : code;
-  let attempts = 0;
-  const tryApply = () => {
-    const combo = document.querySelector(
-      "select.goog-te-combo"
-    ) as HTMLSelectElement | null;
-    if (combo) {
-      combo.value = comboValue;
-      combo.dispatchEvent(new Event("change"));
-      return;
-    }
-    attempts += 1;
-    if (attempts < 40) {
-      window.setTimeout(tryApply, 150);
-    }
-  };
-  tryApply();
+  for (const d of domains) {
+    document.cookie = `googtrans=${value};path=/;${d}`;
+  }
 }
 
 function applyDirAndLang(code: string) {
@@ -92,35 +88,44 @@ export default function LangProvider({
 }) {
   const [lang, setLangState] = useState<string>(DEFAULT_LANG);
 
-  // 初期化: localStorage に保存された言語を復帰。
-  // ja デフォルトのときは何も触らない（画素変化ゼロを保証）。
-  // 翻訳自体は googtrans cookie を Google が読み込み自動適用するため、
-  // ここでは状態/dir/lang の同期と combo の念のための再適用を行う。
+  // 初期化: cookie（=Google が実際に翻訳する言語）を真実として state/dir/lang を同期。
+  // これでヘッダーのボタン表示と実際の表示言語が必ず一致する。
+  // localStorage は cookie が無いときの保険としてのみ参照。
   useEffect(() => {
-    let stored = DEFAULT_LANG;
-    try {
-      stored = localStorage.getItem(STORAGE_KEY) || DEFAULT_LANG;
-    } catch {
-      stored = DEFAULT_LANG;
+    let resolved = readGoogTransLang();
+    if (resolved === DEFAULT_LANG) {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored && stored !== DEFAULT_LANG) resolved = stored;
+      } catch {
+        /* localStorage 不可環境は無視 */
+      }
     }
-    if (stored !== DEFAULT_LANG) {
-      setLangState(stored);
-      applyDirAndLang(stored);
-      applyComboWhenReady(stored);
+    if (resolved !== DEFAULT_LANG) {
+      setLangState(resolved);
+      applyDirAndLang(resolved);
     }
   }, []);
 
-  const setLang = useCallback((code: string) => {
-    try {
-      localStorage.setItem(STORAGE_KEY, code);
-    } catch {
-      /* localStorage 不可環境は無視 */
-    }
-    writeGoogTransCookie(code);
-    applyComboWhenReady(code);
-    applyDirAndLang(code);
-    setLangState(code);
-  }, []);
+  // 言語変更: cookie を書き換えてからフルリロード。
+  // リロード後に Google が cookie を読んで決定的に翻訳する（combo の即時操作は
+  // 原文復帰が不安定＝ボタンと中身がズレる原因だったため廃止）。
+  const setLang = useCallback(
+    (code: string) => {
+      if (code === lang) return; // 同じ言語なら何もしない（無駄なリロード防止）
+      try {
+        if (code === DEFAULT_LANG) localStorage.removeItem(STORAGE_KEY);
+        else localStorage.setItem(STORAGE_KEY, code);
+      } catch {
+        /* localStorage 不可環境は無視 */
+      }
+      writeGoogTransCookie(code);
+      applyDirAndLang(code);
+      // cookie を確実に反映させるためフルリロード（言語切替＝唯一の真実は cookie）。
+      window.location.reload();
+    },
+    [lang]
+  );
 
   return (
     <LangContext.Provider value={{ lang, setLang }}>

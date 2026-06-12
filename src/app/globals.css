@@ -159,10 +159,16 @@ body {
   font-size: 0 !important;
 }
 
-/* 翻訳されたテキストノードのハイライト背景を無効化（デザイン保護） */
-.goog-text-highlight {
+/* 翻訳されたテキストノードのホバーハイライト（白い帯/枠）を無効化（デザイン保護）。
+   Google 側も !important で注入するため、specificity を上げて確実に勝たせる
+   （html body 付きでクラス単体の Google ルールを上書き）。 */
+html body .goog-text-highlight,
+html body .jfk-bubble,
+html body [class*="goog-text-highlight"] {
   background: none !important;
+  background-color: transparent !important;
   box-shadow: none !important;
+  border: none !important;
 }
 
 /* ===== RTL 最小対応 =====
