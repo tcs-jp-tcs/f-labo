@@ -123,7 +123,7 @@ export default function TzSwitcher() {
             onClick={() => setOpen(false)}
             aria-hidden
           />
-          <div className="absolute right-0 z-[70] mt-2 w-[min(92vw,320px)] overflow-hidden rounded-xl border border-white/10 bg-flabo-carbon shadow-2xl shadow-black/60">
+          <div className="fixed left-1/2 top-[68px] z-[70] w-[min(92vw,320px)] -translate-x-1/2 overflow-hidden rounded-xl border border-white/10 bg-flabo-carbon shadow-2xl shadow-black/60 md:absolute md:left-auto md:right-0 md:top-auto md:mt-2 md:translate-x-0">
             <div className="border-b border-white/10 px-3 py-2.5">
               <p className="text-[0.7rem] font-bold text-flabo-text">
                 地域・時間設定
