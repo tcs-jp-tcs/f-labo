@@ -1,26 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { seriesNetworks } from "@/lib/data";
 import type { ScheduleItem, ScheduleResult, ScheduleSession } from "@/lib/data";
 import CardHeader from "./CardHeader";
-
-/**
- * 放送統合テーブルの列ヘッダー（放送局名）を決定する。
- * 各セッションの broadcasts オブジェクトのキーを初出順で集約して列にする
- * （F1: FOD/フジTV NEXT、F2・F3: F1 TV のように実態に合わせて動的化）。
- * broadcasts が未設定の行は networks → seriesNetworks の従来フォールバックを使う。
- */
-function resolveNetworks(item: ScheduleItem): string[] {
-  const seen: string[] = [];
-  for (const s of item.sessions ?? []) {
-    for (const key of Object.keys(s.broadcasts ?? {})) {
-      if (!seen.includes(key)) seen.push(key);
-    }
-  }
-  if (seen.length > 0) return seen;
-  return item.networks ?? seriesNetworks[item.series] ?? [];
-}
 
 const STATUS_BADGE: Record<NonNullable<ScheduleItem["status"]>, { label: string; cls: string }> = {
   live: { label: "LIVE", cls: "text-flabo-green bg-flabo-green/15 animate-pulse" },
@@ -120,7 +102,6 @@ export default function ScheduleList({
         const isHighlight = isWeekend
           ? isOpen
           : item.status === "live" || item.status === "next";
-        const networks = resolveNetworks(item);
         return (
           <div key={`${item.series}-${item.round}`} className="flex flex-col">
             <button
@@ -162,11 +143,11 @@ export default function ScheduleList({
 
             {isOpen && (
               <div className="rounded-b-xl border border-t-0 border-white/5 bg-flabo-carbon px-3 py-3 space-y-3">
-                {/* セッション × 放送統合テーブル */}
+                {/* セッションタイムテーブル */}
                 {item.sessions && item.sessions.length > 0 && (
                   <div>
                     <div className="font-display tracking-[0.18em] text-[0.5rem] text-flabo-grey uppercase mb-1.5">
-                      セッション × 放送
+                      セッションタイムテーブル
                     </div>
                     <div className="overflow-x-auto -mx-1">
                       <table className="w-full text-[0.65rem]">
@@ -175,9 +156,6 @@ export default function ScheduleList({
                             <th className="text-left py-1 px-1 font-normal">セッション</th>
                             <th className="text-left py-1 px-1 font-normal">現地</th>
                             <th className="text-left py-1 px-1 font-normal text-flabo-green">日本</th>
-                            {networks.map((n) => (
-                              <th key={n} className="text-center py-1 px-1 font-normal">{n}</th>
-                            ))}
                           </tr>
                         </thead>
                         <tbody>
@@ -201,25 +179,10 @@ export default function ScheduleList({
                                 <div className="text-flabo-grey text-[0.55rem]">{s.jpDate}</div>
                                 <div className="font-display text-flabo-green">{s.jpTime}</div>
                               </td>
-                              {networks.map((n) => {
-                                const t = s.broadcasts?.[n];
-                                return (
-                                  <td key={n} className="py-1.5 px-1 whitespace-nowrap font-display text-center align-middle">
-                                    {t ? (
-                                      <span className={t === "○" ? "text-white text-[0.95rem] leading-none" : "text-white"}>{t}</span>
-                                    ) : (
-                                      <span className="text-flabo-grey/40">—</span>
-                                    )}
-                                  </td>
-                                );
-                              })}
                             </tr>
                           ))}
                         </tbody>
                       </table>
-                    </div>
-                    <div className="mt-1.5 text-[0.5rem] text-flabo-grey/70 leading-relaxed">
-                      ※ 放送局列は番組開始時刻（公式番組表）。空欄は未確認。
                     </div>
                   </div>
                 )}
