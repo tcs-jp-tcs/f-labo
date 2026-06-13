@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { ScheduleItem, ScheduleResult, ScheduleSession } from "@/lib/data";
+import type { ScheduleItem, ScheduleSession } from "@/lib/data";
 import CardHeader from "./CardHeader";
 
 const STATUS_BADGE: Record<NonNullable<ScheduleItem["status"]>, { label: string; cls: string }> = {
@@ -17,66 +17,6 @@ const SESSION_BADGE: Record<NonNullable<ScheduleSession["type"]>, string> = {
   quali: "text-flabo-blue bg-flabo-blue/15",
   practice: "text-flabo-grey bg-white/5",
 };
-
-const POS_BORDER = [
-  "border-l-flabo-yellow",
-  "border-l-[#C0C0C0]",
-  "border-l-[#CD7F32]",
-];
-
-function PodiumLines({ podium }: { podium: NonNullable<ScheduleResult["podium"]> }) {
-  return (
-    <div className="space-y-1">
-      {podium.map((p, i) => (
-        <div
-          key={p.pos}
-          className={`flex items-center gap-1.5 text-[0.7rem] pl-1.5 border-l-2 ${POS_BORDER[i]}`}
-        >
-          <span className="font-display font-black w-4 text-center">{p.pos}</span>
-          <span className="font-bold flex-1 truncate">{p.driver}</span>
-          <span className="text-flabo-grey text-[0.6rem] truncate max-w-[80px]">{p.team}</span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function ResultBlock({ title, result }: { title: string; result: { pole?: ScheduleResult["pole"]; podium?: ScheduleResult["podium"] } }) {
-  if (!result.pole && (!result.podium || result.podium.length === 0)) return null;
-  return (
-    <div className="rounded-md bg-white/[0.02] border border-white/5 p-2.5">
-      <div className="font-display tracking-[0.18em] text-[0.5rem] text-flabo-grey uppercase mb-1.5">
-        {title}
-      </div>
-      {result.pole && (
-        <div className="text-[0.7rem] mb-1.5 flex items-start gap-1.5">
-          <span className="font-display tracking-[0.18em] text-[0.45rem] text-flabo-red bg-flabo-red/15 px-1 py-0.5 rounded shrink-0 mt-0.5">
-            POLE
-          </span>
-          <div className="min-w-0">
-            <span className="font-bold">{result.pole.driver}</span>
-            {result.pole.time && (
-              <span className="font-display text-flabo-yellow ml-1.5 text-[0.65rem]">{result.pole.time}</span>
-            )}
-          </div>
-        </div>
-      )}
-      {result.podium && result.podium.length > 0 && <PodiumLines podium={result.podium} />}
-    </div>
-  );
-}
-
-function FastestLapInline({ fl }: { fl: NonNullable<ScheduleResult["fastestLap"]> }) {
-  return (
-    <div className="rounded-md bg-flabo-blue/5 border border-flabo-blue/30 p-2 flex items-center gap-1.5 text-[0.7rem]">
-      <span className="font-display tracking-[0.18em] text-[0.45rem] text-flabo-blue bg-flabo-blue/15 px-1 py-0.5 rounded shrink-0">
-        FL
-      </span>
-      <span className="font-bold truncate">{fl.driver}</span>
-      {fl.time && <span className="font-display text-white ml-auto text-[0.65rem]">{fl.time}</span>}
-    </div>
-  );
-}
 
 export default function ScheduleList({
   items,
@@ -190,41 +130,11 @@ export default function ScheduleList({
                   </div>
                 )}
 
-                {/* レース結果（過去） */}
-                {item.result && (
-                  <div className="space-y-2 border-t border-white/5 pt-3">
-                    <div className="font-display tracking-[0.18em] text-[0.5rem] text-flabo-grey uppercase">
-                      結果（公式）
-                    </div>
-                    {item.result.sprint && (
-                      <ResultBlock title="🏁 スプリント" result={item.result.sprint} />
-                    )}
-                    {(item.result.pole || (item.result.podium && item.result.podium.length > 0)) && (
-                      <ResultBlock
-                        title="🏁 決勝"
-                        result={{
-                          pole: item.result.pole,
-                          podium: item.result.podium,
-                        }}
-                      />
-                    )}
-                    {item.result.fastestLap && <FastestLapInline fl={item.result.fastestLap} />}
-                    {item.result.sourceUrl && (
-                      <a
-                        href={item.result.sourceUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-block text-[0.55rem] text-flabo-grey hover:text-flabo-red font-display tracking-[0.18em]"
-                      >
-                        出典 ↗
-                      </a>
-                    )}
-                  </div>
-                )}
+                {/* 結果は「結果」タブ(race_results)に一本化。スケジュールカードでは非表示（schedules.result はDB保持） */}
 
-                {!item.sessions && !item.result && (
+                {!item.sessions && (
                   <p className="text-flabo-grey text-[0.7rem] leading-relaxed">
-                    詳細セッション・結果は開催日が近づき次第こちらに反映します。
+                    詳細セッションは開催日が近づき次第こちらに反映します。
                   </p>
                 )}
               </div>
