@@ -32,9 +32,12 @@ export default function ScheduleCard({ item }: { item: ScheduleItem }) {
       </div>
       <div className="font-black text-base leading-tight mb-1">{item.name}</div>
       <div className="text-xs text-flabo-grey">{item.date}</div>
-      <div className="mt-2 text-[0.65rem] text-flabo-green flex items-center gap-1">
-        ✓ {item.broadcast}
-      </div>
+      {/* 局名表記はSFのみ表示（他は実質1局独占で情報価値が低いため非表示。schedules.broadcast はDB保持） */}
+      {item.series === "SF" && item.broadcast && (
+        <div className="mt-2 text-[0.65rem] text-flabo-green flex items-center gap-1">
+          ✓ {item.broadcast}
+        </div>
+      )}
     </article>
   );
 }
