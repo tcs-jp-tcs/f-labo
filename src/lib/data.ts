@@ -9,6 +9,14 @@ export type ScheduleSession = {
   type?: "race" | "sprint" | "quali" | "practice";
   /** 放送局名 → 番組開始時刻（公式番組表で確認できた分のみ） */
   broadcasts?: Record<string, string>;
+  /**
+   * セッション開始のUTC時刻（ISO8601, 例 "2026-06-14T13:00:00Z"）。
+   * フェーズ2-2の canonical 値。これがあれば訪問者TZ/開催地TZへ Intl で変換表示する。
+   * 未設定の行は従来の jpTime/localTime 文字列にフォールバックする（移行中の後方互換）。
+   */
+  startUtc?: string;
+  /** セッション終了のUTC時刻（任意）。開放終了（"22:00 -"）は未設定。 */
+  endUtc?: string;
 };
 
 export type ScheduleResultPodium = {
@@ -36,6 +44,10 @@ export type ScheduleItem = {
   country: string;
   flag: string;
   name: string;
+  /** 開催地の表示用都市名（DB: city）。セッション表の左列ヘッダーに使う。 */
+  city?: string;
+  /** サーキット所在地のIANA TZ名（DB: tz, 例 "Europe/Madrid"）。DST自動判定で時刻変換する。 */
+  tz?: string;
   date: string;
   weekendType: "通常週末" | "スプリント週末";
   status?: "next" | "past" | "upcoming" | "live";

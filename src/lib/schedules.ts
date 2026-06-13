@@ -35,6 +35,8 @@ type ScheduleRow = {
   country: string;
   flag: string;
   name: string;
+  city: string | null;
+  tz: string | null;
   date: string;
   weekend_type: string;
   status: string | null;
@@ -46,7 +48,7 @@ type ScheduleRow = {
 };
 
 const SELECT_COLUMNS =
-  "series, round, round_label, country, flag, name, date, weekend_type, status, is_weekend, broadcast, networks, sessions, result";
+  "series, round, round_label, country, flag, name, city, tz, date, weekend_type, status, is_weekend, broadcast, networks, sessions, result";
 
 /** 全 Series キーを空配列で埋めた Record を生成 */
 function emptyRecord(): Record<Series, ScheduleItem[]> {
@@ -62,6 +64,8 @@ function toScheduleItem(row: ScheduleRow): ScheduleItem {
     country: row.country,
     flag: row.flag,
     name: row.name,
+    city: row.city ?? undefined,
+    tz: row.tz ?? undefined,
     date: row.date,
     weekendType: row.weekend_type as ScheduleItem["weekendType"],
     status: (row.status as ScheduleItem["status"]) ?? undefined,
