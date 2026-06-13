@@ -102,7 +102,9 @@ export default function TzSwitcher() {
   };
 
   return (
-    <div ref={containerRef} className="relative notranslate" translate="no">
+    // notranslate は付けない：地域名(日本/アメリカ東部 等)はサイト言語に追従して翻訳させる。
+    // （言語名を母国語固定にする LangSwitcher とは逆方針）
+    <div ref={containerRef} className="relative">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
