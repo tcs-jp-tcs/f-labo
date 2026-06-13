@@ -1,5 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { Orbitron, Noto_Sans_JP, M_PLUS_1p, Chakra_Petch } from "next/font/google";
+import {
+  Orbitron,
+  Noto_Sans_JP,
+  M_PLUS_1p,
+  Chakra_Petch,
+  Noto_Sans_Devanagari,
+  Noto_Sans_Arabic,
+  Noto_Sans_Bengali,
+  Noto_Sans_Thai,
+} from "next/font/google";
 import Script from "next/script";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -38,6 +47,37 @@ const chakraPetch = Chakra_Petch({
   subsets: ["latin"],
   weight: ["700"],
   display: "swap",
+});
+
+// Google翻訳で非ラテン文字へ切替えた際の豆腐（□）対策。
+// 各スクリプト専用 Noto Sans を body の font-family フォールバックに足す。
+// preload:false=日本語ユーザーには不要なので初期ロードしない（必要な文字が出た時のみ取得）。
+const notoDevanagari = Noto_Sans_Devanagari({
+  variable: "--font-noto-devanagari",
+  subsets: ["devanagari"],
+  display: "swap",
+  preload: false,
+});
+
+const notoArabic = Noto_Sans_Arabic({
+  variable: "--font-noto-arabic",
+  subsets: ["arabic"],
+  display: "swap",
+  preload: false,
+});
+
+const notoBengali = Noto_Sans_Bengali({
+  variable: "--font-noto-bengali",
+  subsets: ["bengali"],
+  display: "swap",
+  preload: false,
+});
+
+const notoThai = Noto_Sans_Thai({
+  variable: "--font-noto-thai",
+  subsets: ["thai"],
+  display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -93,7 +133,7 @@ export default function RootLayout({
   return (
     <html
       lang="ja"
-      className={`${orbitron.variable} ${notoSansJp.variable} ${mPlus1p.variable} ${chakraPetch.variable} h-full antialiased`}
+      className={`${orbitron.variable} ${notoSansJp.variable} ${mPlus1p.variable} ${chakraPetch.variable} ${notoDevanagari.variable} ${notoArabic.variable} ${notoBengali.variable} ${notoThai.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         {/* React安定化パッチ: Google翻訳×React の removeChild/insertBefore クラッシュを
