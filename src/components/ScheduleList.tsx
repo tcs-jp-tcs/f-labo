@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { ScheduleItem, ScheduleSession } from "@/lib/data";
+import { formatClock, tzLabel } from "@/lib/timezone";
 import CardHeader from "./CardHeader";
 
 const STATUS_BADGE: Record<NonNullable<ScheduleItem["status"]>, { label: string; cls: string }> = {
@@ -33,6 +34,17 @@ export default function ScheduleList({
   const initial = items.findIndex((i) => i.status === "live" || i.status === "next");
   const [openIndex, setOpenIndex] = useState<number>(initial >= 0 ? initial : -1);
   const isWeekend = variant === "weekend";
+
+  // 訪問者TZはクライアントでのみ取得可能。SSR/初回描画では null（右列はプレースホルダ）。
+  // mount後に実TZへ確定 → 海外ユーザにJSTを誤表示しない／日本ユーザは即JST。左列(開催地)は常にSSRで正しい。
+  const [visitorTz, setVisitorTz] = useState<string | null>(null);
+  useEffect(() => {
+    try {
+      setVisitorTz(Intl.DateTimeFormat().resolvedOptions().timeZone);
+    } catch {
+      setVisitorTz("Asia/Tokyo");
+    }
+  }, []);
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
@@ -87,48 +99,88 @@ export default function ScheduleList({
             {isOpen && (
               <div className="rounded-b-xl border border-t-0 border-white/5 bg-flabo-carbon px-3 py-3 space-y-3">
                 {/* セッションタイムテーブル */}
-                {item.sessions && item.sessions.length > 0 && (
-                  <div>
-                    <div className="font-display tracking-[0.18em] text-[0.5rem] text-flabo-grey uppercase mb-1.5">
-                      セッションタイムテーブル
-                    </div>
-                    <div className="overflow-x-auto -mx-1">
-                      <table className="w-full text-[0.65rem]">
-                        <thead>
-                          <tr className="text-flabo-grey font-display tracking-[0.14em] text-[0.5rem]">
-                            <th className="text-left py-1 px-1 font-normal">セッション</th>
-                            <th className="text-left py-1 px-1 font-normal">現地</th>
-                            <th className="text-left py-1 px-1 font-normal text-flabo-green">日本</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {item.sessions.map((s) => (
-                            <tr key={s.name} className="border-t border-white/5 align-top">
-                              <td className="py-1.5 px-1">
-                                <div className="flex items-center gap-1 flex-wrap">
-                                  {s.type && (
-                                    <span className={`font-display tracking-[0.14em] text-[0.45rem] px-1 py-0.5 rounded ${SESSION_BADGE[s.type]}`}>
-                                      {s.type.toUpperCase()}
-                                    </span>
-                                  )}
-                                  <span className="font-bold text-[0.65rem]">{s.name}</span>
-                                </div>
-                              </td>
-                              <td className="py-1.5 px-1 whitespace-nowrap">
-                                <div className="text-flabo-grey text-[0.55rem]">{s.localDate}</div>
-                                <div className="font-display">{s.localTime}</div>
-                              </td>
-                              <td className="py-1.5 px-1 whitespace-nowrap">
-                                <div className="text-flabo-grey text-[0.55rem]">{s.jpDate}</div>
-                                <div className="font-display text-flabo-green">{s.jpTime}</div>
-                              </td>
+                {item.sessions && item.sessions.length > 0 && (() => {
+                  const sessions = item.sessions;
+                  // startUtc + tz があればこのカードは地域時間変換モード（左=開催地city / 右=訪問者地域）。
+                  // 無い行（未移行）は従来の文字列（左=現地文字列 / 右=日本JST）にフォールバック。
+                  const useUtc = Boolean(item.tz) && sessions.some((s) => s.startUtc);
+                  const refUtc = sessions.find((s) => s.startUtc)?.startUtc;
+                  const circuitHeader = useUtc ? (item.city ?? "開催地") : "開催地";
+                  const visitorHeader = useUtc
+                    ? visitorTz && refUtc
+                      ? tzLabel(visitorTz, new Date(refUtc))
+                      : "地域を判定中…"
+                    : "日本 (JST)";
+                  return (
+                    <div>
+                      <div className="font-display tracking-[0.18em] text-[0.5rem] text-flabo-grey uppercase mb-1.5">
+                        セッションタイムテーブル
+                      </div>
+                      <div className="overflow-x-auto -mx-1">
+                        <table className="w-full text-[0.65rem]">
+                          <thead>
+                            <tr className="text-flabo-grey font-display tracking-[0.14em] text-[0.5rem]">
+                              <th className="text-left py-1 px-1 font-normal">セッション</th>
+                              <th className="text-left py-1 px-1 font-normal">{circuitHeader}</th>
+                              <th className="text-left py-1 px-1 font-normal text-flabo-green">{visitorHeader}</th>
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                          </thead>
+                          <tbody>
+                            {sessions.map((s) => {
+                              const circuit =
+                                s.startUtc && item.tz ? formatClock(s.startUtc, item.tz) : null;
+                              const visitor =
+                                s.startUtc && visitorTz ? formatClock(s.startUtc, visitorTz) : null;
+                              return (
+                                <tr key={s.name} className="border-t border-white/5 align-top">
+                                  <td className="py-1.5 px-1">
+                                    <div className="flex items-center gap-1 flex-wrap">
+                                      {s.type && (
+                                        <span className={`font-display tracking-[0.14em] text-[0.45rem] px-1 py-0.5 rounded ${SESSION_BADGE[s.type]}`}>
+                                          {s.type.toUpperCase()}
+                                        </span>
+                                      )}
+                                      <span className="font-bold text-[0.65rem]">{s.name}</span>
+                                    </div>
+                                  </td>
+                                  <td className="py-1.5 px-1 whitespace-nowrap">
+                                    {circuit ? (
+                                      <>
+                                        <div className="text-flabo-grey text-[0.55rem]">{circuit.date}</div>
+                                        <div className="font-display">{circuit.time}</div>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <div className="text-flabo-grey text-[0.55rem]">{s.localDate}</div>
+                                        <div className="font-display">{s.localTime}</div>
+                                      </>
+                                    )}
+                                  </td>
+                                  <td className="py-1.5 px-1 whitespace-nowrap">
+                                    {visitor ? (
+                                      <>
+                                        <div className="text-flabo-grey text-[0.55rem]">{visitor.date}</div>
+                                        <div className="font-display text-flabo-green">{visitor.time}</div>
+                                      </>
+                                    ) : s.startUtc ? (
+                                      // 移行済みだが訪問者TZ未確定（mount前）。誤情報を出さずプレースホルダ。
+                                      <div className="font-display text-flabo-grey/40">—</div>
+                                    ) : (
+                                      <>
+                                        <div className="text-flabo-grey text-[0.55rem]">{s.jpDate}</div>
+                                        <div className="font-display text-flabo-green">{s.jpTime}</div>
+                                      </>
+                                    )}
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  );
+                })()}
 
                 {/* 結果は「結果」タブ(race_results)に一本化。スケジュールカードでは非表示（schedules.result はDB保持） */}
 
