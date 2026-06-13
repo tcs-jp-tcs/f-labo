@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import HeaderLogo from "./HeaderLogo";
 import LangSwitcher from "./LangSwitcher";
+import TzSwitcher from "./TzSwitcher";
 
 const NAV = [
   { href: "/", label: "ホーム" },
@@ -49,6 +50,7 @@ export default function Header() {
             ))}
           </nav>
           <LangSwitcher />
+          <TzSwitcher />
           <button
             type="button"
             className="md:hidden text-white text-2xl px-2 py-1"

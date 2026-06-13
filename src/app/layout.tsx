@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import TestBanner from "@/components/TestBanner";
 import LangProvider from "@/components/LangProvider";
+import TzProvider from "@/components/TzProvider";
 import "./globals.css";
 
 const GA_ID = "G-WVP9R50FW5";
@@ -145,12 +146,14 @@ export default function RootLayout({
           strategy="afterInteractive"
         />
         <LangProvider>
-          <TestBanner />
-          <div className="kerb-stripe relative z-[101]" aria-hidden />
-          <Header />
-          <main className="flex-1 relative z-[1]">{children}</main>
-          <Footer />
-          <div className="kerb-stripe" aria-hidden />
+          <TzProvider>
+            <TestBanner />
+            <div className="kerb-stripe relative z-[101]" aria-hidden />
+            <Header />
+            <main className="flex-1 relative z-[1]">{children}</main>
+            <Footer />
+            <div className="kerb-stripe" aria-hidden />
+          </TzProvider>
         </LangProvider>
       </body>
     </html>

@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { ScheduleItem, ScheduleSession } from "@/lib/data";
 import { formatClock, tzLabel } from "@/lib/timezone";
+import { useTz } from "./TzProvider";
 import CardHeader from "./CardHeader";
 
 const STATUS_BADGE: Record<NonNullable<ScheduleItem["status"]>, { label: string; cls: string }> = {
@@ -35,16 +36,9 @@ export default function ScheduleList({
   const [openIndex, setOpenIndex] = useState<number>(initial >= 0 ? initial : -1);
   const isWeekend = variant === "weekend";
 
-  // 訪問者TZはクライアントでのみ取得可能。SSR/初回描画では null（右列はプレースホルダ）。
-  // mount後に実TZへ確定 → 海外ユーザにJSTを誤表示しない／日本ユーザは即JST。左列(開催地)は常にSSRで正しい。
-  const [visitorTz, setVisitorTz] = useState<string | null>(null);
-  useEffect(() => {
-    try {
-      setVisitorTz(Intl.DateTimeFormat().resolvedOptions().timeZone);
-    } catch {
-      setVisitorTz("Asia/Tokyo");
-    }
-  }, []);
+  // 訪問者TZは TzProvider が単一ソース（手動設定 > 端末自動）。SSR/初回描画では null
+  // （右列はプレースホルダ）→ mount後に確定。左列(開催地)は常にSSRで正しい。
+  const { tz: visitorTz } = useTz();
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">

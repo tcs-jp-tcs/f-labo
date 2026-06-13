@@ -117,3 +117,45 @@ export function tzLabel(tz: string, ref: Date): string {
   const abbr = tzAbbr(tz, ref);
   return abbr ? `${region} (${abbr})` : region;
 }
+
+/** 地域設定ピッカーの主要地域候補（IANA + 日本語ラベル）。検索は allTimeZones で全TZへ拡張。 */
+export const TZ_OPTIONS: { iana: string; label: string }[] = [
+  { iana: "Asia/Tokyo", label: "日本" },
+  { iana: "Asia/Seoul", label: "韓国" },
+  { iana: "Asia/Shanghai", label: "中国" },
+  { iana: "Asia/Taipei", label: "台湾" },
+  { iana: "Asia/Hong_Kong", label: "香港" },
+  { iana: "Asia/Singapore", label: "シンガポール" },
+  { iana: "Asia/Bangkok", label: "タイ" },
+  { iana: "Asia/Jakarta", label: "インドネシア" },
+  { iana: "Asia/Manila", label: "フィリピン" },
+  { iana: "Asia/Kuala_Lumpur", label: "マレーシア" },
+  { iana: "Asia/Kolkata", label: "インド" },
+  { iana: "Asia/Dubai", label: "UAE" },
+  { iana: "Europe/London", label: "イギリス" },
+  { iana: "Europe/Paris", label: "フランス" },
+  { iana: "Europe/Berlin", label: "ドイツ" },
+  { iana: "Europe/Madrid", label: "スペイン" },
+  { iana: "Europe/Rome", label: "イタリア" },
+  { iana: "Europe/Amsterdam", label: "オランダ" },
+  { iana: "Europe/Monaco", label: "モナコ" },
+  { iana: "America/New_York", label: "アメリカ東部" },
+  { iana: "America/Chicago", label: "アメリカ中部" },
+  { iana: "America/Denver", label: "アメリカ山岳部" },
+  { iana: "America/Los_Angeles", label: "アメリカ西部" },
+  { iana: "America/Toronto", label: "カナダ東部" },
+  { iana: "America/Sao_Paulo", label: "ブラジル" },
+  { iana: "Australia/Sydney", label: "オーストラリア東部" },
+];
+
+/** 検索用の全IANA TZ。supportedValuesOf 非対応環境では主要候補にフォールバック。 */
+export function allTimeZones(): string[] {
+  try {
+    const f = (Intl as unknown as { supportedValuesOf?: (k: string) => string[] })
+      .supportedValuesOf;
+    if (typeof f === "function") return f("timeZone");
+  } catch {
+    /* 非対応環境は無視 */
+  }
+  return TZ_OPTIONS.map((o) => o.iana);
+}
