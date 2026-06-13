@@ -130,6 +130,44 @@ export default function LangProvider({
     }
   }, []);
 
+  // リロード後の翻訳適用を保証する（モバイル対策）。
+  // デスクトップは googtrans cookie で Google翻訳が自動翻訳するが、iOS Safari 等の
+  // モバイルでは cookie による自動適用が走らず本文が原文(日本語)のまま残ることがある。
+  // そこで GT が生成する隠しセレクト .goog-te-combo を能動的に駆動して翻訳を当てる。
+  // 既に翻訳済み(html.translated-*)なら何もしない＝デスクトップでの二重適用を防ぐ。
+  useEffect(() => {
+    if (isStandalone()) return; // スタンドアロンは GT 自体が不可
+    const target = readGoogTransLang();
+    if (target === DEFAULT_LANG) return; // 原文表示なら何もしない
+
+    let tries = 0;
+    const timer = window.setInterval(() => {
+      tries += 1;
+      const html = document.documentElement;
+      // GT が翻訳を適用すると html に translated-ltr / translated-rtl が付く
+      if (
+        html.classList.contains("translated-ltr") ||
+        html.classList.contains("translated-rtl")
+      ) {
+        window.clearInterval(timer);
+        return;
+      }
+      const combo = document.querySelector(
+        ".goog-te-combo",
+      ) as HTMLSelectElement | null;
+      if (combo && combo.value !== target) {
+        combo.value = target;
+        combo.dispatchEvent(new Event("change", { bubbles: true }));
+      } else if (combo) {
+        // 値が既に target でも未翻訳なら change を再発火して適用を促す
+        combo.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+      if (tries > 40) window.clearInterval(timer); // 約20秒で打ち切り
+    }, 500);
+
+    return () => window.clearInterval(timer);
+  }, []);
+
   // 言語変更（通常ブラウザ・アプリ内ブラウザ）: cookie を書き換えてフルリロード。
   // リロード後に Google が cookie を読んで決定的に翻訳する（ボタン表示と実際の表示
   // 言語が必ず一致・検証済み）。
