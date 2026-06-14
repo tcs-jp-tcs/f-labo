@@ -47,7 +47,7 @@ export default function ResultsClient({ resultsBySeries }: Props) {
     <Section>
       <SectionHeader title="レース結果" />
       <p className="text-flabo-grey text-sm mb-6">
-        直近の主要レース結果です。GPごとにまとめ、予選・スプリント・決勝などのセッションをタブで切り替えできます。各カードに出典元へのリンクを記載しています。
+        直近の主要レース結果です。GPごとにまとめ、予選・スプリント・決勝などのセッションをタブで切り替えできます。
       </p>
       <SeriesTabs tabs={TABS} active={tab} onChange={setTab} />
       {groups.length > 0 ? (
