@@ -113,7 +113,7 @@ export default function PodiumBody({
                   </tr>
                 </thead>
                 <tbody>
-                  {podium.map((row, i) => {
+                  {podium.slice(3).map((row, i) => {
                     const out = isOut(row);
                     return (
                       <tr key={`row-${i}`} className="border-t border-white/5">
