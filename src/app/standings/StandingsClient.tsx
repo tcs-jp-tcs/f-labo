@@ -24,15 +24,17 @@ export default function StandingsClient({ standings }: Props) {
     <Section>
       <SectionHeader title="チャンピオンシップ順位表" />
       <SeriesTabs tabs={TABS} active={tab} onChange={setTab} />
-      {current.note && (
-        <p className="text-[0.7rem] text-flabo-grey mb-4">{current.note}</p>
-      )}
-      <div className={`grid grid-cols-1 ${hasTeams ? "md:grid-cols-2" : ""} gap-3.5`}>
-        <StandingsCard title="🏎️ ドライバーズ" rows={current.drivers} />
+      <div className={`mt-3.5 grid grid-cols-1 ${hasTeams ? "md:grid-cols-2" : ""} gap-3.5`}>
+        <StandingsCard
+          title="🏎️ ドライバーズ"
+          rows={current.drivers}
+          note={current.note}
+        />
         {hasTeams && (
           <StandingsCard
             title="コンストラクターズ"
             rows={current.teams}
+            note={current.note}
             showTeamBar={tab === "F1"}
           />
         )}
