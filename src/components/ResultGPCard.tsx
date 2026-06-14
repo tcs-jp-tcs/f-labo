@@ -121,18 +121,6 @@ export default function ResultGPCard({ group }: { group: GPGroup }) {
             {session.note}
           </p>
         )}
-
-        {/* 出典 */}
-        {session?.sourceUrl && (
-          <a
-            href={session.sourceUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[0.65rem] text-flabo-grey hover:text-flabo-red font-display tracking-[0.18em]"
-          >
-            出典 ↗
-          </a>
-        )}
       </div>
     </div>
   );
