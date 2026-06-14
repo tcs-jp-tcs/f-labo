@@ -137,7 +137,8 @@ export type StandingRow = {
 };
 
 export type PodiumRow = {
-  pos: number;
+  /** 完走順位。リタイア・除外は "NC"/"DNF" 等の文字列が入る */
+  pos: number | string;
   driver: string;
   team: string;
   time: string;
