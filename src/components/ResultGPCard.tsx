@@ -12,9 +12,9 @@ import PodiumBody from "./PodiumBody";
  */
 const SERIES_SESSION_TABS: Record<Series, { type: string; optional?: boolean }[]> = {
   F1: [
-    { type: "予選" },
     { type: "スプリント予選" },
     { type: "スプリント" },
+    { type: "予選" },
     { type: "決勝" },
   ],
   F2: [{ type: "予選" }, { type: "スプリント" }, { type: "フィーチャー" }],
