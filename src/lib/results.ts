@@ -44,7 +44,10 @@ function toRaceResult(row: RaceResultRow): RaceResult {
   };
 }
 
-/** 直近のレース結果を取得（display_order 昇順） */
+/** フリー走行は結果ページに出さない（DB には残すが表示対象から除外） */
+const HIDDEN_RACE_TYPES = new Set(["FP1", "FP2", "FP3"]);
+
+/** 直近のレース結果を取得（display_order 昇順・フリー走行を除外） */
 export const getRecentResults = cache(async (): Promise<RaceResult[]> => {
   const { data, error } = await supabase
     .from("race_results")
@@ -55,5 +58,7 @@ export const getRecentResults = cache(async (): Promise<RaceResult[]> => {
     console.error("[results] fetch failed:", error.message);
     return [];
   }
-  return (data ?? []).map((row) => toRaceResult(row as RaceResultRow));
+  return (data ?? [])
+    .map((row) => toRaceResult(row as RaceResultRow))
+    .filter((r) => !r.raceType || !HIDDEN_RACE_TYPES.has(r.raceType));
 });
