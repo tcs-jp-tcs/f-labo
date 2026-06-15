@@ -7,7 +7,7 @@
   --color-carbon: #1A1A1A;
   --color-carbon-light: #2A2A2A;
   --color-white-soft: #F0F0F0;
-  --color-grey: #888;
+  --color-grey: #aaaaaa;
   --color-accent-yellow: #FFD700;
   --color-accent-green: #00FF88;
   --color-accent-blue: #00AAFF;
@@ -37,7 +37,7 @@ body {
   background-color: #0A0A0A;
   color: var(--color-white-soft);
   font-family: var(--font-noto-sans-jp), var(--font-noto-devanagari), var(--font-noto-arabic), var(--font-noto-bengali), var(--font-noto-thai), "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 body {
