@@ -59,7 +59,7 @@ function MonthSection({
             {group.key}
           </span>
         </span>
-        <span className="font-display tracking-[0.18em] text-[0.55rem] text-flabo-grey">
+        <span className="font-display tracking-[0.18em] text-[0.7rem] text-flabo-grey">
           {group.items.length}件
         </span>
       </button>

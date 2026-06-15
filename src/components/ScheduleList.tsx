@@ -63,11 +63,11 @@ export default function ScheduleList({
               <CardHeader category={item.series} />
               <div className="relative p-5">
                 {badge && badge.label && (
-                  <span className={`absolute top-3 right-3 font-display font-bold tracking-[0.18em] text-[0.5rem] px-1.5 py-0.5 rounded ${badge.cls}`}>
+                  <span className={`absolute top-3 right-3 font-display font-bold tracking-[0.18em] text-[0.7rem] px-1.5 py-0.5 rounded ${badge.cls}`}>
                     {badge.label}
                   </span>
                 )}
-                <div className="font-display tracking-[0.18em] text-[0.55rem] text-flabo-grey mb-2">
+                <div className="font-display tracking-[0.18em] text-[0.7rem] text-flabo-grey mb-2">
                   {item.roundLabel ?? `ROUND ${item.round}`}
                   {item.weekendType === "スプリント週末" && (
                     <span className="ml-2 text-flabo-yellow">SPRINT</span>
@@ -80,11 +80,11 @@ export default function ScheduleList({
                 <div className="text-xs text-flabo-grey">{item.date}</div>
                 {/* 局名表記はSFのみ表示（他は実質1局独占で情報価値が低いため非表示。schedules.broadcast はDB保持） */}
                 {item.series === "SF" && item.broadcast && (
-                  <div className="mt-2 text-[0.65rem] text-flabo-green flex items-center gap-1">
+                  <div className="mt-2 text-[0.75rem] text-flabo-green flex items-center gap-1">
                     ○ {item.broadcast}
                   </div>
                 )}
-                <div className="mt-3 text-[0.55rem] font-display tracking-[0.18em] text-flabo-grey">
+                <div className="mt-3 text-[0.7rem] font-display tracking-[0.18em] text-flabo-grey">
                   {isOpen ? "閉じる ▲" : "詳細を見る ▼"}
                 </div>
               </div>
@@ -107,13 +107,13 @@ export default function ScheduleList({
                     : "日本 (JST)";
                   return (
                     <div>
-                      <div className="font-display tracking-[0.18em] text-[0.5rem] text-flabo-grey uppercase mb-1.5">
+                      <div className="font-display tracking-[0.18em] text-[0.7rem] text-flabo-grey uppercase mb-1.5">
                         セッションタイムテーブル
                       </div>
                       <div className="overflow-x-auto -mx-1">
-                        <table className="w-full text-[0.65rem]">
+                        <table className="w-full text-[0.75rem]">
                           <thead>
-                            <tr className="text-flabo-grey font-display tracking-[0.14em] text-[0.5rem]">
+                            <tr className="text-flabo-grey font-display tracking-[0.14em] text-[0.7rem]">
                               <th className="text-left py-1 px-1 font-normal">セッション</th>
                               <th className="text-left py-1 px-1 font-normal">{circuitHeader}</th>
                               <th className="text-left py-1 px-1 font-normal text-flabo-green">{visitorHeader}</th>
@@ -130,22 +130,22 @@ export default function ScheduleList({
                                   <td className="py-1.5 px-1">
                                     <div className="flex items-center gap-1 flex-wrap">
                                       {s.type && (
-                                        <span className={`font-display tracking-[0.14em] text-[0.45rem] px-1 py-0.5 rounded ${SESSION_BADGE[s.type]}`}>
+                                        <span className={`font-display tracking-[0.14em] text-[0.7rem] px-1 py-0.5 rounded ${SESSION_BADGE[s.type]}`}>
                                           {s.type.toUpperCase()}
                                         </span>
                                       )}
-                                      <span className="font-bold text-[0.65rem]">{s.name}</span>
+                                      <span className="font-bold text-[0.75rem]">{s.name}</span>
                                     </div>
                                   </td>
                                   <td className="py-1.5 px-1 whitespace-nowrap">
                                     {circuit ? (
                                       <>
-                                        <div className="text-flabo-grey text-[0.55rem]">{circuit.date}</div>
+                                        <div className="text-flabo-grey text-[0.7rem]">{circuit.date}</div>
                                         <div className="font-display">{circuit.time}</div>
                                       </>
                                     ) : (
                                       <>
-                                        <div className="text-flabo-grey text-[0.55rem]">{s.localDate}</div>
+                                        <div className="text-flabo-grey text-[0.7rem]">{s.localDate}</div>
                                         <div className="font-display">{s.localTime}</div>
                                       </>
                                     )}
@@ -153,7 +153,7 @@ export default function ScheduleList({
                                   <td className="py-1.5 px-1 whitespace-nowrap">
                                     {visitor ? (
                                       <>
-                                        <div className="text-flabo-grey text-[0.55rem]">{visitor.date}</div>
+                                        <div className="text-flabo-grey text-[0.7rem]">{visitor.date}</div>
                                         <div className="font-display text-flabo-green">{visitor.time}</div>
                                       </>
                                     ) : s.startUtc ? (
@@ -161,7 +161,7 @@ export default function ScheduleList({
                                       <div className="font-display text-flabo-grey/40">—</div>
                                     ) : (
                                       <>
-                                        <div className="text-flabo-grey text-[0.55rem]">{s.jpDate}</div>
+                                        <div className="text-flabo-grey text-[0.7rem]">{s.jpDate}</div>
                                         <div className="font-display text-flabo-green">{s.jpTime}</div>
                                       </>
                                     )}

@@ -5,7 +5,7 @@ import { XLogo, InstagramLogo, TikTokLogo } from "./SnsIcons";
 export default function SnsCard() {
   return (
     <div className="rounded-xl border border-white/5 bg-flabo-carbon p-5 flex flex-col gap-2">
-      <h3 className="font-display tracking-[0.24em] text-[0.65rem] uppercase text-flabo-grey mb-1">
+      <h3 className="font-display tracking-[0.24em] text-[0.75rem] uppercase text-flabo-grey mb-1">
         📱 Follow Us
       </h3>
       <a

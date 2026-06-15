@@ -9,7 +9,7 @@ export default function NewsCard({ item }: { item: NewsItem }) {
       <CardHeader category={item.category} />
       <div className="p-5 flex flex-col flex-1 gap-2.5">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="font-display tracking-[0.18em] text-[0.55rem] text-flabo-grey uppercase">
+          <span className="font-display tracking-[0.18em] text-[0.7rem] text-flabo-grey uppercase">
             {item.source}
           </span>
         </div>
@@ -21,7 +21,7 @@ export default function NewsCard({ item }: { item: NewsItem }) {
         </p>
         <div className="mt-1 flex items-center justify-between gap-3">
           <span className="text-[0.7rem] text-flabo-grey">{item.date}</span>
-          <div className="flex items-center gap-3 font-display tracking-[0.18em] text-[0.55rem]">
+          <div className="flex items-center gap-3 font-display tracking-[0.18em] text-[0.7rem]">
             {hasTranslation && (
               <Link
                 href={`/news/${item.id}`}

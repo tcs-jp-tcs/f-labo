@@ -50,14 +50,14 @@ export default async function ReviewDetailPage({
         <header className="mb-10 pb-8 border-b border-white/10">
           <div className="flex flex-wrap items-center gap-2 mb-4">
             <span
-              className={`font-display tracking-[0.18em] text-[0.6rem] px-2 py-0.5 rounded ${CATEGORY_CHIP[review.category]}`}
+              className={`font-display tracking-[0.18em] text-[0.7rem] px-2 py-0.5 rounded ${CATEGORY_CHIP[review.category]}`}
             >
               {review.category}
             </span>
-            <span className="font-display tracking-[0.18em] text-[0.6rem] text-flabo-grey uppercase">
+            <span className="font-display tracking-[0.18em] text-[0.7rem] text-flabo-grey uppercase">
               Round {review.round}
             </span>
-            <span className="font-display tracking-[0.18em] text-[0.6rem] text-flabo-grey">
+            <span className="font-display tracking-[0.18em] text-[0.7rem] text-flabo-grey">
               {review.flag} {review.gpName}
             </span>
             <span className="text-[0.7rem] text-flabo-grey ml-auto">{review.date}</span>
@@ -77,7 +77,7 @@ export default async function ReviewDetailPage({
         <div className="mt-12 pt-6 border-t border-white/10">
           <Link
             href="/review"
-            className="font-display tracking-[0.18em] text-[0.65rem] text-flabo-grey hover:text-flabo-red transition-colors"
+            className="font-display tracking-[0.18em] text-[0.75rem] text-flabo-grey hover:text-flabo-red transition-colors"
           >
             ← レースレビュー一覧へ戻る
           </Link>

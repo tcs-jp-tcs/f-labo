@@ -17,11 +17,11 @@ export default function HeroFeature({ item }: { item: NewsItem }) {
     <article className="hero-glow rounded-2xl border border-white/5 bg-gradient-to-br from-flabo-carbon to-flabo-dark overflow-hidden">
       {/* compact category bar */}
       <div className={`flex items-center justify-between px-5 py-2 ${bar.bg} ${bar.text}`}>
-        <div className="flex items-center gap-2 font-display font-bold tracking-[0.24em] text-[0.6rem] uppercase">
+        <div className="flex items-center gap-2 font-display font-bold tracking-[0.24em] text-[0.7rem] uppercase">
           <span className="block w-1.5 h-1.5 bg-current rounded-full pulse-dot" />
           TOP STORY · {bar.label}
         </div>
-        <span className="font-display tracking-[0.18em] text-[0.55rem] uppercase opacity-90">
+        <span className="font-display tracking-[0.18em] text-[0.7rem] uppercase opacity-90">
           {item.source}
         </span>
       </div>

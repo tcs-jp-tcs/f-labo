@@ -57,7 +57,7 @@ export default function ResultGPCard({ group }: { group: GPGroup }) {
       <div className="p-5 flex flex-col gap-3">
         {/* GP 見出し */}
         <div>
-          <div className="font-display tracking-[0.18em] text-[0.6rem] text-flabo-grey">
+          <div className="font-display tracking-[0.18em] text-[0.7rem] text-flabo-grey">
             ROUND {round}
           </div>
           <h3 className="font-bold text-[0.95rem] mt-0.5">
@@ -76,7 +76,7 @@ export default function ResultGPCard({ group }: { group: GPGroup }) {
                 type="button"
                 disabled={!hasData}
                 onClick={() => hasData && setActive(t.type)}
-                className={`font-display tracking-[0.14em] text-[0.6rem] px-3 py-1.5 rounded-md border transition-all ${
+                className={`font-display tracking-[0.14em] text-[0.7rem] px-3 py-1.5 rounded-md border transition-all ${
                   isActive
                     ? "bg-flabo-red text-white border-flabo-red"
                     : hasData
@@ -94,12 +94,12 @@ export default function ResultGPCard({ group }: { group: GPGroup }) {
         {session && (
           <div className="flex items-center gap-2">
             {session.status === "live" && (
-              <span className="text-flabo-green text-[0.55rem] font-display tracking-[0.18em] animate-pulse">
+              <span className="text-flabo-green text-[0.7rem] font-display tracking-[0.18em] animate-pulse">
                 ● LIVE
               </span>
             )}
             {session.date && (
-              <span className="text-[0.65rem] text-flabo-grey ml-auto">
+              <span className="text-[0.75rem] text-flabo-grey ml-auto">
                 {session.date}
               </span>
             )}
@@ -122,7 +122,7 @@ export default function ResultGPCard({ group }: { group: GPGroup }) {
 
         {/* 補足 */}
         {session?.note && (
-          <p className="text-[0.65rem] text-white leading-relaxed border-t border-white/5 pt-3">
+          <p className="text-[0.75rem] text-white leading-relaxed border-t border-white/5 pt-3">
             {session.note}
           </p>
         )}

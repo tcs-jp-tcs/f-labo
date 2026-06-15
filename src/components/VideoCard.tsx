@@ -18,7 +18,7 @@ export default function VideoCard() {
 
   return (
     <div className="mx-auto w-full max-w-[320px]">
-      <div className="font-display tracking-[0.24em] text-[0.65rem] uppercase text-flabo-grey mb-2">
+      <div className="font-display tracking-[0.24em] text-[0.75rem] uppercase text-flabo-grey mb-2">
         ▶ 人気動画
       </div>
       <a
@@ -47,7 +47,7 @@ export default function VideoCard() {
           </span>
         </div>
         {/* 右上に Short バッジ */}
-        <span className="absolute top-2.5 right-2.5 font-display tracking-[0.18em] text-[0.5rem] px-1.5 py-0.5 rounded bg-black/55 text-white uppercase">
+        <span className="absolute top-2.5 right-2.5 font-display tracking-[0.18em] text-[0.7rem] px-1.5 py-0.5 rounded bg-black/55 text-white uppercase">
           Short
         </span>
       </a>

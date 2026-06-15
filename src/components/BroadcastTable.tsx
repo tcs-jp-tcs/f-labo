@@ -27,7 +27,7 @@ export default function BroadcastTable({ weekend }: { weekend: WeekendBroadcast 
       <div className="px-5 py-4 flex flex-col gap-2 md:flex-row md:items-center md:justify-between border-b border-white/5 bg-gradient-to-r from-flabo-red/10 to-transparent">
         <span className="font-bold text-base flex items-center gap-2 flex-wrap">
           {/* カテゴリバッジ：/news のカテゴリチップと同じシリーズ別配色で統一 */}
-          <span className={`font-display tracking-[0.18em] text-[0.6rem] rounded-md px-2 py-0.5 shrink-0 ${SERIES_CHIP[weekend.series]}`}>
+          <span className={`font-display tracking-[0.18em] text-[0.7rem] rounded-md px-2 py-0.5 shrink-0 ${SERIES_CHIP[weekend.series]}`}>
             {seriesLabel[weekend.series]}
           </span>
           <span aria-hidden>{weekend.flag}</span> {weekend.gpName} — Round {weekend.round}
@@ -35,7 +35,7 @@ export default function BroadcastTable({ weekend }: { weekend: WeekendBroadcast 
         {/* F2/F3 はスプリント＋フィーチャーが通常フォーマットのため週末タイプ表示は省略 */}
         {weekend.series !== "F2" && weekend.series !== "F3" && (
           <span
-            className={`font-display tracking-[0.18em] text-[0.55rem] uppercase rounded px-2.5 py-1 ${
+            className={`font-display tracking-[0.18em] text-[0.7rem] uppercase rounded px-2.5 py-1 ${
               weekend.weekendType === "スプリント週末"
                 ? "text-flabo-yellow bg-flabo-yellow/10"
                 : "text-flabo-grey bg-white/5"
@@ -47,7 +47,7 @@ export default function BroadcastTable({ weekend }: { weekend: WeekendBroadcast 
       </div>
       <div className="py-1 overflow-x-auto">
         <div
-          className={`grid items-center px-3 md:px-5 py-3 border-b border-white/5 font-display tracking-[0.1em] text-[0.6rem] text-flabo-grey uppercase ${minWidth}`}
+          className={`grid items-center px-3 md:px-5 py-3 border-b border-white/5 font-display tracking-[0.1em] text-[0.7rem] text-flabo-grey uppercase ${minWidth}`}
           style={gridStyle}
         >
           <span>セッション</span>

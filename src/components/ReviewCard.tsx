@@ -11,10 +11,10 @@ export default function ReviewCard({ item }: { item: ReviewSummary }) {
       <CardHeader category={item.category} />
       <div className="p-5 flex flex-col flex-1 gap-2.5">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="font-display tracking-[0.18em] text-[0.55rem] text-flabo-grey uppercase">
+          <span className="font-display tracking-[0.18em] text-[0.7rem] text-flabo-grey uppercase">
             Round {item.round}
           </span>
-          <span className="font-display tracking-[0.18em] text-[0.55rem] text-flabo-grey">
+          <span className="font-display tracking-[0.18em] text-[0.7rem] text-flabo-grey">
             {item.flag} {item.gpName}
           </span>
         </div>
@@ -29,7 +29,7 @@ export default function ReviewCard({ item }: { item: ReviewSummary }) {
         </p>
         <div className="mt-1 flex items-center justify-between">
           <span className="text-[0.7rem] text-flabo-grey">{item.date}</span>
-          <span className="font-display tracking-[0.18em] text-[0.55rem] text-flabo-grey group-hover:text-flabo-red transition-colors">
+          <span className="font-display tracking-[0.18em] text-[0.7rem] text-flabo-grey group-hover:text-flabo-red transition-colors">
             続きを読む →
           </span>
         </div>

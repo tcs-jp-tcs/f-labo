@@ -67,7 +67,7 @@ export default function EmbedList({ embeds }: { embeds: Embed[] }) {
     <div className="flex flex-col gap-8">
       {embeds.map((e) => (
         <div key={e.id} className="mx-auto w-full max-w-[330px]">
-          <div className="font-display tracking-[0.24em] text-[0.65rem] uppercase text-flabo-grey mb-2">
+          <div className="font-display tracking-[0.24em] text-[0.75rem] uppercase text-flabo-grey mb-2">
             {PLATFORM_LABEL[e.platform]}
           </div>
 

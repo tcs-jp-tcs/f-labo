@@ -11,7 +11,7 @@ export default function PodiumScene({ rd, dateLabel }: Props) {
       aria-label={`Fラボ検定 Rd.${rd} 表彰台`}
     >
       <div className="text-center space-y-3">
-        <p className="font-display tracking-[0.32em] text-[0.6rem] text-flabo-red">
+        <p className="font-display tracking-[0.32em] text-[0.7rem] text-flabo-red">
           PODIUM FINISH
         </p>
 

@@ -70,7 +70,7 @@ export default function PodiumBody({
                 </div>
                 <div
                   className={`text-flabo-grey truncate ${
-                    large ? "text-[0.7rem]" : "text-[0.65rem]"
+                    large ? "text-[0.7rem]" : "text-[0.75rem]"
                   }`}
                 >
                   {row.team}
@@ -99,7 +99,7 @@ export default function PodiumBody({
             <div className="overflow-hidden">
               <table className="w-full border-collapse text-left">
                 <thead>
-                  <tr className="text-[0.55rem] uppercase tracking-[0.12em] text-flabo-grey">
+                  <tr className="text-[0.7rem] uppercase tracking-[0.12em] text-flabo-grey">
                     <th className="font-display font-normal py-1.5 pr-2 w-8">
                       Pos
                     </th>
@@ -148,7 +148,7 @@ export default function PodiumBody({
           <button
             type="button"
             onClick={() => setExpanded((v) => !v)}
-            className="mt-3 w-full rounded-lg border border-white/10 bg-white/[0.02] py-2 font-display text-[0.65rem] uppercase tracking-[0.18em] text-flabo-grey transition-colors hover:text-white hover:border-white/20"
+            className="mt-3 w-full rounded-lg border border-white/10 bg-white/[0.02] py-2 font-display text-[0.75rem] uppercase tracking-[0.18em] text-flabo-grey transition-colors hover:text-white hover:border-white/20"
           >
             {expanded ? "閉じる ▲" : "全員を見る ▼"}
           </button>

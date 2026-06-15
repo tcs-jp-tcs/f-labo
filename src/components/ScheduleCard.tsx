@@ -12,16 +12,16 @@ export default function ScheduleCard({ item }: { item: ScheduleItem }) {
       } ${isPast ? "opacity-70" : ""}`}
     >
       {isNext && (
-        <span className="absolute top-2.5 right-2.5 font-display font-bold tracking-[0.18em] text-[0.5rem] text-flabo-red bg-flabo-red/15 px-1.5 py-0.5 rounded">
+        <span className="absolute top-2.5 right-2.5 font-display font-bold tracking-[0.18em] text-[0.7rem] text-flabo-red bg-flabo-red/15 px-1.5 py-0.5 rounded">
           NEXT
         </span>
       )}
       {isPast && (
-        <span className="absolute top-2.5 right-2.5 font-display font-bold tracking-[0.18em] text-[0.5rem] text-flabo-grey bg-white/5 px-1.5 py-0.5 rounded">
+        <span className="absolute top-2.5 right-2.5 font-display font-bold tracking-[0.18em] text-[0.7rem] text-flabo-grey bg-white/5 px-1.5 py-0.5 rounded">
           PAST
         </span>
       )}
-      <div className="font-display tracking-[0.18em] text-[0.55rem] text-flabo-grey mb-2">
+      <div className="font-display tracking-[0.18em] text-[0.7rem] text-flabo-grey mb-2">
         ROUND {item.round}
         {item.weekendType === "スプリント週末" && (
           <span className="ml-2 text-flabo-yellow">SPRINT</span>
@@ -34,7 +34,7 @@ export default function ScheduleCard({ item }: { item: ScheduleItem }) {
       <div className="text-xs text-flabo-grey">{item.date}</div>
       {/* 局名表記はSFのみ表示（他は実質1局独占で情報価値が低いため非表示。schedules.broadcast はDB保持） */}
       {item.series === "SF" && item.broadcast && (
-        <div className="mt-2 text-[0.65rem] text-flabo-green flex items-center gap-1">
+        <div className="mt-2 text-[0.75rem] text-flabo-green flex items-center gap-1">
           ✓ {item.broadcast}
         </div>
       )}

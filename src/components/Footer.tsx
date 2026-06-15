@@ -31,21 +31,21 @@ export default function Footer() {
               abo
             </text>
           </svg>
-          <div className="text-[0.65rem] text-white/40 leading-relaxed max-w-xs">
+          <div className="text-[0.75rem] text-white/40 leading-relaxed max-w-xs">
             F1・F2・F3・スーパーフォーミュラ・インディカーの<br />
             ニュース＆スケジュールメディア
           </div>
         </div>
 
         <div className="flex flex-col gap-2">
-          <span className="font-display tracking-[0.18em] text-[0.55rem] text-flabo-grey uppercase">サイト</span>
+          <span className="font-display tracking-[0.18em] text-[0.7rem] text-flabo-grey uppercase">サイト</span>
           <Link href="/about" className="text-flabo-grey hover:text-white text-xs transition-colors">運営者情報</Link>
           <Link href="/contact" className="text-flabo-grey hover:text-white text-xs transition-colors">お問い合わせ</Link>
           <Link href="/privacy" className="text-flabo-grey hover:text-white text-xs transition-colors">プライバシーポリシー</Link>
         </div>
 
         <div className="flex flex-col gap-2">
-          <span className="font-display tracking-[0.18em] text-[0.55rem] text-flabo-grey uppercase">フォロー</span>
+          <span className="font-display tracking-[0.18em] text-[0.7rem] text-flabo-grey uppercase">フォロー</span>
           <a
             href={sns.x.url}
             target="_blank"
@@ -88,7 +88,7 @@ export default function Footer() {
           */}
         </div>
       </div>
-      <div className="mt-6 pt-4 border-t border-white/5 text-[0.65rem] text-white/25 text-center">
+      <div className="mt-6 pt-4 border-t border-white/5 text-[0.75rem] text-white/25 text-center">
         © 2026 フォーミュラ研究所（Fラボ）— 当サイトは公式団体ではありません。掲載情報は各公式ソースに基づきます。
       </div>
     </footer>

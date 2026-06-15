@@ -217,7 +217,7 @@ export default function Markdown({ content }: { content: string }) {
           className="rounded-xl border border-white/5 bg-flabo-carbon overflow-x-auto"
         >
           <table className="w-full text-[0.82rem]">
-            <thead className="text-flabo-grey font-display tracking-[0.12em] text-[0.6rem] uppercase">
+            <thead className="text-flabo-grey font-display tracking-[0.12em] text-[0.7rem] uppercase">
               <tr className="border-b border-white/5">
                 {headers.map((h, hi) => (
                   <th key={hi} className="px-3 py-2 text-left">

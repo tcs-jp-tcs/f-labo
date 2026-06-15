@@ -45,11 +45,11 @@ export default function StandingsCard({
 
   return (
     <div className="rounded-xl border border-white/5 bg-flabo-carbon p-5">
-      <h3 className="font-display tracking-[0.24em] text-[0.65rem] uppercase text-flabo-grey mb-1">
+      <h3 className="font-display tracking-[0.24em] text-[0.75rem] uppercase text-flabo-grey mb-1">
         {title}
       </h3>
       {note && (
-        <p className="text-[0.65rem] text-flabo-grey mb-3.5">{note}</p>
+        <p className="text-[0.75rem] text-flabo-grey mb-3.5">{note}</p>
       )}
 
       {/* 上位3名カード */}
@@ -77,14 +77,14 @@ export default function StandingsCard({
                 {row.name}
               </p>
               {row.team && (
-                <p className="truncate text-[0.6rem] text-flabo-grey leading-tight mt-0.5">
+                <p className="truncate text-[0.7rem] text-flabo-grey leading-tight mt-0.5">
                   {row.team}
                 </p>
               )}
             </div>
             <span className="font-display text-[0.8rem] text-flabo-yellow shrink-0">
               {row.points}
-              <span className="text-[0.55rem] text-flabo-grey ml-1">pts</span>
+              <span className="text-[0.7rem] text-flabo-grey ml-1">pts</span>
             </span>
           </div>
         ))}
@@ -101,7 +101,7 @@ export default function StandingsCard({
             <div className="overflow-hidden">
               <table className="w-full border-collapse text-left">
                 <thead>
-                  <tr className="text-[0.55rem] uppercase tracking-[0.12em] text-flabo-grey">
+                  <tr className="text-[0.7rem] uppercase tracking-[0.12em] text-flabo-grey">
                     <th className="font-display font-normal py-1.5 pr-2 w-8">Pos</th>
                     <th className="font-display font-normal py-1.5 pr-2">Name</th>
                     <th className="font-display font-normal py-1.5 pr-2">Team</th>
@@ -136,7 +136,7 @@ export default function StandingsCard({
           <button
             type="button"
             onClick={() => setExpanded((v) => !v)}
-            className="mt-3 w-full rounded-lg border border-white/10 bg-white/[0.02] py-2 font-display text-[0.65rem] uppercase tracking-[0.18em] text-flabo-grey transition-colors hover:text-white hover:border-white/20"
+            className="mt-3 w-full rounded-lg border border-white/10 bg-white/[0.02] py-2 font-display text-[0.75rem] uppercase tracking-[0.18em] text-flabo-grey transition-colors hover:text-white hover:border-white/20"
           >
             {expanded ? "閉じる ▲" : "全員を見る ▼"}
           </button>

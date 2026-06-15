@@ -32,7 +32,7 @@ export default async function AmazonPromo() {
       >
         <div className="flex flex-col gap-3.5 md:flex-row md:items-center md:justify-between">
           <div className="min-w-0">
-            <div className="font-display tracking-[0.2em] text-[0.55rem] text-flabo-red uppercase mb-1.5">
+            <div className="font-display tracking-[0.2em] text-[0.7rem] text-flabo-red uppercase mb-1.5">
               PR · Amazon
             </div>
             <h3 className="font-black text-lg md:text-xl leading-tight">
@@ -46,7 +46,7 @@ export default async function AmazonPromo() {
         </div>
       </a>
       {/* 開示テキスト（必須・削除しない） */}
-      <p className="text-[0.6rem] text-flabo-grey leading-relaxed mt-2 px-1">
+      <p className="text-[0.7rem] text-flabo-grey leading-relaxed mt-2 px-1">
         当サイトは、Amazon.co.jpを宣伝しリンクすることで紹介料を得る手段を提供する、Amazonアソシエイト・プログラムの参加者です。
       </p>
     </div>

@@ -223,7 +223,7 @@ export default function LangSwitcher() {
       >
         <span className="flex min-w-0 flex-col">
           <span className="truncate font-medium">{l.native}</span>
-          <span className="truncate text-[0.65rem] text-flabo-grey">
+          <span className="truncate text-[0.75rem] text-flabo-grey">
             {l.en}
           </span>
         </span>
@@ -281,7 +281,7 @@ export default function LangSwitcher() {
                   <span className="flex-1 text-[0.7rem] font-medium text-flabo-text">
                     言語切替について / About
                   </span>
-                  <span aria-hidden className="text-[0.6rem] text-flabo-grey">
+                  <span aria-hidden className="text-[0.7rem] text-flabo-grey">
                     {noticeOpen ? "▲" : "▼"}
                   </span>
                 </button>
@@ -329,13 +329,13 @@ export default function LangSwitcher() {
                 )
               ) : (
                 <>
-                  <p className="px-3 pb-1 pt-1 text-[0.6rem] font-bold uppercase tracking-[0.18em] text-flabo-grey">
+                  <p className="px-3 pb-1 pt-1 text-[0.7rem] font-bold uppercase tracking-[0.18em] text-flabo-grey">
                     主要言語
                   </p>
                   <div className="flex flex-col gap-0.5">
                     {PRIMARY.map(renderItem)}
                   </div>
-                  <p className="px-3 pb-1 pt-3 text-[0.6rem] font-bold uppercase tracking-[0.18em] text-flabo-grey">
+                  <p className="px-3 pb-1 pt-3 text-[0.7rem] font-bold uppercase tracking-[0.18em] text-flabo-grey">
                     その他
                   </p>
                   <div className="flex flex-col gap-0.5">

@@ -119,11 +119,11 @@ export default function QuizRunner({ quiz }: { quiz: Quiz }) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span
-                className={`font-display tracking-[0.18em] text-[0.55rem] px-1.5 py-0.5 rounded ${categoryBadge[current.category]}`}
+                className={`font-display tracking-[0.18em] text-[0.7rem] px-1.5 py-0.5 rounded ${categoryBadge[current.category]}`}
               >
                 {categoryLabel[current.category]}
               </span>
-              <span className="font-display tracking-[0.18em] text-[0.6rem] text-flabo-grey">
+              <span className="font-display tracking-[0.18em] text-[0.7rem] text-flabo-grey">
                 Q{index + 1} / {total}
               </span>
             </div>
@@ -163,7 +163,7 @@ export default function QuizRunner({ quiz }: { quiz: Quiz }) {
                   disabled={phase !== "question"}
                   className={`text-left rounded-xl border px-4 py-3.5 transition-all duration-200 flex items-center gap-3 ${stateClass} ${phase === "question" ? "cursor-pointer" : "cursor-default"}`}
                 >
-                  <span className="font-display tracking-[0.18em] text-[0.65rem] text-flabo-grey w-5 shrink-0">
+                  <span className="font-display tracking-[0.18em] text-[0.75rem] text-flabo-grey w-5 shrink-0">
                     {String.fromCharCode(65 + i)}
                   </span>
                   <span className="text-sm leading-relaxed flex-1">
@@ -256,7 +256,7 @@ function ResultView({
       {rank.tone === "winner" && <Fireworks />}
       {(rank.tone === "winner" || rank.tone === "podium") && <Confetti />}
       <div className="rounded-2xl border border-white/5 bg-flabo-carbon p-6 md:p-10 text-center space-y-6">
-        <p className="font-display tracking-[0.32em] text-[0.65rem] text-flabo-grey">
+        <p className="font-display tracking-[0.32em] text-[0.75rem] text-flabo-grey">
           RESULT
         </p>
         <div className="space-y-1">

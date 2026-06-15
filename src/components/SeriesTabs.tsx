@@ -18,7 +18,7 @@ export default function SeriesTabs<T extends string>({
             key={tab}
             type="button"
             onClick={() => onChange(tab)}
-            className={`font-display tracking-[0.18em] text-[0.6rem] px-3.5 py-1.5 rounded-md border transition-all ${
+            className={`font-display tracking-[0.18em] text-[0.7rem] px-3.5 py-1.5 rounded-md border transition-all ${
               isActive
                 ? "bg-flabo-red text-white border-flabo-red"
                 : "bg-flabo-carbon text-flabo-grey border-white/5 hover:text-white hover:border-white/20"

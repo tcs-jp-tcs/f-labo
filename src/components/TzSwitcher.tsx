@@ -87,7 +87,7 @@ export default function TzSwitcher() {
       >
         <span className="flex min-w-0 flex-col">
           <span className="truncate font-medium">{label ?? tzRegion(iana)}</span>
-          <span className="truncate text-[0.65rem] text-flabo-grey">
+          <span className="truncate text-[0.75rem] text-flabo-grey">
             {iana}
             {abbr ? ` · ${abbr}` : ""}
           </span>
@@ -130,7 +130,7 @@ export default function TzSwitcher() {
               <p className="text-[0.7rem] font-bold text-flabo-text">
                 地域・時間設定
               </p>
-              <p className="mt-0.5 text-[0.6rem] leading-relaxed text-flabo-grey">
+              <p className="mt-0.5 text-[0.7rem] leading-relaxed text-flabo-grey">
                 スケジュールの「あなたの時刻」をどの地域で表示するか選べます（言語は 🌐 から）。
               </p>
             </div>
@@ -148,7 +148,7 @@ export default function TzSwitcher() {
               >
                 <span className="flex min-w-0 flex-col">
                   <span className="truncate font-medium">自動（端末に合わせる）</span>
-                  <span className="truncate text-[0.65rem] text-flabo-grey">
+                  <span className="truncate text-[0.75rem] text-flabo-grey">
                     {tz && mode === "auto" ? `${tzRegion(tz)} · ${tz}` : "ブラウザのタイムゾーンを使用"}
                   </span>
                 </span>
@@ -183,7 +183,7 @@ export default function TzSwitcher() {
                 )
               ) : (
                 <>
-                  <p className="px-3 pb-1 pt-1 text-[0.6rem] font-bold uppercase tracking-[0.18em] text-flabo-grey">
+                  <p className="px-3 pb-1 pt-1 text-[0.7rem] font-bold uppercase tracking-[0.18em] text-flabo-grey">
                     主要地域
                   </p>
                   <div className="flex flex-col gap-0.5">

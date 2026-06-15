@@ -63,7 +63,7 @@ export default function ScheduleClient({ schedules, broadcasts }: Props) {
                     className="flex items-center gap-2 px-3 py-2 rounded-md bg-white/[0.03]"
                   >
                     <span className="text-base" aria-hidden>{upcoming.flag}</span>
-                    <span className="font-display tracking-[0.18em] text-[0.55rem] text-flabo-grey">
+                    <span className="font-display tracking-[0.18em] text-[0.7rem] text-flabo-grey">
                       {seriesLabel[s]}
                     </span>
                     <span className="font-bold flex-1 truncate">{upcoming.name}</span>

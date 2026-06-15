@@ -25,7 +25,7 @@ export default function Trophy({ rd, dateLabel }: Props) {
       />
 
       <div className="relative z-10 text-center space-y-3">
-        <p className="font-display tracking-[0.32em] text-[0.6rem] text-flabo-yellow">
+        <p className="font-display tracking-[0.32em] text-[0.7rem] text-flabo-yellow">
           WINNER TROPHY
         </p>
 
