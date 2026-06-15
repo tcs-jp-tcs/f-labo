@@ -15,13 +15,36 @@ type StandingsEntry = { drivers: StandingRow[]; teams: StandingRow[]; note?: str
 
 const SERIES_KEYS: Series[] = ["F1", "F2", "F3", "SF", "INDY"];
 
+/**
+ * DB の rows(jsonb) 内の1エントリ。
+ * ポイントは `pts` キーで格納されている（フロントの StandingRow は `points`）。
+ * 旧データ互換のため `points` も読めるようにしておく。
+ */
+type StandingRowRaw = {
+  pos: number;
+  name: string;
+  team?: string;
+  pts?: number;
+  points?: number;
+};
+
 /** DB の standings 行（読み取りに使うカラムのみ） */
 type StandingsRowRecord = {
   series: string;
   standing_type: string;
   as_of: string | null;
-  rows: StandingRow[] | null;
+  rows: StandingRowRaw[] | null;
 };
+
+/** jsonb の生エントリ → StandingRow（pts→points に正規化。値が無ければ 0） */
+function toStandingRow(r: StandingRowRaw): StandingRow {
+  return {
+    pos: r.pos,
+    name: r.name,
+    team: r.team,
+    points: r.pts ?? r.points ?? 0,
+  };
+}
 
 const SELECT_COLUMNS = "series, standing_type, as_of, rows";
 
@@ -53,7 +76,7 @@ export const getStandings = cache(
       const row = raw as StandingsRowRecord;
       const series = row.series as Series;
       if (!SERIES_KEYS.includes(series)) continue;
-      const rows = row.rows ?? [];
+      const rows = (row.rows ?? []).map(toStandingRow);
       if (row.standing_type === "driver") {
         grouped[series].drivers = rows;
       } else if (row.standing_type === "constructor") {
