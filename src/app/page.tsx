@@ -128,7 +128,7 @@ export default async function HomePage() {
       {/* NEXT RACE — 次に開催されるF1レース（日時から自動判定・展開カード） */}
       <Section>
         <SectionHeader
-          title="🏁 NEXT RACE / 次のレース"
+          title="🏁 NEXT RACE"
           seeAllHref="/schedule"
           seeAllLabel="全スケジュールを見る →"
         />
