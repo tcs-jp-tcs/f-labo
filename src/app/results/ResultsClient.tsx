@@ -6,8 +6,10 @@ import SectionHeader from "@/components/SectionHeader";
 import SeriesTabs from "@/components/SeriesTabs";
 import ResultGPCard, { type GPGroup } from "@/components/ResultGPCard";
 import type { RaceResult, Series } from "@/lib/data";
+import { visibleTabs } from "@/lib/displayConfig";
 
-const TABS = ["F1", "F2", "F3", "SF", "INDY"] as const;
+// 表示対象シリーズのみのタブ（displayConfig 一元管理）。F1のみのときはタブ自体を出さない。
+const TABS = visibleTabs(["F1", "F2", "F3", "SF", "INDY"]);
 
 type Props = {
   resultsBySeries: Record<Series, RaceResult[]>;
@@ -40,7 +42,7 @@ function groupByGP(results: RaceResult[]): GPGroup[] {
 }
 
 export default function ResultsClient({ resultsBySeries }: Props) {
-  const [tab, setTab] = useState<Series>("F1");
+  const [tab, setTab] = useState<Series>(TABS[0] ?? "F1");
   const groups = groupByGP(resultsBySeries[tab]);
 
   return (
@@ -49,7 +51,9 @@ export default function ResultsClient({ resultsBySeries }: Props) {
       <p className="text-flabo-grey text-sm mb-6">
         直近の主要レース結果です。GPごとにまとめ、予選・スプリント・決勝などのセッションをタブで切り替えできます。
       </p>
-      <SeriesTabs tabs={TABS} active={tab} onChange={setTab} />
+      {TABS.length > 1 && (
+        <SeriesTabs tabs={TABS} active={tab} onChange={setTab} />
+      )}
       {groups.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
           {groups.map((g) => (

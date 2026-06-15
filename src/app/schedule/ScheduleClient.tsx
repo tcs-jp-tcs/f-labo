@@ -8,8 +8,10 @@ import ScheduleList from "@/components/ScheduleList";
 import BroadcastTable from "@/components/BroadcastTable";
 import { seriesLabel } from "@/lib/data";
 import type { ScheduleItem, Series, WeekendBroadcast } from "@/lib/data";
+import { isSeriesVisible, visibleTabs } from "@/lib/displayConfig";
 
-const TABS = ["F1", "F2", "F3", "SF", "INDY"] as const;
+// 表示対象シリーズのみのタブ（displayConfig 一元管理）。F1のみのときはタブ自体を出さない。
+const TABS = visibleTabs(["F1", "F2", "F3", "SF", "INDY"]);
 
 type Props = {
   schedules: Record<Series, ScheduleItem[]>;
@@ -17,7 +19,7 @@ type Props = {
 };
 
 export default function ScheduleClient({ schedules, broadcasts }: Props) {
-  const [tab, setTab] = useState<Series>("F1");
+  const [tab, setTab] = useState<Series>(TABS[0] ?? "F1");
   const list = schedules[tab];
 
   return (
@@ -27,7 +29,9 @@ export default function ScheduleClient({ schedules, broadcasts }: Props) {
         <p className="text-flabo-grey text-xs mb-4">
           レースカードをタップするとセッションごとの現地時間／日本時間が展開表示されます。
         </p>
-        <SeriesTabs tabs={TABS} active={tab} onChange={setTab} />
+        {TABS.length > 1 && (
+          <SeriesTabs tabs={TABS} active={tab} onChange={setTab} />
+        )}
         <ScheduleList items={list} />
       </Section>
 
@@ -48,7 +52,7 @@ export default function ScheduleClient({ schedules, broadcasts }: Props) {
               次回レースのあるカテゴリ：
             </p>
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[0.8rem]">
-              {(Object.keys(schedules) as Series[]).map((s) => {
+              {(Object.keys(schedules) as Series[]).filter(isSeriesVisible).map((s) => {
                 const upcoming = schedules[s].find(
                   (r) => r.status === "next" || r.status === "upcoming" || r.status === "live",
                 );

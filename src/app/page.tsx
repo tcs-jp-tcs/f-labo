@@ -18,6 +18,7 @@ import { getActiveEmbeds } from "@/lib/embeds";
 import { getRecentResults } from "@/lib/results";
 import { getSchedules, selectWeekendItems } from "@/lib/schedules";
 import { getStandings } from "@/lib/standings";
+import { isSeriesVisible } from "@/lib/displayConfig";
 
 // 【応急処置】YouTubeチャンネル削除（ポリシー誤検知・再審査請求中）に伴い、
 // ホームの「人気動画」セクション（YouTube Short埋め込み）を一旦非表示にする。
@@ -37,9 +38,10 @@ export default async function HomePage() {
   ]);
   const featuredNews = homeNews[0];
   const restHomeNews = homeNews.slice(1, 4);
-  // 結果ページと同じ基準：display_order 昇順の先頭（display_order=0 の最新1件）を
-  // race_type で除外せず表示する。FP1/FP2/FP3・予選・スプリント・決勝いずれも対象。
-  const sidebarResult = recentResults[0];
+  // 結果ページと同じ基準：display_order 昇順の先頭を表示する（FP/予選/スプリント/決勝いずれも対象）。
+  // カテゴリ表示制御（displayConfig）に従い、表示対象シリーズ（現状F1のみ）の最新結果に固定する。
+  const sidebarResult =
+    recentResults.find((r) => isSeriesVisible(r.series)) ?? recentResults[0];
 
   // 今週のレース予定：schedules の is_weekend=true を単一ソースとして優先度順
   // （F1→F2→F3→SF→INDY）で取得する。今週末セットの切替は schedules の is_weekend を
@@ -142,7 +144,7 @@ export default async function HomePage() {
               次回レースのあるカテゴリ：
             </p>
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[0.8rem]">
-              {(Object.keys(schedules) as Series[]).map((s) => {
+              {(Object.keys(schedules) as Series[]).filter(isSeriesVisible).map((s) => {
                 const upcoming = schedules[s].find(
                   (r) => r.status === "next" || r.status === "upcoming" || r.status === "live",
                 );
@@ -185,7 +187,7 @@ export default async function HomePage() {
             href="/standings"
             className="inline-block font-display tracking-[0.18em] text-xs text-flabo-red hover:text-white transition-colors"
           >
-            F2・F3・SF・INDY の順位も見る →
+            順位表を詳しく見る →
           </Link>
         </div>
       </Section>

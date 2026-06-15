@@ -6,8 +6,10 @@ import SectionHeader from "@/components/SectionHeader";
 import SeriesTabs from "@/components/SeriesTabs";
 import StandingsCard from "@/components/StandingsCard";
 import type { Series, StandingRow } from "@/lib/data";
+import { visibleTabs } from "@/lib/displayConfig";
 
-const TABS = ["F1", "F2", "F3", "SF", "INDY"] as const;
+// 表示対象シリーズのみのタブ（displayConfig 一元管理）。F1のみのときはタブ自体を出さない。
+const TABS = visibleTabs(["F1", "F2", "F3", "SF", "INDY"]);
 
 type StandingsEntry = { drivers: StandingRow[]; teams: StandingRow[]; note?: string };
 
@@ -16,14 +18,16 @@ type Props = {
 };
 
 export default function StandingsClient({ standings }: Props) {
-  const [tab, setTab] = useState<Series>("F1");
+  const [tab, setTab] = useState<Series>(TABS[0] ?? "F1");
   const current = standings[tab];
   const hasTeams = current.teams.length > 0;
 
   return (
     <Section>
       <SectionHeader title="チャンピオンシップ順位表" />
-      <SeriesTabs tabs={TABS} active={tab} onChange={setTab} />
+      {TABS.length > 1 && (
+        <SeriesTabs tabs={TABS} active={tab} onChange={setTab} />
+      )}
       <div className={`mt-3.5 grid grid-cols-1 ${hasTeams ? "md:grid-cols-2" : ""} gap-3.5`}>
         <StandingsCard
           title="🏎️ ドライバーズ"

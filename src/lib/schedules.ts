@@ -8,6 +8,7 @@ import type {
   Series,
   WeekendBroadcast,
 } from "@/lib/data";
+import { isSeriesVisible } from "@/lib/displayConfig";
 
 /**
  * Supabase schedules テーブルからレーススケジュールを取得するデータアクセス層。
@@ -110,7 +111,8 @@ export const getSchedules = cache(
 export function selectWeekendItems(
   schedules: Record<Series, ScheduleItem[]>,
 ): ScheduleItem[] {
-  return SERIES_PRIORITY.flatMap((s) =>
+  // カテゴリ表示制御（displayConfig）に従い、表示対象シリーズのみ抽出する。
+  return SERIES_PRIORITY.filter(isSeriesVisible).flatMap((s) =>
     schedules[s].filter((r) => r.isWeekend),
   );
 }
