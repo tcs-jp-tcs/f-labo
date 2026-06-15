@@ -11,12 +11,11 @@ import StandingsCard from "@/components/StandingsCard";
 import SectionHeader from "@/components/SectionHeader";
 import Section from "@/components/Section";
 import MainLogo from "@/components/MainLogo";
-import { seriesLabel } from "@/lib/data";
-import type { ScheduleItem, Series } from "@/lib/data";
+import type { ScheduleItem } from "@/lib/data";
 import { getActiveNews } from "@/lib/news";
 import { getActiveEmbeds } from "@/lib/embeds";
 import { getRecentResults } from "@/lib/results";
-import { getSchedules, selectWeekendItems } from "@/lib/schedules";
+import { getSchedules, selectNextRace } from "@/lib/schedules";
 import { getStandings } from "@/lib/standings";
 import { isSeriesVisible } from "@/lib/displayConfig";
 
@@ -43,13 +42,13 @@ export default async function HomePage() {
   const sidebarResult =
     recentResults.find((r) => isSeriesVisible(r.series)) ?? recentResults[0];
 
-  // 今週のレース予定：schedules の is_weekend=true を単一ソースとして優先度順
-  // （F1→F2→F3→SF→INDY）で取得する。今週末セットの切替は schedules の is_weekend を
-  // 立て替えるだけでよい（旧 weekend_broadcasts テーブルは廃止）。
-  // 先頭カード（最優先シリーズ）のみ NEXT として初期展開し、他は閉じた状態にする。
-  const weekendItems: ScheduleItem[] = selectWeekendItems(schedules).map(
-    (item, i) => ({ ...item, status: i === 0 ? ("next" as const) : undefined }),
-  );
+  // NEXT RACE：現在日時を基準に「次に開催される（まだ終わっていない）F1レース」を
+  // schedules から自動取得する（決勝の startUtc で終了判定。is_weekend/status の手動
+  // フラグには依存しない）。終了したレースは掴まない。
+  const nextRace = selectNextRace(schedules);
+  const nextRaceItems: ScheduleItem[] = nextRace
+    ? [{ ...nextRace, status: "next" as const }]
+    : [];
   const f1Standings = standings.F1;
 
   return (
@@ -126,44 +125,23 @@ export default async function HomePage() {
         </div>
       </Section>
 
-      {/* This Weekend — 今週のレース予定（展開カードに一本化） */}
+      {/* NEXT RACE — 次に開催されるF1レース（日時から自動判定・展開カード） */}
       <Section>
         <SectionHeader
-          title="📺 今週のレース予定"
+          title="🏁 NEXT RACE / 次のレース"
           seeAllHref="/schedule"
           seeAllLabel="全スケジュールを見る →"
         />
-        {weekendItems.length > 0 ? (
-          <ScheduleList items={weekendItems} variant="weekend" />
+        {nextRaceItems.length > 0 ? (
+          <ScheduleList items={nextRaceItems} variant="weekend" />
         ) : (
-          <div className="rounded-xl border border-white/5 bg-flabo-carbon p-5 space-y-3">
+          <div className="rounded-xl border border-white/5 bg-flabo-carbon p-5 space-y-2">
             <p className="font-display tracking-[0.18em] text-xs text-flabo-grey uppercase">
-              📅 今週末のレースはありません
+              📅 次のレースは未定
             </p>
             <p className="text-xs text-flabo-grey leading-relaxed">
-              次回レースのあるカテゴリ：
+              次戦が決まり次第こちらに表示されます。
             </p>
-            <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[0.8rem]">
-              {(Object.keys(schedules) as Series[]).filter(isSeriesVisible).map((s) => {
-                const upcoming = schedules[s].find(
-                  (r) => r.status === "next" || r.status === "upcoming" || r.status === "live",
-                );
-                if (!upcoming) return null;
-                return (
-                  <li
-                    key={s}
-                    className="flex items-center gap-2 px-3 py-2 rounded-md bg-white/[0.03]"
-                  >
-                    <span className="text-base" aria-hidden>{upcoming.flag}</span>
-                    <span className="font-display tracking-[0.18em] text-[0.55rem] text-flabo-grey">
-                      {seriesLabel[s]}
-                    </span>
-                    <span className="font-bold flex-1 truncate">{upcoming.name}</span>
-                    <span className="text-flabo-grey text-[0.7rem]">{upcoming.date}</span>
-                  </li>
-                );
-              })}
-            </ul>
           </div>
         )}
       </Section>

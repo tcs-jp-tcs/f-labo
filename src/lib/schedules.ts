@@ -118,6 +118,49 @@ export function selectWeekendItems(
 }
 
 /**
+ * 決勝（=最終セッション）開始からこの時間が過ぎたら「レース終了」とみなす。
+ * 終了判定の余裕。決勝開催中はまだ「次のレース」として掴み続けるための緩衝。
+ */
+const RACE_FINISH_BUFFER_MS = 4 * 60 * 60 * 1000; // 4時間
+
+/**
+ * そのレース週末の「終了時刻の目安」を返す（決勝開始 startUtc + 緩衝）。
+ * startUtc を持つセッションが無い行（過去の旧データ等）は null。
+ */
+function raceFinishEstimate(item: ScheduleItem): number | null {
+  const sessions = item.sessions ?? [];
+  for (let i = sessions.length - 1; i >= 0; i--) {
+    const u = sessions[i]?.startUtc;
+    if (u) {
+      const t = new Date(u).getTime();
+      if (!Number.isNaN(t)) return t + RACE_FINISH_BUFFER_MS;
+    }
+  }
+  return null;
+}
+
+/**
+ * 現在日時を基準に「次に開催される（まだ終わっていない）レース」を1件返す。
+ * 表示対象シリーズ（displayConfig・現状F1のみ）の中から、決勝終了見込みが
+ * 現在以降のレースを最も早い順で選ぶ。終了したレースは掴まない。
+ * is_weekend / status の手動フラグには依存しない（日時から自動判定）。
+ */
+export function selectNextRace(
+  schedules: Record<Series, ScheduleItem[]>,
+): ScheduleItem | null {
+  const now = Date.now();
+  const upcoming = SERIES_PRIORITY.filter(isSeriesVisible)
+    .flatMap((s) => schedules[s])
+    .map((item) => ({ item, finish: raceFinishEstimate(item) }))
+    .filter(
+      (x): x is { item: ScheduleItem; finish: number } =>
+        x.finish !== null && x.finish >= now,
+    )
+    .sort((a, b) => a.finish - b.finish);
+  return upcoming[0]?.item ?? null;
+}
+
+/**
  * ScheduleItem → 放送統合表（BroadcastTable）用の WeekendBroadcast に変換する。
  * 旧 weekend_broadcasts テーブルの代わりに、schedules.sessions（放送局→開始時刻を保持）
  * から放送局列と ○ 表示を導出する。weekendBroadcastToScheduleItem の逆変換にあたる。
