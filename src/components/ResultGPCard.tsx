@@ -106,9 +106,14 @@ export default function ResultGPCard({ group }: { group: GPGroup }) {
           </div>
         )}
 
-        {/* 表彰台（タブ切替で state リセットされるよう key を付与） */}
+        {/* 全ドライバー順位（タブ切替で state リセットされるよう key を付与）。
+            full_results があれば全員表示、無い古い行は podium にフォールバック */}
         {session ? (
-          <PodiumBody key={active} podium={session.podium} large />
+          <PodiumBody
+            key={active}
+            podium={session.fullResults ?? session.podium}
+            large
+          />
         ) : (
           <p className="text-flabo-grey text-xs leading-relaxed py-1">
             結果待ち

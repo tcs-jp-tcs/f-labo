@@ -109,7 +109,7 @@ export default function StandingsCard({
                   </tr>
                 </thead>
                 <tbody>
-                  {rows.map((row) => (
+                  {rows.slice(3).map((row) => (
                     <tr
                       key={`${row.pos}-${row.name}`}
                       className="border-t border-white/5"

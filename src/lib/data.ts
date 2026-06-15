@@ -152,7 +152,10 @@ export type RaceResult = {
   date: string;
   raceType?: "決勝" | "スプリント" | "フィーチャー" | "予選";
   status?: "confirmed" | "live" | "scheduled";
+  /** 表彰台（Top3）。トップページのポジウムカードで使用 */
   podium: PodiumRow[];
+  /** 全ドライバーの順位。結果ページで全員表示するために使う（無い行は podium にフォールバック） */
+  fullResults?: PodiumRow[];
   note?: string;
   sourceUrl?: string;
 };

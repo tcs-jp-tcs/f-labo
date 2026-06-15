@@ -21,12 +21,13 @@ type RaceResultRow = {
   race_type: string | null;
   status: string | null;
   podium: PodiumRow[] | null;
+  full_results: PodiumRow[] | null;
   note: string | null;
   source_url: string | null;
 };
 
 const SELECT_COLUMNS =
-  "series, round, flag, gp_name, date, race_type, status, podium, note, source_url, display_order";
+  "series, round, flag, gp_name, date, race_type, status, podium, full_results, note, source_url, display_order";
 
 /** DB 行 → RaceResult 型に変換 */
 function toRaceResult(row: RaceResultRow): RaceResult {
@@ -39,6 +40,7 @@ function toRaceResult(row: RaceResultRow): RaceResult {
     raceType: (row.race_type as RaceResult["raceType"]) ?? undefined,
     status: (row.status as RaceResult["status"]) ?? undefined,
     podium: row.podium ?? [],
+    fullResults: row.full_results ?? undefined,
     note: row.note ?? undefined,
     sourceUrl: row.source_url ?? undefined,
   };
