@@ -54,6 +54,11 @@ export default async function HomePage() {
 
   return (
     <>
+      {/* Audible プロモ（最上部・ヘッダー直下）。期間外は自動非表示。 */}
+      <div className="max-w-[1280px] mx-auto px-6 pt-6 relative z-[1]">
+        <AudibleBanner />
+      </div>
+
       {/* Hero */}
       <section className="max-w-[1280px] mx-auto px-6 pt-8 pb-4 relative z-[1]">
         <div className="text-center mb-8 flex flex-col items-center">
@@ -110,11 +115,6 @@ export default async function HomePage() {
           <EmbedList embeds={embeds} />
         </Section>
       )}
-
-      {/* Audible プロモ（期間限定・プライムデーバナーの上）。期間外は自動非表示。 */}
-      <Section className="py-6 pb-0">
-        <AudibleBanner />
-      </Section>
 
       {/* Amazon アソシエイト プロモ（動画 と 最新ニュース の間） */}
       <Section className="py-6">
