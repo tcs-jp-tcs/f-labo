@@ -41,41 +41,44 @@ function AssociateDisclosure() {
 function PrimedayBanner() {
   return (
     <div className="mx-auto w-full max-w-[640px]">
-      {/* 上段: 公式画像バナー（カード全体がリンク） */}
-      <a
-        href={PRIMEDAY_URL}
-        target="_blank"
-        rel="sponsored noopener"
-        aria-label="Amazonプライムデー 2026（外部サイト・PR）"
-        className="group block overflow-hidden rounded-xl border border-flabo-red/40 bg-flabo-carbon transition-all duration-300 hover:border-flabo-red hover:-translate-y-0.5 hover:shadow-lg hover:shadow-flabo-red/20"
-      >
-        <img
-          src="/images/primeday2026.jpg"
-          alt="Amazonプライムデー 2026 7/10(金)〜7/13(月) 4日間のビッグセール"
-          width={640}
-          height={360}
-          loading="lazy"
-          className="block w-full h-auto"
-        />
-      </a>
-
-      {/* 下段: 告知テキスト＋CTAボタン（サイトの既存スタイルに合わせる） */}
-      <div className="mt-3 rounded-xl border border-flabo-red/40 bg-gradient-to-r from-flabo-red/20 via-flabo-carbon to-flabo-carbon px-5 py-4 md:px-6 md:py-5">
-        <p className="font-black text-base md:text-lg leading-tight">
-          先行セールは7/7(火)スタート！
-        </p>
-        <p className="text-[0.85rem] text-white/70 mt-1.5">
-          ポイントアップキャンペーン エントリー受付中
-        </p>
+      {/* 画像＋下段を1枚のカードに一体化（プライムデーブルー基調） */}
+      <div className="overflow-hidden rounded-xl border border-[#0073E6]/50 shadow-lg shadow-[#0073E6]/15">
+        {/* 上段: 公式画像バナー（画像部分がリンク） */}
         <a
           href={PRIMEDAY_URL}
           target="_blank"
           rel="sponsored noopener"
-          aria-label="セール会場をチェック（外部サイト・PR）"
-          className="group mt-3.5 inline-flex items-center justify-center gap-2 rounded-full bg-flabo-red px-6 py-3 font-display font-bold tracking-[0.12em] text-sm text-white transition-colors hover:bg-white hover:text-flabo-red"
+          aria-label="Amazonプライムデー 2026（外部サイト・PR）"
+          className="block"
         >
-          セール会場をチェック →
+          <img
+            src="/images/primeday2026.jpg"
+            alt="Amazonプライムデー 2026 7/10(金)〜7/13(月) 4日間のビッグセール"
+            width={640}
+            height={360}
+            loading="lazy"
+            className="block w-full h-auto"
+          />
         </a>
+
+        {/* 下段: 告知テキスト＋CTAボタン（バナーの青に合わせ画像と地続き） */}
+        <div className="bg-gradient-to-b from-[#0F8FF0] to-[#0073E6] px-5 py-4 md:px-6 md:py-5 text-center">
+          <p className="font-black text-base md:text-lg leading-tight text-white">
+            先行セールは7/7(火)スタート！
+          </p>
+          <p className="text-[0.85rem] text-white/85 mt-1.5">
+            ポイントアップキャンペーン エントリー受付中
+          </p>
+          <a
+            href={PRIMEDAY_URL}
+            target="_blank"
+            rel="sponsored noopener"
+            aria-label="セール会場をチェック（外部サイト・PR）"
+            className="mt-3.5 inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 font-display font-bold tracking-[0.12em] text-sm text-[#0073E6] shadow-md transition-colors hover:bg-[#001F3F] hover:text-white"
+          >
+            セール会場をチェック →
+          </a>
+        </div>
       </div>
 
       <AssociateDisclosure />
