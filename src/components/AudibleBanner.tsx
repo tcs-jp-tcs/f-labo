@@ -1,5 +1,3 @@
-import { AssociateDisclosure } from "@/components/AmazonPromo";
-
 /**
  * Audible（Amazonオーディオブック）プロモバナー。
  *
@@ -59,8 +57,6 @@ export default function AudibleBanner() {
           プレミアムプランを試す →
         </span>
       </a>
-
-      <AssociateDisclosure />
     </div>
   );
 }
