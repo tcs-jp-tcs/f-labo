@@ -33,10 +33,15 @@ function AssociateDisclosure() {
   );
 }
 
-/** プライムデー2026 画像バナー（640×360・全幅レスポンシブ） */
+/**
+ * プライムデー2026 画像バナー（640×360・スマホ全幅／デスクトップは max-640px 中央寄せ）。
+ * 画像の下に告知テキスト＋CTAボタンを付ける。期間外は本コンポーネント自体が
+ * レンダリングされない（AmazonPromo の分岐）ため、下段ごと自動で非表示になる。
+ */
 function PrimedayBanner() {
   return (
-    <div>
+    <div className="mx-auto w-full max-w-[640px]">
+      {/* 上段: 公式画像バナー（カード全体がリンク） */}
       <a
         href={PRIMEDAY_URL}
         target="_blank"
@@ -53,6 +58,26 @@ function PrimedayBanner() {
           className="block w-full h-auto"
         />
       </a>
+
+      {/* 下段: 告知テキスト＋CTAボタン（サイトの既存スタイルに合わせる） */}
+      <div className="mt-3 rounded-xl border border-flabo-red/40 bg-gradient-to-r from-flabo-red/20 via-flabo-carbon to-flabo-carbon px-5 py-4 md:px-6 md:py-5">
+        <p className="font-black text-base md:text-lg leading-tight">
+          先行セールは7/7(火)スタート！
+        </p>
+        <p className="text-[0.85rem] text-white/70 mt-1.5">
+          ポイントアップキャンペーン エントリー受付中
+        </p>
+        <a
+          href={PRIMEDAY_URL}
+          target="_blank"
+          rel="sponsored noopener"
+          aria-label="セール会場をチェック（外部サイト・PR）"
+          className="group mt-3.5 inline-flex items-center justify-center gap-2 rounded-full bg-flabo-red px-6 py-3 font-display font-bold tracking-[0.12em] text-sm text-white transition-colors hover:bg-white hover:text-flabo-red"
+        >
+          セール会場をチェック →
+        </a>
+      </div>
+
       <AssociateDisclosure />
     </div>
   );
