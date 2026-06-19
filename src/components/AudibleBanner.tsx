@@ -29,31 +29,31 @@ export default function AudibleBanner() {
         target="_blank"
         rel="sponsored noopener"
         aria-label="Audible（Amazonのオーディオブック）プレミアムプラン3か月間無料体験へ（外部サイト・PR）"
-        className="group block overflow-hidden rounded-xl border border-[#1399FF]/50 bg-gradient-to-br from-[#4a74ea] via-[#3b63dd] to-[#2f50c4] px-4 py-4 text-center shadow-lg shadow-[#2f50c4]/25 transition-all duration-300 hover:border-[#1399FF] hover:-translate-y-0.5 hover:shadow-[#2f50c4]/40"
+        className="group block overflow-hidden rounded-xl border border-[#1399FF]/50 bg-gradient-to-br from-[#4a74ea] via-[#3b63dd] to-[#2f50c4] px-4 py-2.5 text-center shadow-lg shadow-[#2f50c4]/25 transition-all duration-300 hover:border-[#1399FF] hover:-translate-y-0.5 hover:shadow-[#2f50c4]/40"
       >
         {/* Audibleロゴ（小さな白チップ＝3） */}
-        <span className="inline-flex rounded-md bg-white px-2.5 py-1 shadow-sm">
+        <span className="inline-flex rounded bg-white px-2 py-0.5 shadow-sm">
           <img
             src="/images/audible-logo.png"
             alt="Audible（オーディブル）an amazon company"
             width={366}
             height={154}
             loading="lazy"
-            className="block h-auto w-full max-w-[84px]"
+            className="block h-auto w-full max-w-[72px]"
           />
         </span>
 
-        {/* 告知テキスト（主役＝7・読みやすく） */}
-        <p className="mt-2.5 text-[0.7rem] font-bold text-white/90 md:text-[0.78rem]">
+        {/* 告知テキスト（主役＝7） */}
+        <p className="mt-1.5 text-[0.62rem] font-bold leading-none text-white/90 md:text-[0.7rem]">
           【Amazonプライム会員限定】
         </p>
-        <p className="mt-0.5 text-base font-black leading-snug text-white md:text-lg">
+        <p className="mt-1 text-sm font-black leading-tight text-white md:text-base">
           プレミアムプラン3か月間無料体験
         </p>
-        <p className="mt-0.5 text-[0.68rem] text-white/75">※適用条件あり</p>
+        <p className="mt-0.5 text-[0.58rem] leading-none text-white/75">※適用条件あり</p>
 
         {/* CTAピル（ネイビー） */}
-        <span className="mt-3 inline-flex items-center justify-center gap-2 rounded-full bg-[#1f2d4a] px-5 py-2 font-display text-[0.8rem] font-bold tracking-[0.08em] text-white shadow-md transition-colors group-hover:bg-white group-hover:text-[#1f2d4a]">
+        <span className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-[#1f2d4a] px-4 py-1.5 font-display text-[0.74rem] font-bold tracking-[0.06em] text-white shadow-md transition-colors group-hover:bg-white group-hover:text-[#1f2d4a]">
           プレミアムプランを試す →
         </span>
       </a>
