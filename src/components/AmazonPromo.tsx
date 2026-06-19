@@ -24,8 +24,8 @@ function isPrimedayActive(): boolean {
   return now >= PRIMEDAY_START && now < PRIMEDAY_END;
 }
 
-/** アソシエイト開示テキスト（必須・削除しない） */
-function AssociateDisclosure() {
+/** アソシエイト開示テキスト（必須・削除しない）。他のAmazon系バナーからも流用する。 */
+export function AssociateDisclosure() {
   return (
     <p className="text-[0.7rem] text-flabo-grey leading-relaxed mt-2 px-1">
       当サイトは、Amazon.co.jpを宣伝しリンクすることで紹介料を得る手段を提供する、Amazonアソシエイト・プログラムの参加者です。

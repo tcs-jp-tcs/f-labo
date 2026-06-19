@@ -5,6 +5,7 @@ import SnsCard from "@/components/SnsCard";
 import VideoCard from "@/components/VideoCard";
 import EmbedList from "@/components/EmbedList";
 import AmazonPromo from "@/components/AmazonPromo";
+import AudibleBanner from "@/components/AudibleBanner";
 import ScheduleList from "@/components/ScheduleList";
 import NewsCard from "@/components/NewsCard";
 import StandingsCard from "@/components/StandingsCard";
@@ -109,6 +110,11 @@ export default async function HomePage() {
           <EmbedList embeds={embeds} />
         </Section>
       )}
+
+      {/* Audible プロモ（期間限定・プライムデーバナーの上）。期間外は自動非表示。 */}
+      <Section className="py-6 pb-0">
+        <AudibleBanner />
+      </Section>
 
       {/* Amazon アソシエイト プロモ（動画 と 最新ニュース の間） */}
       <Section className="py-6">
