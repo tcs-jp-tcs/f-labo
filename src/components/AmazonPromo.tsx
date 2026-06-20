@@ -24,15 +24,6 @@ function isPrimedayActive(): boolean {
   return now >= PRIMEDAY_START && now < PRIMEDAY_END;
 }
 
-/** アソシエイト開示テキスト（必須・削除しない）。他のAmazon系バナーからも流用する。 */
-export function AssociateDisclosure() {
-  return (
-    <p className="text-[0.7rem] text-flabo-grey leading-relaxed mt-2 px-1">
-      当サイトは、Amazon.co.jpを宣伝しリンクすることで紹介料を得る手段を提供する、Amazonアソシエイト・プログラムの参加者です。
-    </p>
-  );
-}
-
 /**
  * プライムデー2026 画像バナー（640×360・スマホ全幅／デスクトップは max-640px 中央寄せ）。
  * 画像の下に告知テキスト＋CTAボタンを付ける。期間外は本コンポーネント自体が
@@ -80,8 +71,6 @@ function PrimedayBanner() {
           </a>
         </div>
       </div>
-
-      <AssociateDisclosure />
     </div>
   );
 }
@@ -128,7 +117,6 @@ export default async function AmazonPromo() {
           </span>
         </div>
       </a>
-      <AssociateDisclosure />
     </div>
   );
 }

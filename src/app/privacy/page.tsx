@@ -47,13 +47,19 @@ export default function PrivacyPage() {
           </p>
         </section>
         <section>
-          <h3 className="font-display tracking-[0.18em] text-flabo-red text-xs uppercase mb-2">5. 免責事項</h3>
+          <h3 className="font-display tracking-[0.18em] text-flabo-red text-xs uppercase mb-2">5. Amazonアソシエイトについて</h3>
+          <p>
+            当サイトは、Amazon.co.jpを宣伝しリンクすることで紹介料を得る手段を提供するAmazonアソシエイト・プログラムの参加者です。
+          </p>
+        </section>
+        <section>
+          <h3 className="font-display tracking-[0.18em] text-flabo-red text-xs uppercase mb-2">6. 免責事項</h3>
           <p>
             当サイトの情報は最新の公式情報に基づき可能な限り正確を期していますが、その正確性・完全性を保証するものではありません。情報の利用によって生じたいかなる損害についても当サイトは責任を負いません。
           </p>
         </section>
         <section>
-          <h3 className="font-display tracking-[0.18em] text-flabo-red text-xs uppercase mb-2">6. ポリシーの変更</h3>
+          <h3 className="font-display tracking-[0.18em] text-flabo-red text-xs uppercase mb-2">7. ポリシーの変更</h3>
           <p>
             本ポリシーの内容は、必要に応じて予告なく変更されることがあります。変更後の内容は当ページに掲載された時点で効力を持ちます。
           </p>
