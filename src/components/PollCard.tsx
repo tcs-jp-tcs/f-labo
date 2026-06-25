@@ -158,7 +158,7 @@ export default function PollCard({ poll }: { poll: Poll }) {
               return (
                 <div
                   key={option}
-                  className={`relative overflow-hidden rounded-xl border px-4 py-4 min-h-[3.5rem] ${
+                  className={`relative overflow-hidden rounded-xl border px-4 py-3.5 ${
                     isMine ? "border-flabo-red/70" : "border-white/10"
                   }`}
                 >
@@ -169,18 +169,17 @@ export default function PollCard({ poll }: { poll: Poll }) {
                     style={{ width: `${pct}%` }}
                     aria-hidden
                   />
-                  <div className="relative flex items-center justify-between gap-3">
-                    <span className="flex-1 min-w-0 text-base md:text-lg leading-relaxed flex items-center gap-2 font-medium break-words">
-                      <span className="break-words">{option}</span>
-                      {isMine && (
-                        <span className="text-flabo-red text-base shrink-0">
-                          ✓
-                        </span>
-                      )}
+                  <div className="relative flex items-center justify-between gap-2">
+                    {/* 改行させず1行に収める（はみ出す場合のみ末尾を…で省略） */}
+                    <span className="flex-1 min-w-0 truncate text-sm font-medium">
+                      {option}
                     </span>
-                    <span className="font-display tracking-[0.05em] text-lg md:text-xl font-bold text-white shrink-0 flex items-baseline gap-1.5">
+                    {isMine && (
+                      <span className="text-flabo-red text-sm shrink-0">✓</span>
+                    )}
+                    <span className="font-display tracking-[0.05em] text-base font-bold text-white shrink-0 flex items-baseline gap-1">
                       {pct}%
-                      <span className="text-flabo-grey text-sm font-normal">
+                      <span className="text-flabo-grey text-xs font-normal">
                         ({count})
                       </span>
                     </span>
