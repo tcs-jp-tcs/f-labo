@@ -124,8 +124,8 @@ export default function PollCard({ poll }: { poll: Poll }) {
         <div className="px-5 pb-5 pt-0 space-y-3">
           {phase === "result" && (
             <div className="flex justify-end">
-              <span className="font-display tracking-[0.18em] text-[0.65rem] text-flabo-grey">
-                {total}票
+              <span className="font-display tracking-[0.12em] text-sm text-flabo-grey">
+                合計 {total}票
               </span>
             </div>
           )}
@@ -158,7 +158,7 @@ export default function PollCard({ poll }: { poll: Poll }) {
               return (
                 <div
                   key={option}
-                  className={`relative overflow-hidden rounded-xl border px-4 py-3 ${
+                  className={`relative overflow-hidden rounded-xl border px-4 py-4 ${
                     isMine ? "border-flabo-red/70" : "border-white/10"
                   }`}
                 >
@@ -170,13 +170,17 @@ export default function PollCard({ poll }: { poll: Poll }) {
                     aria-hidden
                   />
                   <div className="relative flex items-center justify-between gap-3">
-                    <span className="text-sm leading-relaxed flex items-center gap-2">
+                    <span className="text-base md:text-lg leading-relaxed flex items-center gap-2 font-medium">
                       {option}
-                      {isMine && <span className="text-flabo-red text-xs">✓</span>}
+                      {isMine && (
+                        <span className="text-flabo-red text-base">✓</span>
+                      )}
                     </span>
-                    <span className="font-display tracking-[0.1em] text-xs text-white/80 shrink-0">
+                    <span className="font-display tracking-[0.05em] text-lg md:text-xl font-bold text-white shrink-0 flex items-baseline gap-1.5">
                       {pct}%
-                      <span className="text-flabo-grey ml-1.5">({count})</span>
+                      <span className="text-flabo-grey text-sm font-normal">
+                        ({count})
+                      </span>
                     </span>
                   </div>
                 </div>
