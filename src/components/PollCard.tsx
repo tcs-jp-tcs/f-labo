@@ -158,7 +158,7 @@ export default function PollCard({ poll }: { poll: Poll }) {
               return (
                 <div
                   key={option}
-                  className={`relative overflow-hidden rounded-xl border px-4 py-4 ${
+                  className={`relative overflow-hidden rounded-xl border px-4 py-4 min-h-[3.5rem] ${
                     isMine ? "border-flabo-red/70" : "border-white/10"
                   }`}
                 >
@@ -170,10 +170,12 @@ export default function PollCard({ poll }: { poll: Poll }) {
                     aria-hidden
                   />
                   <div className="relative flex items-center justify-between gap-3">
-                    <span className="text-base md:text-lg leading-relaxed flex items-center gap-2 font-medium">
-                      {option}
+                    <span className="flex-1 min-w-0 text-base md:text-lg leading-relaxed flex items-center gap-2 font-medium break-words">
+                      <span className="break-words">{option}</span>
                       {isMine && (
-                        <span className="text-flabo-red text-base">✓</span>
+                        <span className="text-flabo-red text-base shrink-0">
+                          ✓
+                        </span>
                       )}
                     </span>
                     <span className="font-display tracking-[0.05em] text-lg md:text-xl font-bold text-white shrink-0 flex items-baseline gap-1.5">
