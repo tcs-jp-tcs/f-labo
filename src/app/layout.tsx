@@ -95,6 +95,9 @@ export const metadata: Metadata = {
     "フォーミュラ研究所",
   ],
   metadataBase: new URL("https://f-labo.vercel.app"),
+  verification: {
+    google: "UACu_BUaPmtQN8EftcJ6LvwCDa0RBS_NFD2mphZ6shM",
+  },
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
