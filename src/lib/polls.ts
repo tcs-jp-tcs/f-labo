@@ -31,26 +31,47 @@ function normalizeOptions(raw: unknown): string[] {
   return raw.filter((o): o is string => typeof o === "string");
 }
 
-/** is_active=true の質問を作成日時の新しい順で全件取得 */
+/** メインページ表示件数（これを超えた古い質問はアーカイブへ） */
+export const POLLS_MAIN_LIMIT = 9;
+
+function toPoll(row: PollRow): Poll {
+  return {
+    id: row.id,
+    question: row.question,
+    options: normalizeOptions(row.options),
+  };
+}
+
+/** is_active=true の質問を新しい順（created_at DESC）で最新9件取得（メイン用） */
 export const getActivePolls = cache(async (): Promise<Poll[]> => {
   const { data, error } = await supabase
     .from("polls")
     .select("id, question, options")
     .eq("is_active", true)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .limit(POLLS_MAIN_LIMIT);
 
   if (error) {
     console.error("[polls] fetch failed:", error.message);
     return [];
   }
-  return (data ?? []).map((row) => {
-    const r = row as PollRow;
-    return {
-      id: r.id,
-      question: r.question,
-      options: normalizeOptions(r.options),
-    };
-  });
+  return (data ?? []).map((row) => toPoll(row as PollRow));
+});
+
+/** 最新9件より古い質問（10件目以降）をアーカイブとして取得 */
+export const getArchivedPolls = cache(async (): Promise<Poll[]> => {
+  const { data, error } = await supabase
+    .from("polls")
+    .select("id, question, options")
+    .eq("is_active", true)
+    .order("created_at", { ascending: false })
+    .range(POLLS_MAIN_LIMIT, POLLS_MAIN_LIMIT + 999);
+
+  if (error) {
+    console.error("[polls] archive fetch failed:", error.message);
+    return [];
+  }
+  return (data ?? []).map((row) => toPoll(row as PollRow));
 });
 
 /** 指定 poll の投票数を選択肢ごとに集計（クライアント用） */

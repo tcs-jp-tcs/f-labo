@@ -10,10 +10,14 @@ export default async function VotePage() {
   const polls = await getActivePolls();
 
   return (
-    <Section className="max-w-[760px]">
-      <SectionHeader title="ファン投票" />
+    <Section>
+      <SectionHeader
+        title="ファン投票"
+        seeAllHref="/vote/archive"
+        seeAllLabel="アーカイブを見る →"
+      />
       <p className="text-flabo-grey text-sm mb-6">
-        気になる質問に投票しよう。タップするとすぐにみんなの結果が見られます。
+        気になる質問のカードをタップして投票しよう。投票するとみんなの結果が見られます。
       </p>
       <VoteClient polls={polls} />
     </Section>
