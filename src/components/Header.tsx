@@ -15,6 +15,7 @@ const NAV = [
   { href: "/standings", label: "順位表" },
   { href: "/review", label: "レビュー" },
   { href: "/quiz", label: "検定" },
+  { href: "/vote", label: "投票" },
 ];
 
 export default function Header() {
