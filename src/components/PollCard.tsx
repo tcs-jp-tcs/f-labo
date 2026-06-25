@@ -158,7 +158,7 @@ export default function PollCard({ poll }: { poll: Poll }) {
               return (
                 <div
                   key={option}
-                  className={`relative overflow-hidden rounded-xl border px-4 py-3.5 ${
+                  className={`relative overflow-hidden rounded-xl border px-4 py-3 min-h-[60px] flex items-center ${
                     isMine ? "border-flabo-red/70" : "border-white/10"
                   }`}
                 >
@@ -169,9 +169,9 @@ export default function PollCard({ poll }: { poll: Poll }) {
                     style={{ width: `${pct}%` }}
                     aria-hidden
                   />
-                  <div className="relative flex items-center justify-between gap-2">
-                    {/* 改行させず1行に収める（はみ出す場合のみ末尾を…で省略） */}
-                    <span className="flex-1 min-w-0 truncate text-sm font-medium">
+                  <div className="relative flex items-center justify-between gap-2.5 w-full">
+                    {/* 名前＋チーム名は折り返して2行で表示（min-h-[60px]で確実に収まる） */}
+                    <span className="flex-1 min-w-0 text-sm font-medium leading-snug break-words">
                       {option}
                     </span>
                     {isMine && (
