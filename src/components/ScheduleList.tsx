@@ -51,6 +51,7 @@ export default function ScheduleList({
           : item.status === "live" || item.status === "next";
         return (
           <div key={`${item.series}-${item.round}`} className="flex flex-col">
+            <div className="relative">
             <button
               type="button"
               onClick={() => setOpenIndex(isOpen ? -1 : i)}
@@ -90,6 +91,20 @@ export default function ScheduleList({
                 </div>
               </div>
             </button>
+
+            {/* サーキット図鑑への導線。カードを展開しなくても右下から遷移できる。
+                button の子ではなく兄弟として重ねる（a を button 内にネストしない）。
+                circuit_slug が紐付くカードのみ表示。 */}
+            {item.circuitSlug && (
+              <Link
+                href={`/circuits/${item.circuitSlug}`}
+                aria-label="サーキット情報"
+                className="absolute bottom-5 right-5 z-10 flex items-center gap-1 font-display tracking-[0.18em] text-[0.7rem] text-flabo-red hover:text-white transition-colors"
+              >
+                サーキット情報 →
+              </Link>
+            )}
+            </div>
 
             {isOpen && (
               <div className="rounded-b-xl border border-t-0 border-white/5 bg-flabo-carbon px-3 py-3 space-y-3">
@@ -183,16 +198,6 @@ export default function ScheduleList({
                   <p className="text-flabo-grey text-[0.7rem] leading-relaxed">
                     詳細セッションは開催日が近づき次第こちらに反映します。
                   </p>
-                )}
-
-                {/* サーキット図鑑（情報/DB）への導線。circuit_slug が紐付くカードのみ表示 */}
-                {item.circuitSlug && (
-                  <Link
-                    href={`/circuits/${item.circuitSlug}`}
-                    className="mt-1 flex items-center gap-1 font-display tracking-[0.18em] text-[0.7rem] text-flabo-red hover:text-white transition-colors"
-                  >
-                    サーキット情報 →
-                  </Link>
                 )}
               </div>
             )}

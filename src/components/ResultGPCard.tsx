@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import type { RaceResult, Series } from "@/lib/data";
 import CardHeader from "./CardHeader";
 import PodiumBody from "./PodiumBody";
@@ -37,7 +38,14 @@ export type GPGroup = {
   sessions: Record<string, RaceResult>;
 };
 
-export default function ResultGPCard({ group }: { group: GPGroup }) {
+export default function ResultGPCard({
+  group,
+  reviewSlug,
+}: {
+  group: GPGroup;
+  /** 同じ round の公開レビュー(archived=false)がある場合の slug。あれば右上に「レビュー →」を出す。 */
+  reviewSlug?: string;
+}) {
   const { series, round, gpName, flag, sessions } = group;
 
   const template = SERIES_SESSION_TABS[series] ?? [{ type: "決勝" }];
@@ -55,14 +63,25 @@ export default function ResultGPCard({ group }: { group: GPGroup }) {
     <div className="rounded-xl border border-white/5 bg-flabo-carbon overflow-hidden">
       <CardHeader category={series} />
       <div className="p-5 flex flex-col gap-3">
-        {/* GP 見出し */}
-        <div>
-          <div className="font-display tracking-[0.18em] text-[0.7rem] text-flabo-grey">
-            ROUND {round}
+        {/* GP 見出し + 右上のレビュー導線 */}
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <div className="font-display tracking-[0.18em] text-[0.7rem] text-flabo-grey">
+              ROUND {round}
+            </div>
+            <h3 className="font-bold text-[0.95rem] mt-0.5">
+              {flag} {gpName}
+            </h3>
           </div>
-          <h3 className="font-bold text-[0.95rem] mt-0.5">
-            {flag} {gpName}
-          </h3>
+          {/* 同 round の公開レビューがある時だけ表示（archived=true や該当なしは出さない） */}
+          {reviewSlug && (
+            <Link
+              href={`/review/${reviewSlug}`}
+              className="shrink-0 mt-0.5 flex items-center gap-1 font-display tracking-[0.18em] text-[0.7rem] text-flabo-red hover:text-white transition-colors"
+            >
+              レビュー →
+            </Link>
+          )}
         </div>
 
         {/* セッションタブ（データ無しはグレーアウト・タップ不可） */}

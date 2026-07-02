@@ -13,6 +13,8 @@ const TABS = visibleTabs(["F1", "F2", "F3", "SF", "INDY"]);
 
 type Props = {
   resultsBySeries: Record<Series, RaceResult[]>;
+  /** "{category}:{round}" → 公開レビューの slug。結果カード右上の「レビュー →」導線に使う。 */
+  reviewSlugByKey: Record<string, string>;
 };
 
 /**
@@ -41,7 +43,7 @@ function groupByGP(results: RaceResult[]): GPGroup[] {
   return [...map.values()].sort((a, b) => a.order - b.order);
 }
 
-export default function ResultsClient({ resultsBySeries }: Props) {
+export default function ResultsClient({ resultsBySeries, reviewSlugByKey }: Props) {
   const [tab, setTab] = useState<Series>(TABS[0] ?? "F1");
   const groups = groupByGP(resultsBySeries[tab]);
 
@@ -57,7 +59,11 @@ export default function ResultsClient({ resultsBySeries }: Props) {
       {groups.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
           {groups.map((g) => (
-            <ResultGPCard key={`${g.round}-${g.gpName}`} group={g} />
+            <ResultGPCard
+              key={`${g.round}-${g.gpName}`}
+              group={g}
+              reviewSlug={reviewSlugByKey[`${g.series}:${g.round}`]}
+            />
           ))}
         </div>
       ) : (
