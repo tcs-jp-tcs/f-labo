@@ -1,0 +1,107 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Barcelona-Catalunya</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box} html,body{background:#000}
+.stage{width:1080px;height:1920px;position:relative;overflow:hidden;
+ background:radial-gradient(ellipse at 50% 36%,#16243f 0%,#0b1424 55%,#070d18 100%);
+ font-family:'Poppins','Helvetica Neue',Arial,sans-serif}
+.checker{position:absolute;left:0;width:100%;height:26px;
+ background-image:linear-gradient(45deg,#fff 25%,transparent 25%,transparent 75%,#fff 75%),linear-gradient(45deg,#fff 25%,#111 25%,#111 75%,#fff 75%);
+ background-size:26px 26px;background-position:0 0,13px 13px;background-color:#111}
+.checker.top{top:0}.checker.bottom{bottom:0}
+.header{position:absolute;top:250px;left:0;width:100%;text-align:center}
+.kicker{color:#e10600;font-weight:800;font-size:34px;letter-spacing:5px}
+.round{color:#9fb4d6;font-weight:700;font-size:30px;letter-spacing:3px;margin-top:14px}
+.title{color:#fff;font-weight:900;font-size:78px;line-height:1;margin-top:10px;letter-spacing:1px}
+.sub{color:#9fb4d6;font-weight:500;font-size:28px;margin-top:16px}
+.bar{width:130px;height:7px;background:#e10600;margin:22px auto 0;border-radius:4px}
+.map{position:absolute;top:640px;left:0;width:1080px;height:340px}
+.map svg{width:1080px;height:340px;overflow:visible}
+.seg{fill:none;stroke-width:14;stroke-linecap:round;stroke-linejoin:round}
+/* 下地：セクター別の濃さ */
+#bs1{stroke:#c8d2e0}  /* S1 薄いグレー */
+#bs2{stroke:#6b7790}  /* S2 グレー */
+#bs3{stroke:#222c3c}  /* S3 黒(濃) */
+/* なぞり：赤1本 */
+#trace{fill:none;stroke:#e10600;stroke-width:14;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 9px rgba(225,6,0,.7))}
+.info{position:absolute;top:1050px;left:0;width:100%;text-align:center}
+.turn{color:#fff;font-weight:900;font-size:92px;letter-spacing:2px;line-height:1}
+.sector{font-weight:800;font-size:46px;letter-spacing:3px;margin-top:14px}
+.specs{position:absolute;top:1270px;left:50%;transform:translateX(-50%);width:840px;display:flex;justify-content:space-between}
+.spec{flex:1;text-align:center;border-right:1px solid rgba(255,255,255,.15)}
+.spec:last-child{border-right:none}
+.spec .v{color:#fff;font-weight:800;font-size:44px}.spec .l{color:#9fb4d6;font-weight:500;font-size:24px;margin-top:6px}
+.logo{position:absolute;bottom:230px;left:50%;transform:translateX(-50%);width:300px;height:120px;display:flex;align-items:center;justify-content:center}
+.logo img{max-width:100%;max-height:100%}
+.foot{position:absolute;bottom:150px;left:0;width:100%;text-align:center}
+.foot .site{color:#fff;font-weight:800;font-size:36px;letter-spacing:2px}
+.foot .sns{color:#9fb4d6;font-weight:500;font-size:26px;margin-top:8px}
+</style></head><body>
+<div class="stage">
+ <div class="checker top"></div><div class="checker bottom"></div>
+ <div class="header">
+  <div class="kicker">NEXT BATTLEGROUND</div>
+  <div class="round">Rd.7 · 2026 · JUN 14</div>
+  <div class="title">BARCELONA-<br>CATALUNYA GP</div>
+  <div class="sub">CIRCUIT DE BARCELONA-CATALUNYA · 4.657km</div>
+  
+ </div>
+ <div class="map">
+  <svg viewBox="0 0 1080 320">
+   <defs><pattern id="checker" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="#fff"/><rect width="4" height="4" fill="#111"/><rect x="4" y="4" width="4" height="4" fill="#111"/></pattern></defs>
+   <path id="baseline" d="M 689.2 288.9 L 531.1 282.8 L 442.8 280.0 L 352.3 276.3 L 256.3 273.1 L 223.9 271.9 L 215.7 270.2 L 209.5 268.1 L 205.6 265.3 L 200.9 259.2 L 197.8 252.9 L 196.4 247.7 L 196.2 242.0 L 197.2 221.3 L 196.6 215.3 L 193.5 205.6 L 189.5 198.6 L 181.6 190.0 L 174.8 186.4 L 119.2 162.5 L 112.8 158.3 L 107.1 153.5 L 99.7 147.0 L 94.1 140.0 L 90.2 133.3 L 86.4 125.8 L 82.8 117.1 L 80.8 107.8 L 80.0 95.6 L 80.8 88.6 L 82.1 81.9 L 83.4 75.7 L 91.3 56.8 L 99.2 45.2 L 109.1 34.4 L 117.1 28.5 L 126.7 21.6 L 137.7 15.6 L 150.0 10.7 L 170.8 4.7 L 188.3 1.3 L 202.9 0.0 L 215.3 0.5 L 373.6 6.5 L 380.2 8.5 L 387.3 12.5 L 396.7 22.3 L 400.0 30.0 L 401.7 36.9 L 401.8 45.8 L 400.0 57.0 L 397.3 65.1 L 388.9 77.7 L 381.3 85.0 L 367.8 93.5 L 359.3 97.8 L 348.9 101.1 L 337.5 102.4 L 319.2 103.1 L 205.7 98.0 L 199.3 99.8 L 194.3 102.5 L 189.2 107.2 L 186.6 112.0 L 184.7 116.6 L 184.2 122.5 L 185.4 128.8 L 187.0 133.3 L 192.2 139.3 L 195.2 141.6 L 277.3 200.5 L 290.5 207.6 L 305.3 213.7 L 322.1 218.7 L 336.1 221.1 L 404.2 224.1 L 413.6 223.2 L 419.6 221.7 L 427.0 215.6 L 432.0 207.4 L 434.2 197.7 L 434.4 178.3 L 436.3 166.8 L 438.6 159.6 L 442.4 151.7 L 445.3 146.8 L 481.3 99.5 L 521.8 45.9 L 530.0 38.8 L 539.4 33.4 L 547.2 30.1 L 555.0 27.5 L 565.7 27.3 L 573.1 27.6 L 585.4 30.2 L 595.3 34.2 L 871.8 212.7 L 882.0 218.7 L 889.6 220.5 L 895.7 220.0 L 901.7 217.3 L 907.1 211.8 L 910.5 205.8 L 912.2 199.1 L 913.3 190.1 L 911.9 177.4 L 909.8 170.3 L 906.0 161.0 L 902.0 153.4 L 897.3 146.2 L 890.5 139.2 L 878.4 131.0 L 869.4 125.9 L 853.7 120.5 L 839.7 114.2 L 832.1 108.7 L 824.6 97.7 L 822.2 90.0 L 821.7 79.4 L 823.4 69.7 L 827.4 62.0 L 832.7 54.6 L 840.0 49.0 L 843.6 46.5 L 855.3 42.7 L 865.1 42.5 L 874.8 45.2 L 959.4 76.9 L 967.9 80.0 L 976.7 84.9 L 983.1 90.4 L 990.1 99.0 L 995.7 108.3 L 998.9 117.9 L 1000.0 126.7 L 999.2 146.2 L 998.1 168.0 L 996.5 187.3 L 996.5 199.2 L 994.8 240.2 L 993.9 250.4 L 991.7 257.8 L 988.5 265.2 L 983.9 272.3 L 976.9 280.0 L 969.8 286.3 L 958.3 293.0 L 946.9 297.4 L 925.6 298.5 L 689.2 288.9 Z" fill="none" stroke="#2a3650" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+   <path id="bs1" class="seg" d="M 689.2 288.9 L 531.1 282.8 L 442.8 280.0 L 352.3 276.3 L 256.3 273.1 L 223.9 271.9 L 215.7 270.2 L 209.5 268.1 L 205.6 265.3 L 200.9 259.2 L 197.8 252.9 L 196.4 247.7 L 196.2 242.0 L 197.2 221.3 L 196.6 215.3 L 193.5 205.6 L 189.5 198.6 L 181.6 190.0 L 174.8 186.4 L 119.2 162.5 L 112.8 158.3 L 107.1 153.5 L 99.7 147.0 L 94.1 140.0 L 90.2 133.3 L 86.4 125.8 L 82.8 117.1 L 80.8 107.8 L 80.0 95.6 L 80.8 88.6 L 82.1 81.9 L 83.4 75.7 L 91.3 56.8 L 99.2 45.2 L 109.1 34.4 L 117.1 28.5 L 126.7 21.6 L 137.7 15.6 L 150.0 10.7 L 170.8 4.7 L 188.3 1.3 L 202.9 0.0 L 215.3 0.5 L 357.8 5.9"/>
+   <path id="bs2" class="seg" d="M 357.8 5.9 L 373.6 6.5 L 380.2 8.5 L 387.3 12.5 L 396.7 22.3 L 400.0 30.0 L 401.7 36.9 L 401.8 45.8 L 400.0 57.0 L 397.3 65.1 L 388.9 77.7 L 381.3 85.0 L 367.8 93.5 L 359.3 97.8 L 348.9 101.1 L 337.5 102.4 L 319.2 103.1 L 205.7 98.0 L 199.3 99.8 L 194.3 102.5 L 189.2 107.2 L 186.6 112.0 L 184.7 116.6 L 184.2 122.5 L 185.4 128.8 L 187.0 133.3 L 192.2 139.3 L 195.2 141.6 L 277.3 200.5 L 290.5 207.6 L 305.3 213.7 L 322.1 218.7 L 336.1 221.1 L 404.2 224.1 L 413.6 223.2 L 419.6 221.7 L 427.0 215.6 L 432.0 207.4 L 434.2 197.7 L 434.4 178.3 L 436.3 166.8 L 438.6 159.6 L 442.4 151.7 L 445.3 146.8 L 481.3 99.5 L 521.8 45.9 L 530.0 38.8 L 539.4 33.4 L 547.2 30.1 L 555.0 27.5 L 565.7 27.3 L 573.1 27.6 L 585.4 30.2 L 595.3 34.2 L 743.1 129.1"/>
+   <path id="bs3" class="seg" d="M 743.1 129.1 L 871.8 212.7 L 882.0 218.7 L 889.6 220.5 L 895.7 220.0 L 901.7 217.3 L 907.1 211.8 L 910.5 205.8 L 912.2 199.1 L 913.3 190.1 L 911.9 177.4 L 909.8 170.3 L 906.0 161.0 L 902.0 153.4 L 897.3 146.2 L 890.5 139.2 L 878.4 131.0 L 869.4 125.9 L 853.7 120.5 L 839.7 114.2 L 832.1 108.7 L 824.6 97.7 L 822.2 90.0 L 821.7 79.4 L 823.4 69.7 L 827.4 62.0 L 832.7 54.6 L 840.0 49.0 L 843.6 46.5 L 855.3 42.7 L 865.1 42.5 L 874.8 45.2 L 959.4 76.9 L 967.9 80.0 L 976.7 84.9 L 983.1 90.4 L 990.1 99.0 L 995.7 108.3 L 998.9 117.9 L 1000.0 126.7 L 999.2 146.2 L 998.1 168.0 L 996.5 187.3 L 996.5 199.2 L 994.8 240.2 L 993.9 250.4 L 991.7 257.8 L 988.5 265.2 L 983.9 272.3 L 976.9 280.0 L 969.8 286.3 L 958.3 293.0 L 946.9 297.4 L 925.6 298.5 L 689.2 288.9 L 689.2 288.9"/>
+   <path id="trace" d="M 689.2 288.9 L 531.1 282.8 L 442.8 280.0 L 352.3 276.3 L 256.3 273.1 L 223.9 271.9 L 215.7 270.2 L 209.5 268.1 L 205.6 265.3 L 200.9 259.2 L 197.8 252.9 L 196.4 247.7 L 196.2 242.0 L 197.2 221.3 L 196.6 215.3 L 193.5 205.6 L 189.5 198.6 L 181.6 190.0 L 174.8 186.4 L 119.2 162.5 L 112.8 158.3 L 107.1 153.5 L 99.7 147.0 L 94.1 140.0 L 90.2 133.3 L 86.4 125.8 L 82.8 117.1 L 80.8 107.8 L 80.0 95.6 L 80.8 88.6 L 82.1 81.9 L 83.4 75.7 L 91.3 56.8 L 99.2 45.2 L 109.1 34.4 L 117.1 28.5 L 126.7 21.6 L 137.7 15.6 L 150.0 10.7 L 170.8 4.7 L 188.3 1.3 L 202.9 0.0 L 215.3 0.5 L 373.6 6.5 L 380.2 8.5 L 387.3 12.5 L 396.7 22.3 L 400.0 30.0 L 401.7 36.9 L 401.8 45.8 L 400.0 57.0 L 397.3 65.1 L 388.9 77.7 L 381.3 85.0 L 367.8 93.5 L 359.3 97.8 L 348.9 101.1 L 337.5 102.4 L 319.2 103.1 L 205.7 98.0 L 199.3 99.8 L 194.3 102.5 L 189.2 107.2 L 186.6 112.0 L 184.7 116.6 L 184.2 122.5 L 185.4 128.8 L 187.0 133.3 L 192.2 139.3 L 195.2 141.6 L 277.3 200.5 L 290.5 207.6 L 305.3 213.7 L 322.1 218.7 L 336.1 221.1 L 404.2 224.1 L 413.6 223.2 L 419.6 221.7 L 427.0 215.6 L 432.0 207.4 L 434.2 197.7 L 434.4 178.3 L 436.3 166.8 L 438.6 159.6 L 442.4 151.7 L 445.3 146.8 L 481.3 99.5 L 521.8 45.9 L 530.0 38.8 L 539.4 33.4 L 547.2 30.1 L 555.0 27.5 L 565.7 27.3 L 573.1 27.6 L 585.4 30.2 L 595.3 34.2 L 871.8 212.7 L 882.0 218.7 L 889.6 220.5 L 895.7 220.0 L 901.7 217.3 L 907.1 211.8 L 910.5 205.8 L 912.2 199.1 L 913.3 190.1 L 911.9 177.4 L 909.8 170.3 L 906.0 161.0 L 902.0 153.4 L 897.3 146.2 L 890.5 139.2 L 878.4 131.0 L 869.4 125.9 L 853.7 120.5 L 839.7 114.2 L 832.1 108.7 L 824.6 97.7 L 822.2 90.0 L 821.7 79.4 L 823.4 69.7 L 827.4 62.0 L 832.7 54.6 L 840.0 49.0 L 843.6 46.5 L 855.3 42.7 L 865.1 42.5 L 874.8 45.2 L 959.4 76.9 L 967.9 80.0 L 976.7 84.9 L 983.1 90.4 L 990.1 99.0 L 995.7 108.3 L 998.9 117.9 L 1000.0 126.7 L 999.2 146.2 L 998.1 168.0 L 996.5 187.3 L 996.5 199.2 L 994.8 240.2 L 993.9 250.4 L 991.7 257.8 L 988.5 265.2 L 983.9 272.3 L 976.9 280.0 L 969.8 286.3 L 958.3 293.0 L 946.9 297.4 L 925.6 298.5 L 689.2 288.9 Z"/>
+   <g><rect x="682" y="273" width="14" height="32" fill="url(#checker)"/><polygon points="659,323 639,323 639,317 627,326 639,335 639,329 659,329" fill="#fff"/></g>
+   <circle id="dot" r="12" fill="#e10600" filter="drop-shadow(0 0 8px rgba(255,255,255,.4))"/>
+   <circle cx="213.7" cy="292.2" r="13" fill="#fff" stroke="#0b1424" stroke-width="2"/><text x="213.7" y="292.2" font-size="16" font-weight="700" fill="#0b1424" text-anchor="middle" dominant-baseline="central" font-family="Poppins,sans-serif">1</text><circle cx="191.2" cy="197.3" r="13" fill="#fff" stroke="#0b1424" stroke-width="2"/><text x="191.2" y="197.3" font-size="16" font-weight="700" fill="#0b1424" text-anchor="middle" dominant-baseline="central" font-family="Poppins,sans-serif">2</text><circle cx="82.1" cy="61.9" r="13" fill="#fff" stroke="#0b1424" stroke-width="2"/><text x="82.1" y="61.9" font-size="16" font-weight="700" fill="#0b1424" text-anchor="middle" dominant-baseline="central" font-family="Poppins,sans-serif">3</text><circle cx="400.0" cy="10.0" r="13" fill="#fff" stroke="#0b1424" stroke-width="2"/><text x="400.0" y="10.0" font-size="16" font-weight="700" fill="#0b1424" text-anchor="middle" dominant-baseline="central" font-family="Poppins,sans-serif">4</text><circle cx="199.3" cy="79.8" r="13" fill="#fff" stroke="#0b1424" stroke-width="2"/><text x="199.3" y="79.8" font-size="16" font-weight="700" fill="#0b1424" text-anchor="middle" dominant-baseline="central" font-family="Poppins,sans-serif">5</text><circle cx="277.3" cy="222.5" r="13" fill="#fff" stroke="#0b1424" stroke-width="2"/><text x="277.3" y="222.5" font-size="16" font-weight="700" fill="#0b1424" text-anchor="middle" dominant-baseline="central" font-family="Poppins,sans-serif">6</text><circle cx="413.6" cy="245.2" r="13" fill="#fff" stroke="#0b1424" stroke-width="2"/><text x="413.6" y="245.2" font-size="16" font-weight="700" fill="#0b1424" text-anchor="middle" dominant-baseline="central" font-family="Poppins,sans-serif">7</text><circle cx="438.6" cy="139.6" r="13" fill="#fff" stroke="#0b1424" stroke-width="2"/><text x="438.6" y="139.6" font-size="16" font-weight="700" fill="#0b1424" text-anchor="middle" dominant-baseline="central" font-family="Poppins,sans-serif">8</text><circle cx="547.2" cy="10.1" r="13" fill="#fff" stroke="#0b1424" stroke-width="2"/><text x="547.2" y="10.1" font-size="16" font-weight="700" fill="#0b1424" text-anchor="middle" dominant-baseline="central" font-family="Poppins,sans-serif">9</text><circle cx="907.7" cy="241.3" r="13" fill="#fff" stroke="#0b1424" stroke-width="2"/><text x="907.7" y="241.3" font-size="16" font-weight="700" fill="#0b1424" text-anchor="middle" dominant-baseline="central" font-family="Poppins,sans-serif">10</text><circle cx="917.8" cy="140.3" r="13" fill="#fff" stroke="#0b1424" stroke-width="2"/><text x="917.8" y="140.3" font-size="16" font-weight="700" fill="#0b1424" text-anchor="middle" dominant-baseline="central" font-family="Poppins,sans-serif">11</text><circle cx="823.4" cy="42.0" r="13" fill="#fff" stroke="#0b1424" stroke-width="2"/><text x="823.4" y="42.0" font-size="16" font-weight="700" fill="#0b1424" text-anchor="middle" dominant-baseline="central" font-family="Poppins,sans-serif">12</text><circle cx="1003.1" cy="86.4" r="13" fill="#fff" stroke="#0b1424" stroke-width="2"/><text x="1003.1" y="86.4" font-size="16" font-weight="700" fill="#0b1424" text-anchor="middle" dominant-baseline="central" font-family="Poppins,sans-serif">13</text><circle cx="988.5" cy="287.2" r="13" fill="#fff" stroke="#0b1424" stroke-width="2"/><text x="988.5" y="287.2" font-size="16" font-weight="700" fill="#0b1424" text-anchor="middle" dominant-baseline="central" font-family="Poppins,sans-serif">14</text>
+  </svg>
+ </div>
+ <div class="info">
+  <div class="turn" id="turn">TURN 1</div>
+  <div class="sector" id="sector" style="color:#c8d2e0">SECTOR 1</div>
+ </div>
+ <div class="specs">
+  <div class="spec"><div class="v">4.657</div><div class="l">km</div></div>
+  <div class="spec"><div class="v">14</div><div class="l">CORNERS</div></div>
+  <div class="spec"><div class="v">66</div><div class="l">LAPS</div></div>
+ </div>
+ <div class="logo">
+   <img id="flabologo" src="flabo-logo-full.svg" alt="F Labo" onerror="this.style.display='none';document.getElementById('lf').style.display='block'">
+   <div id="lf" style="display:none;color:#fff;font-weight:900;font-size:48px">F<span style="color:#e10600">Labo</span></div>
+ </div>
+ <div class="foot">
+  <div class="site">f-labo.vercel.app</div>
+  <div class="sns">@flabo.jp ／ @flabo_jp</div>
+ </div>
+</div>
+<script>
+const trace=document.getElementById('trace'),dot=document.getElementById('dot');
+const turnEl=document.getElementById('turn'),secEl=document.getElementById('sector');
+const LT=trace.getTotalLength();
+trace.style.strokeDasharray=LT; trace.style.strokeDashoffset=LT;
+const B1=0.3298,B2=0.666,DUR=18000;
+const turns=[[0.04]];
+// ターン比率（idxベース）
+const turnR=[[1, 0.1498], [2, 0.1681], [3, 0.2311], [4, 0.3465], [5, 0.4249], [6, 0.4733], [7, 0.5176], [8, 0.541], [9, 0.5951], [10, 0.7251], [11, 0.7411], [12, 0.7897], [13, 0.8443], [14, 0.9014]];
+const secName={1:'SECTOR 1',2:'SECTOR 2',3:'SECTOR 3'};
+const secCol={1:'#c8d2e0',2:'#8b97b0',3:'#cfd8e6'};
+let start=null;
+function frame(t){
+ if(!start)start=t;
+ let e=((t-start)%DUR)/DUR;
+ // 赤なぞり：全周を一定速度で描画
+ trace.style.strokeDashoffset=LT*(1-e);
+ let pt=trace.getPointAtLength(LT*e);
+ dot.setAttribute('cx',pt.x); dot.setAttribute('cy',pt.y);
+ let sec=e<B1?1:(e<B2?2:3);
+ secEl.textContent=secName[sec]; secEl.style.color=secCol[sec];
+ let tn=1;
+ for(let i=0;i<turnR.length;i++){ if(e>=turnR[i][1]-0.005) tn=turnR[i][0]; }
+ turnEl.textContent='TURN '+tn;
+ requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script></body></html>
