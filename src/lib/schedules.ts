@@ -46,10 +46,11 @@ type ScheduleRow = {
   networks: string[] | null;
   sessions: ScheduleSession[] | null;
   result: ScheduleResult | null;
+  circuit_slug: string | null;
 };
 
 const SELECT_COLUMNS =
-  "series, round, round_label, country, flag, name, city, tz, date, weekend_type, status, is_weekend, broadcast, networks, sessions, result";
+  "series, round, round_label, country, flag, name, city, tz, date, weekend_type, status, is_weekend, broadcast, networks, sessions, result, circuit_slug";
 
 /** 全 Series キーを空配列で埋めた Record を生成 */
 function emptyRecord(): Record<Series, ScheduleItem[]> {
@@ -75,6 +76,7 @@ function toScheduleItem(row: ScheduleRow): ScheduleItem {
     networks: row.networks ?? undefined,
     sessions: row.sessions ?? undefined,
     result: row.result ?? undefined,
+    circuitSlug: row.circuit_slug ?? undefined,
   };
 }
 

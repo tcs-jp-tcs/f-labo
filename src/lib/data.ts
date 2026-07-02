@@ -58,6 +58,8 @@ export type ScheduleItem = {
   networks?: string[];
   sessions?: ScheduleSession[];
   result?: ScheduleResult;
+  /** サーキット図鑑ページ（/circuits/{slug}）への紐付け（DB: circuit_slug）。あればカードに情報リンクを出す */
+  circuitSlug?: string;
 };
 
 export type BroadcastSession = {
@@ -158,6 +160,63 @@ export type RaceResult = {
   fullResults?: PodiumRow[];
   note?: string;
   sourceUrl?: string;
+};
+
+/* ============================
+   CIRCUITS（サーキット図鑑・Supabase駆動）
+   ============================ */
+/** 歴代ウィナー1行（circuit_winners テーブル） */
+export type CircuitWinner = {
+  year: number;
+  driver: string;
+  team: string;
+};
+
+/** サーキット図鑑1件（circuits テーブル + winners 配列） */
+export type Circuit = {
+  slug: string;
+  nameJa: string;
+  nameEn: string;
+  gpNameEn: string;
+  country: string;
+  flag: string;
+  lengthKm?: number;
+  laps?: number;
+  raceDistanceKm?: number;
+  corners?: number;
+  direction?: string;
+  firstGp?: number;
+  topSpeedKmh?: number;
+  topSpeedNote?: string;
+  avgSpeedKmh?: number;
+  elevationM?: number;
+  recordQualiTime?: string;
+  recordQualiDriver?: string;
+  recordQualiTeam?: string;
+  recordQualiYear?: number;
+  recordRaceTime?: string;
+  recordRaceDriver?: string;
+  recordRaceTeam?: string;
+  recordRaceYear?: number;
+  characterJa?: string;
+  characterEn?: string;
+  /** public/circuit-maps/{key}.html を iframe 埋め込みするキー（例: "silverstone"） */
+  mapEmbedKey?: string;
+  /** 歴代ウィナー（年 DESC）。一覧取得時は空配列 */
+  winners: CircuitWinner[];
+};
+
+/** 図鑑一覧用の軽量サマリ（winners / character 等は不要） */
+export type CircuitSummary = {
+  slug: string;
+  nameJa: string;
+  nameEn: string;
+  gpNameEn: string;
+  country: string;
+  flag: string;
+  lengthKm?: number;
+  corners?: number;
+  firstGp?: number;
 };
 
 /* ============================

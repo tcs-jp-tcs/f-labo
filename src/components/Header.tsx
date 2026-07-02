@@ -14,6 +14,7 @@ const NAV = [
   { href: "/results", label: "結果" },
   { href: "/standings", label: "順位表" },
   { href: "/review", label: "レビュー" },
+  { href: "/circuits", label: "情報 / DB" },
   { href: "/quiz", label: "検定" },
   { href: "/vote", label: "投票" },
 ];

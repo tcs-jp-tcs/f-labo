@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import type { ScheduleItem, ScheduleSession } from "@/lib/data";
 import { formatClock, tzLabel } from "@/lib/timezone";
 import { useTz } from "./TzProvider";
@@ -182,6 +183,16 @@ export default function ScheduleList({
                   <p className="text-flabo-grey text-[0.7rem] leading-relaxed">
                     詳細セッションは開催日が近づき次第こちらに反映します。
                   </p>
+                )}
+
+                {/* サーキット図鑑（情報/DB）への導線。circuit_slug が紐付くカードのみ表示 */}
+                {item.circuitSlug && (
+                  <Link
+                    href={`/circuits/${item.circuitSlug}`}
+                    className="mt-1 flex items-center gap-1 font-display tracking-[0.18em] text-[0.7rem] text-flabo-red hover:text-white transition-colors"
+                  >
+                    サーキット情報 →
+                  </Link>
                 )}
               </div>
             )}
