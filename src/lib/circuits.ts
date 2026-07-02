@@ -1,4 +1,6 @@
 import { cache } from "react";
+import fs from "node:fs";
+import path from "node:path";
 import { supabase } from "@/lib/supabase";
 import type { Circuit, CircuitSummary, CircuitWinner } from "@/lib/data";
 
@@ -44,6 +46,7 @@ type CircuitRow = {
   character_ja: string | null;
   character_en: string | null;
   map_embed_key: string | null;
+  map_svg: string | null;
 };
 
 /** DB の circuit_winners 行 */
@@ -54,11 +57,37 @@ type WinnerRow = {
 };
 
 const CIRCUIT_COLUMNS =
-  "slug, name_ja, name_en, gp_name_en, country, flag, length_km, laps, race_distance_km, corners, direction, first_gp, top_speed_kmh, top_speed_note, avg_speed_kmh, elevation_m, record_quali_time, record_quali_driver, record_quali_team, record_quali_year, record_race_time, record_race_driver, record_race_team, record_race_year, character_ja, character_en, map_embed_key";
+  "slug, name_ja, name_en, gp_name_en, country, flag, length_km, laps, race_distance_km, corners, direction, first_gp, top_speed_kmh, top_speed_note, avg_speed_kmh, elevation_m, record_quali_time, record_quali_driver, record_quali_team, record_quali_year, record_race_time, record_race_driver, record_race_team, record_race_year, character_ja, character_en, map_embed_key, map_svg";
 
 /** null → undefined 変換ヘルパ（Circuit 型は optional） */
 function nn<T>(v: T | null): T | undefined {
   return v ?? undefined;
+}
+
+/**
+ * アニメ版コースマップ（public/circuit-maps/{key}.html）が実在するか（サーバー専用）。
+ * CircuitMap の3段フォールバックの tier① 判定に使う。map_embed_key が DB にあっても
+ * 対応HTMLがまだ差し込まれていないケースを弾き、静止SVG/プレースホルダーへ切り替える。
+ * process 内でメモ化（デプロイ内でファイル構成は不変）。next.config の
+ * outputFileTracingIncludes で当該ファイルを関数トレースに含めている前提。
+ */
+const mapExistCache = new Map<string, boolean>();
+export function animatedMapExists(embedKey: string | undefined): boolean {
+  if (!embedKey) return false;
+  // 想定外の値でパストラバーサルや無駄な fs アクセスを避ける（英数・ハイフン・アンダースコアのみ）
+  if (!/^[a-z0-9_-]+$/i.test(embedKey)) return false;
+  const cached = mapExistCache.get(embedKey);
+  if (cached !== undefined) return cached;
+  let exists = false;
+  try {
+    exists = fs.existsSync(
+      path.join(process.cwd(), "public", "circuit-maps", `${embedKey}.html`),
+    );
+  } catch {
+    exists = false;
+  }
+  mapExistCache.set(embedKey, exists);
+  return exists;
 }
 
 /** DB 行 → Circuit 型に変換（winners は別引数で合成） */
@@ -91,6 +120,7 @@ function toCircuit(row: CircuitRow, winners: CircuitWinner[]): Circuit {
     characterJa: nn(row.character_ja),
     characterEn: nn(row.character_en),
     mapEmbedKey: nn(row.map_embed_key),
+    mapSvg: nn(row.map_svg),
     winners,
   };
 }

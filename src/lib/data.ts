@@ -202,6 +202,11 @@ export type Circuit = {
   characterEn?: string;
   /** public/circuit-maps/{key}.html を iframe 埋め込みするキー（例: "silverstone"） */
   mapEmbedKey?: string;
+  /**
+   * 静止コース図（SVG）。アニメ版HTMLが未整備のサーキット向けフォールバック表示に使う。
+   * bacinger/f1-circuits 由来のコース形状を正規化したSVG（完全な <svg> 要素を推奨）。出典 MIT License。
+   */
+  mapSvg?: string;
   /** 歴代ウィナー（年 DESC）。一覧取得時は空配列 */
   winners: CircuitWinner[];
 };

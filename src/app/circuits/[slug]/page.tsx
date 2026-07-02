@@ -113,8 +113,8 @@ export default async function CircuitDetailPage({
         </div>
       </header>
 
-      {/* コースマップ + 標高プロファイル（主役位置） */}
-      {c.mapEmbedKey && <CircuitMap embedKey={c.mapEmbedKey} title={`${c.nameEn} コースマップ`} />}
+      {/* コース図（主役位置）: 動くコースマップ→静止SVG→準備中 の3段フォールバック */}
+      <CircuitMap embedKey={c.mapEmbedKey} mapSvg={c.mapSvg} title={`${c.nameEn} コースマップ`} />
 
       {/* スペック9項目 */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-6">
