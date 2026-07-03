@@ -1,50 +1,38 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Barcelona-Catalunya</title>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Barcelona-Catalunya</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;700;800;900&display=swap');
-*{margin:0;padding:0;box-sizing:border-box} html,body{background:#000}
-.stage{width:1080px;height:1920px;position:relative;overflow:hidden;
- background:radial-gradient(ellipse at 50% 36%,#16243f 0%,#0b1424 55%,#070d18 100%);
- font-family:'Poppins','Helvetica Neue',Arial,sans-serif}
-.checker{position:absolute;left:0;width:100%;height:26px;
- background-image:linear-gradient(45deg,#fff 25%,transparent 25%,transparent 75%,#fff 75%),linear-gradient(45deg,#fff 25%,#111 25%,#111 75%,#fff 75%);
- background-size:26px 26px;background-position:0 0,13px 13px;background-color:#111}
-.checker.top{top:0}.checker.bottom{bottom:0}
-.header{position:absolute;top:250px;left:0;width:100%;text-align:center}
-.kicker{color:#e10600;font-weight:800;font-size:34px;letter-spacing:5px}
-.round{color:#9fb4d6;font-weight:700;font-size:30px;letter-spacing:3px;margin-top:14px}
-.title{color:#fff;font-weight:900;font-size:78px;line-height:1;margin-top:10px;letter-spacing:1px}
-.sub{color:#9fb4d6;font-weight:500;font-size:28px;margin-top:16px}
-.bar{width:130px;height:7px;background:#e10600;margin:22px auto 0;border-radius:4px}
-.map{position:absolute;top:640px;left:0;width:1080px;height:340px}
-.map svg{width:1080px;height:340px;overflow:visible}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%}
+body{background:radial-gradient(ellipse at 50% 30%,#12203a 0%,#0a1430 60%,#070d18 100%);
+ font-family:'Poppins','Helvetica Neue',Arial,sans-serif;color:#fff;
+ display:flex;align-items:center;justify-content:center;min-height:100vh;overflow:hidden}
+.wrap{width:min(92vw,1040px);display:flex;flex-direction:column;align-items:center;
+ padding:clamp(14px,3vh,30px) 0;gap:clamp(10px,2.2vh,22px)}
+/* ── header ── */
+.head{text-align:center}
+.name{font-weight:900;font-size:clamp(20px,3.6vw,34px);letter-spacing:1px;line-height:1.02}
+.meta{color:#9fb4d6;font-weight:600;font-size:clamp(11px,1.5vw,15px);letter-spacing:2.5px;margin-top:8px;text-transform:uppercase}
+.bar{width:120px;height:5px;background:#e10600;margin:12px auto 0;border-radius:4px}
+/* ── map ── */
+.map{width:100%}
+.map svg{width:100%;height:auto;display:block;overflow:visible}
 .seg{fill:none;stroke-width:14;stroke-linecap:round;stroke-linejoin:round}
-/* 下地：セクター別の濃さ */
-#bs1{stroke:#c8d2e0}  /* S1 薄いグレー */
-#bs2{stroke:#6b7790}  /* S2 グレー */
-#bs3{stroke:#222c3c}  /* S3 黒(濃) */
-/* なぞり：赤1本 */
+#bs1{stroke:#c8d2e0}
+#bs2{stroke:#6b7790}
+#bs3{stroke:#222c3c}
 #trace{fill:none;stroke:#e10600;stroke-width:14;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 9px rgba(225,6,0,.7))}
-.info{position:absolute;top:1050px;left:0;width:100%;text-align:center}
-.turn{color:#fff;font-weight:900;font-size:92px;letter-spacing:2px;line-height:1}
-.sector{font-weight:800;font-size:46px;letter-spacing:3px;margin-top:14px}
-.specs{position:absolute;top:1270px;left:50%;transform:translateX(-50%);width:840px;display:flex;justify-content:space-between}
-.spec{flex:1;text-align:center;border-right:1px solid rgba(255,255,255,.15)}
-.spec:last-child{border-right:none}
-.spec .v{color:#fff;font-weight:800;font-size:44px}.spec .l{color:#9fb4d6;font-weight:500;font-size:24px;margin-top:6px}
-.logo{position:absolute;bottom:230px;left:50%;transform:translateX(-50%);width:300px;height:120px;display:flex;align-items:center;justify-content:center}
-.logo img{max-width:100%;max-height:100%}
-.foot{position:absolute;bottom:150px;left:0;width:100%;text-align:center}
-.foot .site{color:#fff;font-weight:800;font-size:36px;letter-spacing:2px}
-.foot .sns{color:#9fb4d6;font-weight:500;font-size:26px;margin-top:8px}
+/* ── info readout ── */
+.info{display:flex;align-items:center;justify-content:center;gap:clamp(14px,3vw,34px);flex-wrap:wrap}
+.info .cell{text-align:center;min-width:96px}
+.info .v{font-weight:900;font-size:clamp(20px,3vw,30px);letter-spacing:1px;line-height:1}
+.info .l{color:#9fb4d6;font-weight:600;font-size:clamp(9px,1.2vw,12px);letter-spacing:2.5px;margin-top:5px;text-transform:uppercase}
+.info .sep{width:1px;align-self:stretch;background:rgba(255,255,255,.15)}
 </style></head><body>
-<div class="stage">
- <div class="checker top"></div><div class="checker bottom"></div>
- <div class="header">
-  <div class="kicker">NEXT BATTLEGROUND</div>
-  <div class="round">Rd.7 · 2026 · JUN 14</div>
-  <div class="title">BARCELONA-<br>CATALUNYA GP</div>
-  <div class="sub">CIRCUIT DE BARCELONA-CATALUNYA · 4.657km</div>
-  
+<div class="wrap">
+ <div class="head">
+  <div class="name">BARCELONA-CATALUNYA</div>
+  <div class="meta">Spain · 4.657 km · 66 Laps · 14 Corners</div>
+  <div class="bar"></div>
  </div>
  <div class="map">
   <svg viewBox="0 0 1080 320">
@@ -60,21 +48,9 @@
   </svg>
  </div>
  <div class="info">
-  <div class="turn" id="turn">TURN 1</div>
-  <div class="sector" id="sector" style="color:#c8d2e0">SECTOR 1</div>
- </div>
- <div class="specs">
-  <div class="spec"><div class="v">4.657</div><div class="l">km</div></div>
-  <div class="spec"><div class="v">14</div><div class="l">CORNERS</div></div>
-  <div class="spec"><div class="v">66</div><div class="l">LAPS</div></div>
- </div>
- <div class="logo">
-   <img id="flabologo" src="flabo-logo-full.svg" alt="F Labo" onerror="this.style.display='none';document.getElementById('lf').style.display='block'">
-   <div id="lf" style="display:none;color:#fff;font-weight:900;font-size:48px">F<span style="color:#e10600">Labo</span></div>
- </div>
- <div class="foot">
-  <div class="site">f-labo.vercel.app</div>
-  <div class="sns">@flabo.jp ／ @flabo_jp</div>
+  <div class="cell"><div class="v" id="turn">TURN 1</div><div class="l">Current Corner</div></div>
+  <div class="sep"></div>
+  <div class="cell"><div class="v" id="sector" style="color:#c8d2e0">SECTOR 1</div><div class="l">Track Section</div></div>
  </div>
 </div>
 <script>
@@ -83,7 +59,6 @@ const turnEl=document.getElementById('turn'),secEl=document.getElementById('sect
 const LT=trace.getTotalLength();
 trace.style.strokeDasharray=LT; trace.style.strokeDashoffset=LT;
 const B1=0.3298,B2=0.666,DUR=18000;
-const turns=[[0.04]];
 // ターン比率（idxベース）
 const turnR=[[1, 0.1498], [2, 0.1681], [3, 0.2311], [4, 0.3465], [5, 0.4249], [6, 0.4733], [7, 0.5176], [8, 0.541], [9, 0.5951], [10, 0.7251], [11, 0.7411], [12, 0.7897], [13, 0.8443], [14, 0.9014]];
 const secName={1:'SECTOR 1',2:'SECTOR 2',3:'SECTOR 3'};
