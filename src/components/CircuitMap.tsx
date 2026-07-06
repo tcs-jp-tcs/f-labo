@@ -1,4 +1,5 @@
 import { animatedMapExists } from "@/lib/circuits";
+import AnimatedCircuitMap from "./AnimatedCircuitMap";
 
 /**
  * サーキットのコース図表示（サーバーコンポーネント）。3段フォールバック：
@@ -22,18 +23,10 @@ export default function CircuitMap({
   const frame =
     "mt-5 border border-white/10 rounded-xl overflow-hidden bg-[#0a1430]";
 
-  // ── tier① 動くコースマップ（iframe） ──
-  if (animatedMapExists(embedKey)) {
-    return (
-      <div className={frame}>
-        <iframe
-          src={`/circuit-maps/${embedKey}.html`}
-          title={title}
-          loading="lazy"
-          className="w-full h-[520px] max-[560px]:h-[360px] block border-0"
-        />
-      </div>
-    );
+  // ── tier① 動くコースマップ（iframe＋全画面ボタン） ──
+  // Spa専用のiframe高さ・全画面表示はクライアント側（AnimatedCircuitMap）で処理。
+  if (animatedMapExists(embedKey) && embedKey) {
+    return <AnimatedCircuitMap embedKey={embedKey} title={title} />;
   }
 
   // ── tier② 静止コース図（SVG） ──
