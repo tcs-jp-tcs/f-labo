@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 // （flex-start 配置なので高くしても下に余白が出るだけでコースはクリップされない）
 // それ以外は共通の 520 / 360。※Tailwind JIT が拾えるようクラス文字列はリテラルで記述。
 const HEIGHT_CLASS: Record<string, string> = {
-  "spa-francorchamps": "h-[680px] max-[560px]:h-[600px]",
+  "spa-francorchamps": "h-[760px] max-[560px]:h-[600px]",
 };
 const DEFAULT_HEIGHT = "h-[520px] max-[560px]:h-[360px]";
 
