@@ -83,20 +83,40 @@ function applyDirAndLang(code: string) {
 
 /**
  * スタンドアロン（ホーム画面に追加した PWA）起動かどうか。
- * iOS Safari は navigator.standalone、その他は display-mode: standalone。
  * この環境では webview が Google翻訳の element.js 実行をブロックするため翻訳が
  * 一切機能しない（読込方式 after/before どちらでも不可）。よって言語切替は行わず、
  * LangSwitcher で「ブラウザで開くと使える」案内を出す。
+ *
+ * 判定方針:
+ * - iOS Safari のホーム画面PWA だけが navigator.standalone===true を返す（確実な true）。
+ * - iOS の Chrome/Firefox/Edge・一部 in-app ブラウザは、通常タブでも
+ *   matchMedia("(display-mode: standalone)") を **true と誤報告** することがある。
+ *   これに引っかかると通常タブの iOS Chrome で言語切替が no-op になる（実際の不具合）。
+ *   よって iOS では display-mode を一切信用せず、navigator.standalone===true 以外は
+ *   standalone ではないと判定する。iOS の UA は WebKit 必須ゆえ必ず iPhone/iPad/iPod を
+ *   含むため、navigator.standalone プロパティの有無に依存しない確実な iOS 判定になる。
+ * - 非iOS（Android/desktop）では display-mode: standalone が信頼できる。
  */
 export function isStandalone(): boolean {
   if (typeof window === "undefined") return false;
-  const iosStandalone =
-    (window.navigator as Navigator & { standalone?: boolean }).standalone ===
-    true;
-  const displayModeStandalone =
+  const nav = window.navigator as Navigator & {
+    standalone?: boolean;
+    maxTouchPoints?: number;
+  };
+  // iOS Safari のホーム画面PWA（唯一の確実な true positive）
+  if (nav.standalone === true) return true;
+  // iOS(WebKit) 判定。iOS では display-mode を信用しないため、ここで true なら
+  // 上の navigator.standalone===true 以外は standalone ではない（＝false）とする。
+  const ua = nav.userAgent || "";
+  const isIOS =
+    /iPad|iPhone|iPod/.test(ua) ||
+    (nav.platform === "MacIntel" && (nav.maxTouchPoints ?? 0) > 1); // iPadOS 13+
+  if (isIOS) return false;
+  // 非iOS（Android/desktop）: display-mode: standalone が信頼できる
+  return (
     typeof window.matchMedia === "function" &&
-    window.matchMedia("(display-mode: standalone)").matches;
-  return iosStandalone || displayModeStandalone;
+    window.matchMedia("(display-mode: standalone)").matches
+  );
 }
 
 export default function LangProvider({
