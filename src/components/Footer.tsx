@@ -42,6 +42,9 @@ export default function Footer() {
           <Link href="/about" className="text-flabo-grey hover:text-white text-xs transition-colors">運営者情報</Link>
           <Link href="/contact" className="text-flabo-grey hover:text-white text-xs transition-colors">お問い合わせ</Link>
           <Link href="/privacy" className="text-flabo-grey hover:text-white text-xs transition-colors">プライバシーポリシー</Link>
+          {/* 【一時】PWAでGT翻訳が動くか実機検証するための /gt-diag への導線。
+              検証完了後、この Link ごと（src/app/gt-diag も含めて）撤去すること。 */}
+          <Link href="/gt-diag" className="text-flabo-red hover:text-white text-xs transition-colors">🔧 GT診断（一時）</Link>
         </div>
 
         <div className="flex flex-col gap-2">
