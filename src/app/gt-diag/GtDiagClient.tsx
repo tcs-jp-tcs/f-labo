@@ -17,6 +17,8 @@ type Snapshot = {
   ua: string;
   googleDefined: boolean;
   googleTranslateDefined: boolean;
+  initFnDefined: boolean;
+  elementScriptInDom: boolean;
   widgetChildren: number;
   comboExists: boolean;
   comboOptions: number;
@@ -28,6 +30,7 @@ type Snapshot = {
 function takeSnapshot(): Snapshot {
   const w = window as unknown as {
     google?: { translate?: unknown };
+    googleTranslateElementInit?: unknown;
   };
   const nav = window.navigator as Navigator & { standalone?: boolean };
   const html = document.documentElement;
@@ -48,6 +51,10 @@ function takeSnapshot(): Snapshot {
     ua: nav.userAgent,
     googleDefined: typeof w.google !== "undefined",
     googleTranslateDefined: !!(w.google && w.google.translate),
+    initFnDefined: typeof w.googleTranslateElementInit === "function",
+    elementScriptInDom: !!document.querySelector(
+      'script[src*="translate.google.com/translate_a/element.js"]',
+    ),
     widgetChildren: widget ? widget.childElementCount : -1,
     comboExists: !!combo,
     comboOptions: combo ? combo.options.length : -1,
@@ -98,6 +105,37 @@ export default function GtDiagClient() {
     },
     [pushLog],
   );
+
+  // element.js を手動で <script> 注入して切り分ける。
+  // onload 発火＆window.google=true → NextのafterInteractiveが流し込めていないだけ（直せる）。
+  // onerror or それでもfalse → iOS PWA環境が element.js を実行できない（環境的に不可）。
+  const manualLoadElementJs = useCallback(() => {
+    const w = window as unknown as {
+      google?: { translate?: { TranslateElement?: new (o: unknown, id: string) => void } };
+      googleTranslateElementInit?: () => void;
+    };
+    if (typeof w.googleTranslateElementInit !== "function") {
+      w.googleTranslateElementInit = function () {
+        const TE = w.google?.translate?.TranslateElement;
+        if (TE) new TE({ pageLanguage: "ja", autoDisplay: false }, "google_translate_element");
+      };
+      pushLog("googleTranslateElementInit を手動定義した");
+    }
+    const existing = document.querySelector(
+      'script[src*="translate.google.com/translate_a/element.js"]',
+    );
+    pushLog(`既存の element.js タグ: ${existing ? "あり" : "なし"}`);
+    const s = document.createElement("script");
+    s.src =
+      "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+    s.async = true;
+    s.onload = () =>
+      pushLog("✅ element.js onload 発火。数秒後 window.google / combo を確認");
+    s.onerror = () =>
+      pushLog("❌ element.js onerror＝ロード失敗（環境がブロックしている可能性大）");
+    document.head.appendChild(s);
+    pushLog("element.js を手動 injection した（結果は上の表と数秒後のログで）");
+  }, [pushLog]);
 
   // googtrans cookie を書いてフルリロード（本番の切替と同じ方式）
   const cookieReload = useCallback(
@@ -199,6 +237,16 @@ export default function GtDiagClient() {
               ok={snap.googleTranslateDefined}
             />
             <Row
+              k="init関数 定義"
+              v={String(snap.initFnDefined)}
+              ok={snap.initFnDefined}
+            />
+            <Row
+              k="element.js タグ在DOM"
+              v={String(snap.elementScriptInDom)}
+              ok={snap.elementScriptInDom}
+            />
+            <Row
               k="翻訳widget 子要素数"
               v={String(snap.widgetChildren)}
               ok={snap.widgetChildren > 0}
@@ -226,6 +274,13 @@ export default function GtDiagClient() {
       </div>
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 16 }}>
+        <button
+          type="button"
+          style={{ ...btn, borderColor: "#E10600", background: "#2a0d0d" }}
+          onClick={manualLoadElementJs}
+        >
+          ⓿ element.js を手動ロード（最重要）
+        </button>
         <button type="button" style={btn} onClick={() => driveCombo("en")}>
           ① combo駆動で英語化（リロードなし）
         </button>
