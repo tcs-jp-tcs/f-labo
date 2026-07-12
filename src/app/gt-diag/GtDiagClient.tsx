@@ -72,6 +72,7 @@ const GOOGTRANS_DOMAINS = (host: string) => ["", `domain=${host};`, `domain=.${h
 
 export default function GtDiagClient() {
   const [snap, setSnap] = useState<Snapshot | null>(null);
+  const [pageUrl, setPageUrl] = useState("");
   const [log, setLog] = useState<string[]>([]);
   const logRef = useRef<string[]>([]);
 
@@ -82,10 +83,26 @@ export default function GtDiagClient() {
   }, []);
 
   useEffect(() => {
+    setPageUrl(window.location.href);
     setSnap(takeSnapshot());
     const t = window.setInterval(() => setSnap(takeSnapshot()), 1000);
     return () => window.clearInterval(t);
   }, []);
+
+  // 外部ブラウザで開く方式の検証用ハンドラ群
+  const openWindowBlank = useCallback(() => {
+    pushLog("B: window.open(url,'_blank') 実行 → Safariに出たか？");
+    window.open(pageUrl, "_blank");
+  }, [pageUrl, pushLog]);
+
+  const copyUrl = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(pageUrl);
+      pushLog("D: クリップボードにURLをコピーした（Safariに貼付けて開く）");
+    } catch {
+      pushLog("D: clipboard API 不可。URLを長押しでコピーしてください");
+    }
+  }, [pageUrl, pushLog]);
 
   // .goog-te-combo を直接駆動（リロードなし）で翻訳が当たるか試す
   const driveCombo = useCallback(
@@ -305,6 +322,49 @@ export default function GtDiagClient() {
         </p>
         <p style={{ fontSize: 16, lineHeight: 1.7 }}>
           これはテスト用の文章です。ボタンを押して数秒待っても、この文が日本語のままなら、この環境では翻訳が当たっていません。英語に変われば翻訳は正常に動いています。
+        </p>
+      </div>
+
+      <div
+        style={{
+          border: "2px solid #E10600",
+          borderRadius: 10,
+          padding: 12,
+          marginBottom: 16,
+        }}
+      >
+        <p style={{ fontSize: 13, fontWeight: 900, marginBottom: 4 }}>
+          ▼ 外部ブラウザで開く方式の検証
+        </p>
+        <p style={{ fontSize: 11, color: "#9aa", marginBottom: 10 }}>
+          A〜D を1つずつ試し、「PWAを抜けて実際にSafari/Chromeが開き、このページが出た」のはどれか教えてください。
+        </p>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <a
+            href={pageUrl ? `x-safari-${pageUrl}` : "#"}
+            style={{ ...btn, display: "block", textAlign: "center", textDecoration: "none" }}
+            onClick={() => pushLog("A: x-safari- スキームをタップ → Safariが開いたか？")}
+          >
+            A: x-safari- スキームで開く（本命）
+          </a>
+          <a
+            href={pageUrl || "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ ...btn, display: "block", textAlign: "center", textDecoration: "none" }}
+            onClick={() => pushLog("B2: 実アンカー target=_blank をタップ → 外部ブラウザに出たか？")}
+          >
+            B2: 実リンク target=_blank で開く
+          </a>
+          <button type="button" style={btn} onClick={openWindowBlank}>
+            C2: window.open(_blank) で開く
+          </button>
+          <button type="button" style={btn} onClick={copyUrl}>
+            D: URLをコピー（Safariに貼付けて開く フォールバック）
+          </button>
+        </div>
+        <p style={{ fontSize: 11, color: "#9aa", marginTop: 8, wordBreak: "break-all" }}>
+          対象URL: {pageUrl || "(取得中)"}
         </p>
       </div>
 
