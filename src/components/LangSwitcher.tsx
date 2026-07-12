@@ -288,18 +288,18 @@ export default function LangSwitcher() {
                 {noticeOpen && (
                   <div className="space-y-2 px-3 pb-2.5 text-[0.68rem] leading-relaxed text-flabo-text">
                     <p>
-                      📱 ホーム画面アプリでは言語切替を使えません。Chromeブラウザで開いてください。
+                      📱 ホーム画面アプリでは言語切替を使えません。お使いのブラウザで開いてください。
                       <span className="mt-0.5 block text-flabo-grey">
-                        （Chromeブラウザでは言語切り替えがご利用いただけます。動作確認済み）
+                        （ブラウザで開くと言語切り替えがご利用いただけます。動作確認済み）
                       </span>
                     </p>
                     <p className="border-t border-white/10 pt-2">
                       {
-                        "📱 Language switching isn't available in the home-screen app. Please open the site in Chrome."
+                        "📱 Language switching isn't available in the home-screen app. Please open the site in your browser."
                       }
                       <span className="mt-0.5 block text-flabo-grey">
                         {
-                          "(Language switching works in the Chrome browser — verified.)"
+                          "(Language switching works in your browser — verified.)"
                         }
                       </span>
                     </p>
