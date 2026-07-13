@@ -8,66 +8,68 @@ import { getSiteSettings } from "@/lib/settings";
  *   amazon_keyword / amazon_headline / amazon_subtext / amazon_tag
  *   毎週の差し替えは site_settings の UPDATE 1行で済む（コード変更不要）。
  *
- * プライムデー期間中（2026-06-19〜2026-07-13 23:59 JST）は公式画像バナーに自動差し替え。
+ * 夏バテ・エナジードリンク特集 期間中は画像バナー（絵のみ＋HTMLの告知帯）に自動差し替え。
  *   期間が終われば自動で通常のテキストバナーに戻る（コード変更・削除不要）。
  */
 
-// プライムデー2026 表示期間（JST）を UTC エポックで定義
-// 開始: 2026-06-19 00:00 JST = 2026-06-18 15:00 UTC
-// 終了: 2026-07-13 23:59 JST 終わり = 2026-07-14 00:00 JST = 2026-07-13 15:00 UTC
-const PRIMEDAY_START = Date.UTC(2026, 5, 18, 15, 0, 0);
-const PRIMEDAY_END = Date.UTC(2026, 6, 13, 15, 0, 0);
-const PRIMEDAY_URL = "https://amzn.to/4xIb9d2";
+// エナジードリンク特集 表示期間（JST）を UTC エポックで定義
+// 終了: 2026-09-01 00:00 JST = 2026-08-31 15:00 UTC（夏の間表示。要調整可）
+const ENERGY_END = Date.UTC(2026, 7, 31, 15, 0, 0);
+const ENERGY_URL =
+  "https://www.amazon.co.jp/s?k=エナジードリンク&i=food-beverage&linkCode=ll2&tag=tcsjptcs-22&linkId=f671fa3ebf31d1a894e6377c366bf634";
 
-function isPrimedayActive(): boolean {
-  const now = Date.now();
-  return now >= PRIMEDAY_START && now < PRIMEDAY_END;
+function isEnergyActive(): boolean {
+  return Date.now() < ENERGY_END;
 }
 
 /**
- * プライムデー2026 画像バナー（640×360・スマホ全幅／デスクトップは max-640px 中央寄せ）。
- * 画像の下に告知テキスト＋CTAボタンを付ける。期間外は本コンポーネント自体が
- * レンダリングされない（AmazonPromo の分岐）ため、下段ごと自動で非表示になる。
+ * 夏バテ・エナジードリンク特集 画像バナー（スマホ全幅／デスクトップは max-640px 中央寄せ）。
+ * 画像は帯なしのコミック絵（energy-drink-2026.jpg）を使い、下段の告知帯（コピー＋ボタン）は
+ * HTML/CSSで実装（Amazonカラー：濃紺#232F3E＋オレンジ#FF9900）。期間外は本コンポーネント
+ * 自体がレンダリングされない（AmazonPromo の分岐）ため、下段ごと自動で非表示になる。
  */
-function PrimedayBanner() {
+function EnergyBanner() {
   return (
     <div className="mx-auto w-full max-w-[640px]">
-      {/* 画像＋下段を1枚のカードに一体化（プライムデーブルー基調） */}
-      <div className="overflow-hidden rounded-xl border border-[#0073E6]/50 shadow-lg shadow-[#0073E6]/15">
-        {/* 上段: 公式画像バナー（画像部分がリンク） */}
+      {/* 画像＋下段を1枚のカードに一体化（Amazon濃紺×オレンジ基調） */}
+      <div className="overflow-hidden rounded-xl border border-[#FF9900]/40 shadow-lg shadow-black/25">
+        {/* 上段: コミック絵（画像部分がリンク） */}
         <a
-          href={PRIMEDAY_URL}
+          href={ENERGY_URL}
           target="_blank"
           rel="sponsored noopener"
-          aria-label="Amazonプライムデー 2026（外部サイト・PR）"
+          aria-label="夏バテしてない？観戦のお供にエナジードリンク特集（外部サイト・PR）"
           className="block"
         >
           <img
-            src="/images/primeday2026.jpg"
-            alt="Amazonプライムデー 2026 7/10(金)〜7/13(月) 4日間のビッグセール"
-            width={640}
-            height={360}
+            src="/images/energy-drink-2026.jpg"
+            alt="夏バテしてない？観戦のお供に エナジードリンク特集"
+            width={1280}
+            height={714}
             loading="lazy"
             className="block w-full h-auto"
           />
         </a>
 
-        {/* 下段: 告知テキスト＋CTAボタン（バナーの青に合わせ画像と地続き） */}
-        <div className="bg-gradient-to-b from-[#0F8FF0] to-[#0073E6] px-5 py-4 md:px-6 md:py-5 text-center">
+        {/* 下段: 告知帯（HTML実装・Amazonカラー 濃紺#232F3E＋オレンジ#FF9900） */}
+        <div className="bg-[#232F3E] px-5 py-4 md:px-6 md:py-5 text-center">
+          <div className="font-display tracking-[0.2em] text-[0.65rem] text-[#FF9900] uppercase mb-1.5">
+            PR · Amazon
+          </div>
           <p className="font-black text-base md:text-lg leading-tight text-white">
-            先行セールは7/7(火)スタート！
+            夏バテしてない？
           </p>
-          <p className="text-[0.85rem] text-white/85 mt-1.5">
-            ポイントアップキャンペーン エントリー受付中
+          <p className="text-[0.85rem] text-white/80 mt-1.5">
+            観戦のお供に エナジードリンク特集
           </p>
           <a
-            href={PRIMEDAY_URL}
+            href={ENERGY_URL}
             target="_blank"
             rel="sponsored noopener"
-            aria-label="セール会場をチェック（外部サイト・PR）"
-            className="mt-3.5 inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 font-display font-bold tracking-[0.12em] text-sm text-[#0073E6] shadow-md transition-colors hover:bg-[#001F3F] hover:text-white"
+            aria-label="エナジードリンク特集をチェック（外部サイト・PR）"
+            className="mt-3.5 inline-flex items-center justify-center gap-2 rounded-full bg-[#FF9900] px-6 py-3 font-display font-bold tracking-[0.12em] text-sm text-[#232F3E] shadow-md transition-colors hover:bg-white"
           >
-            セール会場をチェック →
+            今すぐチェック →
           </a>
         </div>
       </div>
@@ -76,9 +78,9 @@ function PrimedayBanner() {
 }
 
 export default async function AmazonPromo() {
-  // プライムデー期間中は公式画像バナーを表示し、期間外は下の通常バナーへ
-  if (isPrimedayActive()) {
-    return <PrimedayBanner />;
+  // エナジードリンク特集 期間中は画像バナーを表示し、期間外は下の通常バナーへ
+  if (isEnergyActive()) {
+    return <EnergyBanner />;
   }
 
   const s = await getSiteSettings();
