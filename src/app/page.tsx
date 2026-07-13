@@ -5,7 +5,7 @@ import SnsCard from "@/components/SnsCard";
 import VideoCard from "@/components/VideoCard";
 import EmbedList from "@/components/EmbedList";
 import AmazonPromo from "@/components/AmazonPromo";
-import AudibleBanner from "@/components/AudibleBanner";
+import BelgianBanner from "@/components/BelgianBanner";
 import ScheduleList from "@/components/ScheduleList";
 import NewsCard from "@/components/NewsCard";
 import StandingsCard from "@/components/StandingsCard";
@@ -54,9 +54,9 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* Audible プロモ（最上部・ヘッダー直下）。期間外は自動非表示。 */}
+      {/* ベルギーGP特集 Amazonプロモ（最上部・ヘッダー直下）。GP終了で自動非表示。 */}
       <div className="max-w-[1280px] mx-auto px-6 pt-6 relative z-[1]">
-        <AudibleBanner />
+        <BelgianBanner />
       </div>
 
       {/* Hero */}
