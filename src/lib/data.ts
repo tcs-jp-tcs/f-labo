@@ -578,11 +578,11 @@ export const news: NewsItem[] = [
 ];
 
 /* SNS */
-// X（@flabo_jp）と TikTok（@flabo.jp）のアカウントリンクは撤去。Instagram のみ掲載。
-// YouTube は死にリンク応急処置で非表示中（Footer/SnsCard のコメントアウト参照）。
+// 表示順は X → Instagram → YouTube（Footer / SnsCard 共通）。TikTok は掲載しない。
 export const sns = {
+  x: { handle: "@flabo_jp", url: "https://x.com/flabo_jp" },
   instagram: { handle: "@flabo.jp", url: "https://instagram.com/flabo.jp" },
-  youtube: { handle: "@flabo_jp", url: "https://www.youtube.com/@flabo_jp" },
+  youtube: { handle: "@FLabo-tcs", url: "https://youtube.com/@FLabo-tcs" },
 };
 
 export const seriesLabel: Record<Series, string> = {
