@@ -32,22 +32,6 @@ export default function ContactPage() {
               ※ご返信までに数日いただく場合があります。
             </p>
           </div>
-          <div>
-            <div className="font-display tracking-[0.18em] text-flabo-red text-xs uppercase mb-1">
-              X（旧 Twitter）
-            </div>
-            <a
-              href="https://x.com/flabo_jp"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-base font-bold text-white hover:text-flabo-red transition-colors"
-            >
-              @flabo_jp
-            </a>
-            <p className="text-xs text-flabo-grey mt-1">
-              DM もしくはメンションでお気軽にどうぞ。
-            </p>
-          </div>
         </div>
 
         <section>

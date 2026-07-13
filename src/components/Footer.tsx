@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { sns } from "@/lib/data";
 // 【応急処置】YouTubeチャンネル復活までフッターのYouTubeリンクを非表示にするため YouTubeLogo は一旦外す
-import { XLogo, InstagramLogo, TikTokLogo } from "./SnsIcons";
+// X / TikTok アカウントリンクは撤去（XLogo / TikTokLogo は未使用のため import しない）
+import { InstagramLogo } from "./SnsIcons";
 
 export default function Footer() {
   return (
@@ -47,15 +48,6 @@ export default function Footer() {
         <div className="flex flex-col gap-2">
           <span className="font-display tracking-[0.18em] text-[0.7rem] text-flabo-grey uppercase">フォロー</span>
           <a
-            href={sns.x.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 text-flabo-grey hover:text-white text-xs transition-colors"
-          >
-            <XLogo className="h-3.5 w-3.5" />
-            <span>X {sns.x.handle}</span>
-          </a>
-          <a
             href={sns.instagram.url}
             target="_blank"
             rel="noopener noreferrer"
@@ -63,15 +55,6 @@ export default function Footer() {
           >
             <InstagramLogo className="h-3.5 w-3.5" />
             <span>Instagram {sns.instagram.handle}</span>
-          </a>
-          <a
-            href={sns.tiktok.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 text-flabo-grey hover:text-white text-xs transition-colors"
-          >
-            <TikTokLogo className="h-3.5 w-3.5" />
-            <span>TikTok {sns.tiktok.handle}</span>
           </a>
           {/* 【応急処置】YouTubeチャンネル削除（ポリシー誤検知・再審査請求中）により死にリンクと
               なったため一旦非表示。チャンネル復活時はこのコメントアウトを解除し、
