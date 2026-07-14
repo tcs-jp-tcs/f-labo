@@ -39,7 +39,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 bg-[rgba(10,10,10,0.95)] backdrop-blur-xl border-b border-white/5">
       <div className="max-w-[1280px] mx-auto px-6 flex items-center justify-between h-[60px]">
         <Link href="/" aria-label="Fラボ ホーム" onClick={() => setOpen(false)}>
-          <HeaderLogo width={96} />
+          <HeaderLogo height={40} />
         </Link>
         <div className="flex items-center gap-1.5">
           <nav className="hidden md:flex">
