@@ -62,7 +62,7 @@ export default async function HomePage() {
       {/* Hero */}
       <section className="max-w-[1280px] mx-auto px-6 pt-8 pb-4 relative z-[1]">
         <div className="text-center mb-8 flex flex-col items-center">
-          <MainLogo width={260} />
+          <MainLogo width={325} />
           <h2
             className="mt-2 text-5xl md:text-6xl"
             style={{
