@@ -4,8 +4,7 @@ import PodiumCard from "@/components/PodiumCard";
 import SnsCard from "@/components/SnsCard";
 import VideoCard from "@/components/VideoCard";
 import EmbedList from "@/components/EmbedList";
-import AmazonPromo from "@/components/AmazonPromo";
-import BelgianBanner from "@/components/BelgianBanner";
+import AffiliateBannerList from "@/components/AffiliateBannerList";
 import ScheduleList from "@/components/ScheduleList";
 import NewsCard from "@/components/NewsCard";
 import StandingsCard from "@/components/StandingsCard";
@@ -18,6 +17,7 @@ import { getActiveEmbeds } from "@/lib/embeds";
 import { getRecentResults } from "@/lib/results";
 import { getSchedules, selectNextRace } from "@/lib/schedules";
 import { getStandings } from "@/lib/standings";
+import { getAffiliateBanners } from "@/lib/affiliateBanners";
 import { isSeriesVisible } from "@/lib/displayConfig";
 
 // 【応急処置】YouTubeチャンネル削除（ポリシー誤検知・再審査請求中）に伴い、
@@ -30,12 +30,15 @@ export const revalidate = 0;
 
 export default async function HomePage() {
   const homeNews = await getActiveNews();
-  const [recentResults, schedules, standings, embeds] = await Promise.all([
-    getRecentResults(),
-    getSchedules(),
-    getStandings(),
-    getActiveEmbeds(),
-  ]);
+  const [recentResults, schedules, standings, embeds, topBanners, midBanners] =
+    await Promise.all([
+      getRecentResults(),
+      getSchedules(),
+      getStandings(),
+      getActiveEmbeds(),
+      getAffiliateBanners("top"),
+      getAffiliateBanners("mid"),
+    ]);
   const featuredNews = homeNews[0];
   const restHomeNews = homeNews.slice(1, 4);
   // 結果ページと同じ基準：display_order 昇順の先頭を表示する（FP/予選/スプリント/決勝いずれも対象）。
@@ -54,10 +57,13 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* ベルギーGP特集 Amazonプロモ（最上部・ヘッダー直下）。GP終了で自動非表示。 */}
-      <div className="max-w-[1280px] mx-auto px-6 pt-6 relative z-[1]">
-        <BelgianBanner />
-      </div>
+      {/* Amazonアフィリエイトバナー（最上部・ヘッダー直下）。DB: affiliate_banners placement='top'。
+          表示対象0件ならセクションごと非表示（空白を残さない）。 */}
+      {topBanners.length > 0 && (
+        <div className="max-w-[1280px] mx-auto px-6 pt-6 relative z-[1]">
+          <AffiliateBannerList banners={topBanners} />
+        </div>
+      )}
 
       {/* Hero */}
       <section className="max-w-[1280px] mx-auto px-6 pt-8 pb-4 relative z-[1]">
@@ -116,10 +122,13 @@ export default async function HomePage() {
         </Section>
       )}
 
-      {/* Amazon アソシエイト プロモ（動画 と 最新ニュース の間） */}
-      <Section className="py-6">
-        <AmazonPromo />
-      </Section>
+      {/* Amazonアフィリエイトバナー（動画 と 最新ニュース の間）。DB: affiliate_banners placement='mid'。
+          表示対象0件ならセクションごと非表示（空白を残さない）。 */}
+      {midBanners.length > 0 && (
+        <Section className="py-6">
+          <AffiliateBannerList banners={midBanners} />
+        </Section>
+      )}
 
       {/* News */}
       <Section>
