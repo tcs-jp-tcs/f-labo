@@ -64,23 +64,23 @@ export default async function HomePage() {
         <div className="text-center mb-8 flex flex-col items-center">
           <MainLogo width={325} />
           <h2
-            className="mt-2 text-5xl md:text-6xl"
+            className="mt-4 text-xl md:text-2xl"
             style={{
               fontFamily: "var(--font-mplus-1p), sans-serif",
-              fontWeight: 900,
-              letterSpacing: "0.08em",
+              fontWeight: 400,
+              letterSpacing: "0.2em",
               backgroundImage:
-                "linear-gradient(135deg, #ffffff 0%, #E10600 50%, #ff4444 100%)",
+                "linear-gradient(180deg, #e8e8e8 0%, #c5cad6 100%)",
               WebkitBackgroundClip: "text",
               backgroundClip: "text",
               color: "transparent",
               WebkitTextFillColor: "transparent",
-              filter: "drop-shadow(0 0 30px rgba(225,6,0,0.4))",
+              textShadow: "0 1px 2px rgba(0,0,0,0.5)",
             }}
           >
             フォーミュラ研究所
           </h2>
-          <p className="text-xs md:text-sm text-flabo-grey mt-2">
+          <p className="text-xs md:text-sm text-flabo-grey mt-2.5">
             F1・F2・F3・スーパーフォーミュラ・インディカー
           </p>
         </div>
