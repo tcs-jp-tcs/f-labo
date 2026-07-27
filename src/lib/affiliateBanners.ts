@@ -13,7 +13,27 @@ import { supabase } from "@/lib/supabase";
  * 運用: affiliate_banners を INSERT/UPDATE するだけでバナー差し替えが可能（コード変更不要）。
  *   is_active=true かつ表示期間内（starts_at〜ends_at）を placement 別に sort_order 昇順で表示。
  *   variant: 'image'=全部入り画像（帯なし・PRのみ） / 'banded'=画像＋HTML帯（PR・Amazon＋見出し等）。
+ *
+ * 画像: image_url は resolveBannerImageUrl() で正規化する（下記3形式に対応）。
+ *   新規バナーは Supabase Storage の banner-images バケットへ置く運用（Git commit / デプロイ不要）。
  */
+
+/** バナー画像を置く Supabase Storage の public バケット */
+const BANNER_BUCKET = "banner-images";
+
+/**
+ * DB の image_url を表示用URLに正規化する。次の3形式を受け付ける:
+ *  - 絶対URL（例: https://<ref>.supabase.co/storage/v1/object/public/banner-images/xxx.jpg）→ そのまま
+ *  - 相対パス（例: /images/xxx.jpg）→ そのまま。public/images/ 配下の Git 管理ファイル（過去バナー互換）
+ *  - パスのみ（例: xxx.jpg, 2026/xxx.jpg）→ banner-images バケットの公開URLに解決
+ */
+export function resolveBannerImageUrl(rawUrl: string): string {
+  const value = rawUrl.trim();
+  if (/^(https?:|data:)/i.test(value)) return value;
+  if (value.startsWith("/")) return value;
+  return supabase.storage.from(BANNER_BUCKET).getPublicUrl(value).data
+    .publicUrl;
+}
 
 export type BannerPlacement = "top" | "mid";
 export type BannerVariant = "image" | "banded";
@@ -83,7 +103,7 @@ export const getAffiliateBanners = cache(
         heading: r.heading,
         copy: r.copy,
         ctaLabel: r.cta_label,
-        imageUrl: r.image_url,
+        imageUrl: resolveBannerImageUrl(r.image_url),
         linkUrl: r.link_url,
         sortOrder: r.sort_order ?? 0,
       }));
