@@ -76,6 +76,17 @@ export default function AboutPage() {
               <div className="font-bold">フォーミュラ研究所（Fラボ）編集部</div>
             </div>
             <div>
+              <div className="text-xs text-flabo-grey">制作</div>
+              <a
+                className="font-bold text-white hover:text-flabo-red transition-colors"
+                href="https://tcs-jp.vercel.app"
+                target="_blank"
+                rel="noopener"
+              >
+                TCS
+              </a>
+            </div>
+            <div>
               <div className="text-xs text-flabo-grey">サイト</div>
               <div className="font-bold">https://f-labo.vercel.app</div>
             </div>

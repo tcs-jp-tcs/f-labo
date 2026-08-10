@@ -77,6 +77,17 @@ export default function Footer() {
       </div>
       <div className="mt-6 pt-4 border-t border-white/5 text-[0.75rem] text-white/60 text-center">
         © 2026 フォーミュラ研究所（Fラボ）— 当サイトは公式団体ではありません。掲載情報は各公式ソースに基づきます。
+        <div className="mt-1.5 text-[0.7rem] text-white/40">
+          Produced by{" "}
+          <a
+            href="https://tcs-jp.vercel.app"
+            target="_blank"
+            rel="noopener"
+            className="hover:text-white/70 transition-colors"
+          >
+            TCS
+          </a>
+        </div>
       </div>
     </footer>
   );
