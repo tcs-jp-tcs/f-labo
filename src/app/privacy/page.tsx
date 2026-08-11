@@ -5,7 +5,7 @@ import SectionHeader from "@/components/SectionHeader";
 export const metadata: Metadata = {
   title: "プライバシーポリシー | フォーミュラ研究所（Fラボ）",
   description:
-    "フォーミュラ研究所（Fラボ）のプライバシーポリシー。アクセス解析・広告配信・お問い合わせで取得する情報の取り扱いについて記載しています。",
+    "フォーミュラ研究所（Fラボ）のプライバシーポリシー。アクセス解析・アフィリエイト・Cookie の取り扱いについて記載しています。",
 };
 
 export default function PrivacyPage() {
