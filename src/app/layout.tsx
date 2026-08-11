@@ -18,7 +18,6 @@ import TzProvider from "@/components/TzProvider";
 import "./globals.css";
 
 const GA_ID = "G-WVP9R50FW5";
-const ADSENSE_CLIENT = "ca-pub-3569776484788072";
 
 const orbitron = Orbitron({
   variable: "--font-orbitron",
@@ -164,13 +163,6 @@ export default function RootLayout({
             gtag('config', '${GA_ID}');
           `}
         </Script>
-        {/* Google AdSense */}
-        <Script
-          id="google-adsense"
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
-          strategy="afterInteractive"
-          crossOrigin="anonymous"
-        />
         {/* Google翻訳ウィジェット（非表示コンテナ）。combo は LangSwitcher 経由で操作 */}
         <div id="google_translate_element" className="hidden" />
         {/* 通常ブラウザ・アプリ内ブラウザ向けの Google翻訳ウィジェット。
