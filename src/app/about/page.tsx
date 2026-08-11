@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Section from "@/components/Section";
 import SectionHeader from "@/components/SectionHeader";
 
@@ -88,7 +89,12 @@ export default function AboutPage() {
             </div>
             <div>
               <div className="text-xs text-flabo-grey">サイト</div>
-              <div className="font-bold">https://f-labo.vercel.app</div>
+              <Link
+                className="font-bold text-white hover:text-flabo-red transition-colors"
+                href="/"
+              >
+                https://f-labo.vercel.app
+              </Link>
             </div>
             <div>
               <div className="text-xs text-flabo-grey">連絡先</div>
