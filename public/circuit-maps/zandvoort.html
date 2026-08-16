@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8"><title>Circuit Zandvoort</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;background:#0B1428;overflow:hidden}
+body{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;
+     font-variant-numeric:tabular-nums}
+#fit{position:absolute;top:0;left:0;transform-origin:top left}
+#stage{position:relative;width:1080px;height:1920px;background:#0B1428}
+.abs{position:absolute}
+#sectorBadge{padding:16px 34px;border-radius:10px;font-weight:800;letter-spacing:.14em;color:#fff;
+  background:#2C7BE5;display:inline-block;white-space:nowrap}
+#cornerBox .big{font-weight:800;color:#fff;line-height:1;white-space:nowrap}
+#cornerBox .sm{font-weight:700;color:#9DB2D0;margin-top:8px;letter-spacing:.06em;white-space:nowrap}
+svg{width:100%;overflow:visible}
+.cnum{fill:#0B1428;stroke:#8FA6C8;stroke-width:3}
+.cnumT{fill:#E6EEF9;font-size:30px;font-weight:800;text-anchor:middle;dominant-baseline:central}
+.axl{fill:#6C82A8;font-size:24px;font-weight:700}
+.grid{stroke:#22314F;stroke-width:1.5}
+.txt{font-weight:800;letter-spacing:.14em;color:#4A5E80;white-space:nowrap}
+</style></head>
+<body><div id="fit"><div id="stage">
+
+  <div class="abs" id="sectorBadge">SECTOR 1</div>
+  <div class="abs" id="cornerBox"><div class="big" id="lblBig">S/F</div><div class="sm" id="lblSm">Start / Finish</div></div>
+
+  <div class="abs" id="mapWrap">
+    <svg id="map" viewBox="-60 -60 1120 1120">
+      <path id="base" fill="none" stroke="#1B2A47" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+      <path id="p1" fill="none" stroke="#2C7BE5" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+      <path id="p2" fill="none" stroke="#E8323C" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+      <path id="p3" fill="none" stroke="#28A745" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+      <g id="corners"></g><g id="sf"></g>
+      <circle id="car" r="15" fill="#FFFFFF" stroke="#0B1428" stroke-width="4"/>
+    </svg>
+  </div>
+
+  <div class="abs" id="elevWrap">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:24px">
+      <div style="font-size:38px;font-weight:800;letter-spacing:.22em;color:#9DB2D0">ELEVATION &middot; ONE LAP</div>
+      <div style="font-size:36px;font-weight:800;color:#4DA3FF;white-space:nowrap" id="elevVal"></div>
+    </div>
+    <svg id="elev" viewBox="0 0 960 300" preserveAspectRatio="none" style="height:300px"></svg>
+  </div>
+
+  <div class="abs txt" id="titleTxt"></div>
+  <div class="abs txt" id="footTxt"></div>
+
+</div></div>
+<script>
+var D={"pts": [[152.37, 466.21], [255.5, 216.92], [294.69, 125.44], [303.55, 115.33], [315.57, 109.64], [328.68, 107.96], [340.82, 110.49], [352.26, 118.28], [360.22, 128.07], [364.46, 140.28], [364.79, 153.86], [353.41, 180.28], [320.71, 259.87], [310.17, 296.93], [305.93, 335.56], [308.18, 371.78], [304.78, 386.51], [296.74, 396.41], [280.68, 409.46], [263.4, 416.31], [215.66, 434.94], [203.39, 444.2], [200.05, 457.89], [199.6, 470.21], [204.55, 482.74], [213.8, 491.68], [225.36, 496.42], [243.1, 496.0], [330.54, 468.1], [371.15, 460.52], [406.16, 459.36], [437.13, 461.68], [466.43, 466.63], [487.31, 473.05], [521.49, 480.31], [553.04, 483.05], [575.4, 478.42], [602.32, 471.37], [634.7, 455.05], [672.74, 430.2], [698.5, 417.99], [721.44, 411.36], [751.7, 407.99], [775.54, 408.52], [874.93, 414.62], [897.87, 419.89], [919.14, 430.52], [934.24, 443.47], [943.94, 457.26], [953.38, 473.05], [958.39, 491.26], [960.0, 510.53], [958.2, 529.37], [952.68, 548.53], [940.72, 569.38], [895.04, 631.7], [878.21, 659.38], [840.04, 741.81], [821.73, 748.24], [799.12, 750.87], [777.46, 749.81], [751.96, 745.5], [725.49, 736.45], [697.15, 722.86], [669.07, 702.86], [651.73, 683.6], [648.58, 671.81], [651.34, 659.38], [662.14, 643.8], [677.56, 633.91], [700.24, 625.59], [738.98, 619.49], [776.31, 610.12], [810.36, 597.06], [829.19, 583.8], [836.32, 567.9], [837.28, 550.53], [831.18, 533.27], [815.44, 517.58], [801.3, 512.63], [727.86, 503.68], [653.91, 503.9], [575.33, 513.37], [508.9, 530.11], [467.78, 543.06], [422.42, 559.9], [379.05, 578.32], [343.71, 599.27], [330.73, 604.85], [321.48, 603.06], [312.81, 591.06], [303.55, 573.59], [290.83, 565.69], [274.51, 565.06], [258.58, 572.53], [250.1, 584.01], [246.18, 596.33], [250.1, 621.38], [285.69, 829.19], [286.46, 843.09], [282.54, 857.3], [276.25, 869.3], [270.14, 876.99], [255.05, 887.2], [238.92, 890.88], [170.56, 892.04], [156.61, 891.3], [136.31, 888.14], [115.3, 881.3], [98.02, 873.41], [75.02, 855.3], [60.05, 835.3], [49.83, 818.14], [42.38, 794.98], [40.0, 774.66], [42.12, 741.5], [48.42, 717.92], [147.04, 478.63]], "frc": [0.0, 0.06696, 0.09166, 0.095, 0.0983, 0.10158, 0.10466, 0.10809, 0.11122, 0.11443, 0.11781, 0.12495, 0.1463, 0.15586, 0.16551, 0.17452, 0.17827, 0.18144, 0.18657, 0.19119, 0.20391, 0.20772, 0.21122, 0.21428, 0.21762, 0.22082, 0.22392, 0.22832, 0.2511, 0.26136, 0.27005, 0.27776, 0.28514, 0.29056, 0.29923, 0.30709, 0.31276, 0.31967, 0.32867, 0.33994, 0.34702, 0.35295, 0.3605, 0.36642, 0.39114, 0.39698, 0.40288, 0.40782, 0.412, 0.41657, 0.42126, 0.42606, 0.43076, 0.4357, 0.44167, 0.46085, 0.46889, 0.49144, 0.49625, 0.50191, 0.50729, 0.51371, 0.52065, 0.52845, 0.53701, 0.54344, 0.54647, 0.54963, 0.55434, 0.55888, 0.56488, 0.57461, 0.58417, 0.59322, 0.59894, 0.60326, 0.60758, 0.61212, 0.61764, 0.62136, 0.63972, 0.65808, 0.67772, 0.69473, 0.70543, 0.71744, 0.72913, 0.73933, 0.74284, 0.74517, 0.74885, 0.75376, 0.75747, 0.76153, 0.7659, 0.76944, 0.77265, 0.77894, 0.83127, 0.83473, 0.83839, 0.84175, 0.84419, 0.84871, 0.85282, 0.86979, 0.87325, 0.87836, 0.88384, 0.88856, 0.89582, 0.90202, 0.90698, 0.91302, 0.9181, 0.92635, 0.9324, 0.99664], "cor": [{"f": 0.095, "d": "R"}, {"f": 0.17827, "d": "R"}, {"f": 0.20772, "d": "L"}, {"f": 0.26136, "d": "R"}, {"f": 0.30709, "d": "L"}, {"f": 0.34702, "d": "R"}, {"f": 0.39698, "d": "R"}, {"f": 0.54647, "d": "R"}, {"f": 0.60326, "d": "L"}, {"f": 0.74517, "d": "R"}, {"f": 0.75747, "d": "L"}, {"f": 0.84871, "d": "R"}, {"f": 0.88856, "d": "R"}], "elev": [{"f": 0.0, "m": 5.0}, {"f": 0.0235, "m": 4.3}, {"f": 0.047, "m": 4.5}, {"f": 0.0704, "m": 6.9}, {"f": 0.0845, "m": 7.0}, {"f": 0.1057, "m": 3.6}, {"f": 0.1291, "m": 3.4}, {"f": 0.1456, "m": 3.6}, {"f": 0.1691, "m": 5.4}, {"f": 0.1878, "m": 4.6}, {"f": 0.2066, "m": 3.2}, {"f": 0.2231, "m": 6.0}, {"f": 0.2465, "m": 10.0}, {"f": 0.27, "m": 7.0}, {"f": 0.2935, "m": 4.2}, {"f": 0.3099, "m": 3.8}, {"f": 0.3287, "m": 6.0}, {"f": 0.3522, "m": 10.8}, {"f": 0.3757, "m": 8.0}, {"f": 0.4039, "m": 6.4}, {"f": 0.4344, "m": 7.0}, {"f": 0.4508, "m": 6.6}, {"f": 0.4696, "m": 4.4}, {"f": 0.4813, "m": 2.9}, {"f": 0.5048, "m": 3.1}, {"f": 0.5283, "m": 4.3}, {"f": 0.5447, "m": 3.6}, {"f": 0.5682, "m": 4.2}, {"f": 0.5987, "m": 5.0}, {"f": 0.6152, "m": 4.6}, {"f": 0.6386, "m": 5.0}, {"f": 0.6692, "m": 6.0}, {"f": 0.6927, "m": 6.5}, {"f": 0.7161, "m": 5.4}, {"f": 0.7396, "m": 3.2}, {"f": 0.756, "m": 2.6}, {"f": 0.7748, "m": 2.2}, {"f": 0.7936, "m": 1.5}, {"f": 0.81, "m": 3.5}, {"f": 0.8265, "m": 2.4}, {"f": 0.85, "m": 4.0}, {"f": 0.8875, "m": 6.0}, {"f": 0.911, "m": 6.2}, {"f": 0.9345, "m": 5.7}, {"f": 0.958, "m": 6.0}, {"f": 0.9815, "m": 5.2}, {"f": 1.0002, "m": 5.0}], "lap_km": 4.259, "elev_max": 10.8, "elev_min": 1.5}, C={"START": 0.025, "S1_END": 0.334, "S2_END": 0.708, "ELEV_MAX": 30, "CORNERS": [{"f": 0.08, "name": "TARZANBOCHT", "off": 44, "side": -1}, {"f": 0.15, "name": "GERLACHBOCHT", "off": 62, "side": -1}, {"f": 0.193, "name": "HUGENHOLTZBOCHT", "off": 44, "side": -1}, {"f": 0.25, "name": "HUNSERUG", "off": 40, "side": 1}, {"f": 0.282, "name": "", "off": 47, "side": -1}, {"f": 0.322, "name": "SLOTEMAKERBOCHT", "off": 46, "side": -1}, {"f": 0.382, "name": "SCHEIVLAK", "off": 43, "side": -1}, {"f": 0.469, "name": "MASTERBOCHT", "off": 52, "side": -1}, {"f": 0.526, "name": "", "off": 52, "side": 1}, {"f": 0.582, "name": "", "off": 58, "side": -1}, {"f": 0.72, "name": "", "off": 41, "side": -1}, {"f": 0.737, "name": "HANS ERNST BOCHT", "off": 35, "side": 1}, {"f": 0.818, "name": "KUMHOBOCHT", "off": 54, "side": -1}, {"f": 0.888, "name": "ARIE LUYENDIJK BOCHT", "off": 70, "side": -1}], "LAYOUT": {"sector": {"x": 661, "y": 401, "size": 40}, "corner": {"x": 914, "y": 209, "size": 106, "sub": 43, "align": "right"}, "title": {"x": 540, "y": 1600, "size": 32, "text": "CIRCUIT ZANDVOORT · NETHERLANDS"}, "foot": {"x": 540, "y": 1668, "size": 36, "text": "F-LABO"}, "map": {"x": 40, "y": 290, "w": 1000}, "elev": {"x": 60, "y": 1180, "w": 960}}, "GRID_MAX": 15};
+var START=C.START,S1_END=C.S1_END,S2_END=C.S2_END,EMAX=C.ELEV_MAX,CORNERS=C.CORNERS,L=C.LAYOUT;
+var GMAX=C.GRID_MAX||EMAX;
+var LAP_MS=20000; window.TOTAL_MS=LAP_MS;
+
+var pts=D.pts, frc=D.frc;
+function xyRaw(f){
+  f=((f%1)+1)%1;
+  for(var i=0;i<frc.length-1;i++){
+    if(f>=frc[i]&&f<=frc[i+1]){
+      var t=(frc[i+1]-frc[i])?(f-frc[i])/(frc[i+1]-frc[i]):0;
+      return [pts[i][0]+(pts[i+1][0]-pts[i][0])*t, pts[i][1]+(pts[i+1][1]-pts[i][1])*t];
+    }
+  }
+  var a=pts[pts.length-1],b=pts[0];
+  var t2=(f-frc[frc.length-1])/(1-frc[frc.length-1]);
+  return [a[0]+(b[0]-a[0])*t2, a[1]+(b[1]-a[1])*t2];
+}
+function toRaw(f){ return ((f+START)%1+1)%1; }
+function xyAt(f){ return xyRaw(toRaw(f)); }
+function normAt(f){
+  var a=xyAt(f+0.012), b=xyAt(f-0.012);
+  var nx=-(a[1]-b[1]), ny=(a[0]-b[0]), L=Math.hypot(nx,ny)||1;
+  return [nx/L,ny/L];
+}
+function seg(f0,f1,N){
+  N=N||150; if(f1<=f0) return "";
+  var o=[];
+  for(var i=0;i<=N;i++) o.push(xyAt(f0+(f1-f0)*i/N));
+  return "M"+o.map(function(p){return p[0].toFixed(1)+" "+p[1].toFixed(1)}).join("L");
+}
+function elevRaw(fr){
+  var e=D.elev; fr=((fr%1)+1)%1;
+  if(fr<=e[0].f) return e[0].m;
+  for(var i=0;i<e.length-1;i++){
+    if(fr>=e[i].f&&fr<=e[i+1].f){
+      var t=(fr-e[i].f)/(e[i+1].f-e[i].f);
+      return e[i].m+(e[i+1].m-e[i].m)*t;
+    }
+  }
+  return e[e.length-1].m;
+}
+function lastCorner(p){ var b=-1; for(var i=0;i<CORNERS.length;i++) if(CORNERS[i].f<=p) b=i; return b; }
+function atCorner(p){
+  var b=-1,bd=0.022;
+  for(var i=0;i<CORNERS.length;i++){ var d=Math.abs(CORNERS[i].f-p); d=Math.min(d,1-d); if(d<bd){bd=d;b=i;} }
+  return b;
+}
+var NS="http://www.w3.org/2000/svg";
+function el(n,a){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);return e;}
+
+
+/* ---- layout ---- */
+function place(id,o,extra){
+  var e=document.getElementById(id);
+  e.style.left=o.x+"px"; e.style.top=o.y+"px";
+  if(o.align==="right"){ e.style.left="auto"; e.style.right=(1080-o.x)+"px"; e.style.textAlign="right"; }
+  if(o.align==="center"){ e.style.left="0"; e.style.width="1080px"; e.style.textAlign="center"; e.style.top=o.y+"px"; }
+  if(extra) extra(e,o);
+}
+place("sectorBadge",L.sector,function(e,o){ e.style.fontSize=o.size+"px"; });
+place("cornerBox",L.corner,function(e,o){
+  document.getElementById("lblBig").style.fontSize=o.size+"px";
+  document.getElementById("lblSm").style.fontSize=o.sub+"px";
+});
+document.getElementById("mapWrap").style.cssText+=";left:"+L.map.x+"px;top:"+L.map.y+"px;width:"+L.map.w+"px;height:"+L.map.w+"px";
+document.getElementById("elevWrap").style.cssText+=";left:"+L.elev.x+"px;top:"+L.elev.y+"px;width:"+L.elev.w+"px";
+(function(){
+  var t=document.getElementById("titleTxt");
+  t.textContent=L.title.text; t.style.fontSize=L.title.size+"px";
+  t.style.left="0"; t.style.width="1080px"; t.style.textAlign="center"; t.style.top=L.title.y+"px";
+  var f=document.getElementById("footTxt");
+  f.textContent=L.foot.text; f.style.fontSize=L.foot.size+"px";
+  f.style.left="0"; f.style.width="1080px"; f.style.textAlign="center"; f.style.top=L.foot.y+"px";
+  f.style.color="#5E76A0"; f.style.letterSpacing=".20em";
+})();
+
+/* ---- static map ---- */
+document.getElementById("base").setAttribute("d",seg(0,0.9999,300));
+var box=document.getElementById("corners"), markers=[];
+CORNERS.forEach(function(c,i){
+  var b=xyAt(c.f), n=normAt(c.f);
+  var ox=b[0]+n[0]*c.off*c.side, oy=b[1]+n[1]*c.off*c.side;
+  var ci=el("circle",{cx:ox.toFixed(1),cy:oy.toFixed(1),r:24,"class":"cnum"});
+  box.appendChild(ci);
+  var tn=el("text",{x:ox.toFixed(1),y:oy.toFixed(1),"class":"cnumT"});
+  tn.textContent=i+1; box.appendChild(tn);
+  markers.push(ci);
+});
+(function(){
+  var p=xyAt(0),n=normAt(0),s=document.getElementById("sf");
+  s.appendChild(el("line",{x1:(p[0]-n[0]*24).toFixed(1),y1:(p[1]-n[1]*24).toFixed(1),
+    x2:(p[0]+n[0]*24).toFixed(1),y2:(p[1]+n[1]*24).toFixed(1),stroke:"#FFFFFF","stroke-width":8}));
+})();
+
+/* ---- elevation ---- */
+var EW=960,EH=300,PL=76,PR=14,PT=14,PB=44,iw=EW-PL-PR,ih=EH-PT-PB;
+function ex(f){return PL+f*iw} function ey(m){return PT+ih-(m/EMAX)*ih}
+var g="";
+for(var v=0;v<=GMAX;v+=(GMAX>30?10:5)){
+  g+='<line class="grid" x1="'+PL+'" y1="'+ey(v).toFixed(1)+'" x2="'+(EW-PR)+'" y2="'+ey(v).toFixed(1)+'"/>'
+   +'<text class="axl" x="'+(PL-12)+'" y="'+(ey(v)+8).toFixed(1)+'" text-anchor="end">'+v+'m</text>';
+}
+var eline="",N=200;
+for(var i=0;i<=N;i++){var f=i/N; eline+=(i?"L":"M")+ex(f).toFixed(1)+" "+ey(elevRaw(toRaw(f))).toFixed(1);}
+document.getElementById("elev").innerHTML=
+ '<defs><linearGradient id="eg" x1="0" y1="0" x2="0" y2="1">'+
+ '<stop offset="0%" stop-color="#2C7BE5" stop-opacity=".5"/>'+
+ '<stop offset="100%" stop-color="#2C7BE5" stop-opacity=".04"/></linearGradient>'+
+ '<clipPath id="ec"><rect id="ecr" x="'+PL+'" y="0" width="0" height="'+EH+'"/></clipPath></defs>'+g+
+ '<path id="earea" d="'+eline+'L'+ex(1).toFixed(1)+' '+ey(0).toFixed(1)+'L'+ex(0).toFixed(1)+' '+ey(0).toFixed(1)+'Z" fill="url(#eg)" clip-path="url(#ec)"/>'+
+ '<path d="'+eline+'" fill="none" stroke="#22314F" stroke-width="4" stroke-linejoin="round"/>'+
+ '<path d="'+eline+'" fill="none" stroke="#4DA3FF" stroke-width="4" stroke-linejoin="round" clip-path="url(#ec)"/>'+
+ '<text class="axl" x="'+PL+'" y="'+(EH-12)+'">START</text>'+
+ '<text class="axl" x="'+(EW-PR)+'" y="'+(EH-12)+'" text-anchor="end">FINISH</text>'+
+ '<circle id="edot" r="10" fill="#FFFFFF" stroke="#0B1428" stroke-width="3"/>';
+document.getElementById("elevVal").textContent=D.lap_km.toFixed(3)+" km  \u00B7  \u25B2"+(D.elev_max-D.elev_min).toFixed(1)+" m";
+
+var car=document.getElementById("car"),edot=document.getElementById("edot"),ecr=document.getElementById("ecr");
+var badge=document.getElementById("sectorBadge");
+var hdBig=document.getElementById("lblBig"),hdSm=document.getElementById("lblSm");
+var SECCOL=["#2C7BE5","#E8323C","#28A745"];
+
+window.seek=function(p){
+  p=p<0?0:p>1?1:p;
+  /* progressive fill */
+  document.getElementById("p1").setAttribute("d", seg(0, Math.min(p,S1_END), 200));
+  document.getElementById("p2").setAttribute("d", p>S1_END ? seg(S1_END, Math.min(p,S2_END), 200) : "");
+  document.getElementById("p3").setAttribute("d", p>S2_END ? seg(S2_END, p, 200) : "");
+  ecr.setAttribute("width", (p*iw).toFixed(1));
+
+  var xy=xyAt(p);
+  car.setAttribute("cx",xy[0].toFixed(1)); car.setAttribute("cy",xy[1].toFixed(1));
+  edot.setAttribute("cx",ex(p).toFixed(1)); edot.setAttribute("cy",ey(elevRaw(toRaw(p))).toFixed(1));
+
+  var s=p<S1_END?0:p<S2_END?1:2;
+  badge.textContent="SECTOR "+(s+1); badge.style.background=SECCOL[s];
+
+  var nearSF=(p<0.030)||(p>0.970), shown=lastCorner(p);
+  if(nearSF||shown<0){ hdBig.textContent="S/F"; hdSm.textContent="Start / Finish"; }
+  else { hdBig.textContent="T"+(shown+1); hdSm.textContent=CORNERS[shown].name||""; }
+
+  var a=atCorner(p);
+  for(var i=0;i<CORNERS.length;i++){
+    markers[i].setAttribute("stroke", i===a?"#FFFFFF":"#8FA6C8");
+    markers[i].setAttribute("stroke-width", i===a?6:3);
+    markers[i].setAttribute("fill", i===a?"#1E3A63":"#0B1428");
+  }
+};
+
+var fit=document.getElementById("fit");
+function fitToWindow(){
+  // Web埋め込み(iframe)版: 横だけでなく縦も中央寄せする。
+  // 元の動画書き出し版は 1080x1920 のビューポートに丁度収まる前提で translateX のみだったが、
+  // サーキット図鑑の iframe は横長（既定 520px 高）で上下に余りが出るため、
+  // hungaroring 等の既存埋め込みと同じ「中央に寄せて縮小表示」に揃える。
+  var s=Math.min(window.innerWidth/1080,window.innerHeight/1920,1);
+  var tx=Math.max(0,(window.innerWidth-1080*s)/2);
+  var ty=Math.max(0,(window.innerHeight-1920*s)/2);
+  fit.style.transform="translate("+tx+"px,"+ty+"px) scale("+s+")";
+}
+if(!window.__CAPTURE__){fitToWindow();window.addEventListener("resize",fitToWindow);}
+window.seek(0);
+if(!window.__CAPTURE__){
+  var st=null;
+  (function loop(ts){if(st===null)st=ts;window.seek(((ts-st)%LAP_MS)/LAP_MS);requestAnimationFrame(loop);})(performance.now());
+}
+</script></body></html>
