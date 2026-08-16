@@ -7,6 +7,7 @@ import type { AffiliateBanner } from "@/lib/affiliateBanners";
  * variant で出し分ける（見た目は移行前と一致）:
  *  - 'image' : 全部入り画像（バッジ/見出し/コピー/ボタンが画像に焼き込み）＋右上「PR」。帯なし。
  *  - 'banded': 絵のみ画像＋下段のHTML帯（PR・Amazon＋見出し/コピー/CTAボタン。Amazon濃紺×オレンジ）。
+ *  - 'multi' : banded と同じ構成だが、CTA を links 配列ぶん複数並べる（cta_label / link_url は未使用）。
  *
  * PR／PR・Amazon の開示ラベルは全バナーで常時表示（必須・削除不可）。
  * 呼び出し側（page.tsx）が banners を placement 別に渡す。0件時は親側でセクションごと非表示。
@@ -20,6 +21,7 @@ function plainText(b: AffiliateBanner): string {
 
 /** variant='image': 全部入り画像＋PR（旧 BelgianBanner と同一） */
 function ImageBanner({ b }: { b: AffiliateBanner }) {
+  if (!b.imageUrl || !b.linkUrl) return null;
   return (
     <div className="mx-auto w-full max-w-[640px]">
       <a
@@ -48,6 +50,7 @@ function ImageBanner({ b }: { b: AffiliateBanner }) {
 
 /** variant='banded': 絵＋HTML帯（旧 EnergyBanner と同一。badge があれば見出し上に表示） */
 function BandedBanner({ b }: { b: AffiliateBanner }) {
+  if (!b.imageUrl || !b.linkUrl) return null;
   return (
     <div className="mx-auto w-full max-w-[640px]">
       <div className="overflow-hidden rounded-xl border border-[#FF9900]/40 shadow-lg shadow-black/25">
@@ -101,6 +104,64 @@ function BandedBanner({ b }: { b: AffiliateBanner }) {
   );
 }
 
+/**
+ * variant='multi': banded と同じ絵＋帯だが、CTA を links 配列ぶん並べる。
+ * 画像は遷移先が1つに定まらないためリンクにしない（遷移は各CTAボタンのみ）。
+ */
+function MultiBanner({ b }: { b: AffiliateBanner }) {
+  if (b.links.length === 0) return null;
+  return (
+    <div className="mx-auto w-full max-w-[640px]">
+      <div className="overflow-hidden rounded-xl border border-[#FF9900]/40 shadow-lg shadow-black/25">
+        {/* 上段: 画像（リンクなし） */}
+        {b.imageUrl && (
+          <img
+            src={b.imageUrl}
+            alt={plainText(b)}
+            width={1280}
+            height={714}
+            loading="eager"
+            className="block w-full h-auto"
+          />
+        )}
+
+        {/* 下段: 告知帯（Amazonカラー 濃紺#232F3E＋オレンジ#FF9900） */}
+        <div className="bg-[#232F3E] px-5 py-4 md:px-6 md:py-5 text-center">
+          {/* アフィリエイト開示（PR・Amazon）— 必須 */}
+          <div className="font-display tracking-[0.2em] text-[0.65rem] text-[#FF9900] uppercase mb-1.5">
+            PR · Amazon
+          </div>
+          {b.badge && (
+            <div className="text-[0.7rem] tracking-[0.12em] text-white/70 mb-1.5">
+              {b.badge}
+            </div>
+          )}
+          <p className="font-black text-base md:text-lg leading-tight text-white whitespace-pre-line">
+            {b.heading}
+          </p>
+          {b.copy && (
+            <p className="text-[0.85rem] text-white/80 mt-1.5">{b.copy}</p>
+          )}
+          <div className="mt-3.5 flex flex-wrap items-center justify-center gap-2 md:gap-2.5">
+            {b.links.map((link) => (
+              <a
+                key={link.url}
+                href={link.url}
+                target="_blank"
+                rel="sponsored noopener"
+                aria-label={`${link.label}（外部サイト・PR）`}
+                className="inline-flex items-center justify-center rounded-full bg-[#FF9900] px-4 py-2.5 md:px-5 font-display font-bold tracking-[0.08em] text-[0.8rem] md:text-sm text-[#232F3E] shadow-md transition-colors hover:bg-white"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function AffiliateBannerList({
   banners,
 }: {
@@ -109,13 +170,11 @@ export default function AffiliateBannerList({
   if (banners.length === 0) return null;
   return (
     <div className="flex flex-col gap-4">
-      {banners.map((b) =>
-        b.variant === "image" ? (
-          <ImageBanner key={b.id} b={b} />
-        ) : (
-          <BandedBanner key={b.id} b={b} />
-        ),
-      )}
+      {banners.map((b) => {
+        if (b.variant === "image") return <ImageBanner key={b.id} b={b} />;
+        if (b.variant === "multi") return <MultiBanner key={b.id} b={b} />;
+        return <BandedBanner key={b.id} b={b} />;
+      })}
     </div>
   );
 }
