@@ -82,12 +82,15 @@ export type WeekendBroadcast = {
 };
 
 /** 動画埋め込み（DB: embeds テーブル）。コード書き換えなしで差し替え可能。 */
-export type EmbedPlatform = "tiktok" | "instagram";
+export type EmbedPlatform = "tiktok" | "instagram" | "youtube";
 
 export type Embed = {
   id: number;
   platform: EmbedPlatform;
-  /** TikTok: 動画ページURL（/video/{id}）/ Instagram: リール・投稿のパーマリンク */
+  /**
+   * TikTok: 動画ページURL（/video/{id}）/ Instagram: リール・投稿のパーマリンク /
+   * YouTube: youtu.be・watch?v=・/shorts/・/embed/ のいずれでも可（ID を抽出して埋め込む）
+   */
   url: string;
   active: boolean;
   displayOrder: number;

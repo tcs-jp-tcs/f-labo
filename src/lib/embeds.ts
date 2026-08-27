@@ -7,11 +7,13 @@ import type { Embed, EmbedPlatform } from "@/lib/data";
  * Server Component から直接 await して使う（anon key・読み取り専用）。
  * news.ts / reviews.ts / schedules.ts と同じパターン。
  *
- * テーブルカラム: id, platform('tiktok'|'instagram'), url, active, display_order, created_at
+ * テーブルカラム: id, platform('tiktok'|'instagram'|'youtube'), url, active, display_order, created_at
  *
- * 運用: embeds を UPDATE するだけで TikTok⇄Instagram の切替・動画差し替えが可能
- *       （active=true の行を display_order 順に表示）。コード変更は不要。
+ * 運用: embeds を UPDATE / INSERT するだけで TikTok⇄Instagram⇄YouTube の切替・
+ *       動画差し替えが可能（active=true の行を display_order 順に表示）。コード変更は不要。
  */
+
+const SUPPORTED_PLATFORMS: readonly string[] = ["tiktok", "instagram", "youtube"];
 
 type EmbedRow = {
   id: number;
@@ -45,5 +47,6 @@ export const getActiveEmbeds = cache(async (): Promise<Embed[]> => {
         displayOrder: r.display_order ?? 0,
       };
     })
-    .filter((e) => e.platform === "tiktok" || e.platform === "instagram");
+    // 描画ロジックを持たない未知の platform は表示しない（DB側に増えても壊さない）
+    .filter((e) => SUPPORTED_PLATFORMS.includes(e.platform));
 });
