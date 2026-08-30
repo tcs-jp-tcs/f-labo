@@ -1,10 +1,12 @@
 import Link from "next/link";
+import AudienceSection from "@/components/admin/AudienceSection";
 import DeltaTrace from "@/components/admin/DeltaTrace";
 import FullLog from "@/components/admin/FullLog";
 import Ga4Section from "@/components/admin/Ga4Section";
 import GenreSplit from "@/components/admin/GenreSplit";
 import LongForm from "@/components/admin/LongForm";
 import LogoutButton from "@/components/admin/LogoutButton";
+import { getAudience } from "@/lib/audience";
 import { RANGE_OPTIONS, getTelemetry, parseRange } from "@/lib/telemetry";
 
 /** 管理画面は常に最新の数値を出す（キャッシュさせない） */
@@ -34,7 +36,12 @@ export default async function AdminPage({
 }) {
   const params = await searchParams;
   const range = parseRange(params.range);
-  const data = await getTelemetry(range);
+  const snapshot = Array.isArray(params.snapshot) ? params.snapshot[0] : params.snapshot;
+  const [data, audience] = await Promise.all([
+    getTelemetry(range),
+    // オーディエンスは期間ではなくスナップショット日の断面なので range とは独立
+    getAudience(snapshot),
+  ]);
   const { kpi } = data;
 
   return (
@@ -162,6 +169,18 @@ export default async function AdminPage({
       <section>
         <div className="sec-hd">
           <span className="sec-no">04</span>
+          <h2>Audience</h2>
+        </div>
+        <p className="sec-note">
+          フォロワーの内訳。期間の集計ではなくスナップショット日時点の断面なので、上の期間
+          フィルターとは連動しない。国別は Instagram のフォロワーの国・地域分布。
+        </p>
+        <AudienceSection audience={audience} range={range} />
+      </section>
+
+      <section>
+        <div className="sec-hd">
+          <span className="sec-no">05</span>
           <h2>Google Analytics</h2>
         </div>
         <p className="sec-note">サイト側の反応。GA4 の日次サマリーと流入チャネル。</p>
@@ -170,7 +189,7 @@ export default async function AdminPage({
 
       <section>
         <div className="sec-hd">
-          <span className="sec-no">05</span>
+          <span className="sec-no">06</span>
           <h2>Full Log</h2>
         </div>
         <p className="sec-note">
