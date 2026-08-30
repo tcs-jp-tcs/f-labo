@@ -57,12 +57,16 @@ function toDotted(date: string): string {
 
 export type Winner = "ig" | "yt" | "tie" | "na";
 
+/** 投稿フォーマット。short=縦型ショート（IGリールと同一素材）／long=YouTube長尺 */
+export type PostFormat = "short" | "long";
+
 export type SnsPost = {
   id: string;
   postedAt: string;
   dateLabel: string;
   title: string;
   genre: string;
+  format: PostFormat;
   igReach: number | null;
   igLikes: number | null;
   igSaves: number | null;
@@ -115,14 +119,28 @@ export type ChannelStat = {
   share: number;
 };
 
+/** ショートと長尺の YouTube 再生数の比較（計測済みのものだけで平均する） */
+export type FormatCompare = {
+  shortCount: number;
+  longCount: number;
+  shortAvgYt: number | null;
+  longAvgYt: number | null;
+};
+
 export type Telemetry = {
   configured: boolean;
   error: string | null;
   range: RangeKey;
   periodLabel: string;
+  /** 全投稿（Full Log 用） */
   posts: SnsPost[];
+  /** format='short' のみ（Delta Trace / KPI / Genre Split 用） */
+  shortPosts: SnsPost[];
+  /** format='long' のみ（LONG FORM 用） */
+  longPosts: SnsPost[];
   kpi: Kpi;
   genres: GenreStat[];
+  formatCompare: FormatCompare;
   ga4Daily: Ga4Daily[];
   ga4Channels: ChannelStat[];
 };
@@ -152,6 +170,15 @@ function judgeWinner(igReach: number | null, ytViews: number | null): Winner {
 
 const sum = (values: (number | null)[]): number =>
   values.reduce<number>((acc, v) => acc + (v ?? 0), 0);
+
+/** 未計測(null)を除いた YouTube 再生数の平均。1件も計測済みが無ければ null */
+function averageYtViews(posts: SnsPost[]): number | null {
+  const measured = posts
+    .map((p) => p.ytViews)
+    .filter((v): v is number => v != null);
+  if (measured.length === 0) return null;
+  return Math.round(sum(measured) / measured.length);
+}
 
 function buildKpi(posts: SnsPost[]): Kpi {
   const igValues = posts.map((p) => p.igReach).filter((v): v is number => v != null);
@@ -234,6 +261,7 @@ type SnsPostRow = {
   posted_at: string;
   title: string;
   genre: string;
+  format: string;
   ig_reach: number | null;
   ig_likes: number | null;
   ig_saves: number | null;
@@ -268,6 +296,7 @@ function toPost(row: SnsPostRow): SnsPost {
     dateLabel: toJstMonthDay(row.posted_at),
     title: row.title,
     genre: row.genre,
+    format: row.format === "long" ? "long" : "short",
     igReach: row.ig_reach,
     igLikes: row.ig_likes,
     igSaves: row.ig_saves,
@@ -308,8 +337,11 @@ export async function getTelemetry(range: RangeKey): Promise<Telemetry> {
     range,
     periodLabel: "データなし",
     posts: [],
+    shortPosts: [],
+    longPosts: [],
     kpi: EMPTY_KPI,
     genres: [],
+    formatCompare: { shortCount: 0, longCount: 0, shortAvgYt: null, longAvgYt: null },
     ga4Daily: [],
     ga4Channels: [],
   };
@@ -330,7 +362,7 @@ export async function getTelemetry(range: RangeKey): Promise<Telemetry> {
   const postsQuery = supabase
     .from("sns_posts")
     .select(
-      "id, posted_at, title, genre, ig_reach, ig_likes, ig_saves, ig_shares, ig_url, yt_views, yt_likes, yt_url, note",
+      "id, posted_at, title, genre, format, ig_reach, ig_likes, ig_saves, ig_shares, ig_url, yt_views, yt_likes, yt_url, note",
     )
     // 新しい投稿を先頭に（Delta Trace はこの順で上から並ぶ）
     .order("posted_at", { ascending: false });
@@ -361,6 +393,8 @@ export async function getTelemetry(range: RangeKey): Promise<Telemetry> {
   }
 
   const posts = ((postsRes.data ?? []) as SnsPostRow[]).map(toPost);
+  const shortPosts = posts.filter((p) => p.format === "short");
+  const longPosts = posts.filter((p) => p.format === "long");
   const ga4Daily = ((dailyRes.data ?? []) as Ga4DailyRow[]).map((row) => ({
     date: row.date,
     sessions: row.sessions ?? 0,
@@ -377,8 +411,17 @@ export async function getTelemetry(range: RangeKey): Promise<Telemetry> {
     range,
     periodLabel: buildPeriodLabel(range, posts, ga4Daily, startDate),
     posts,
-    kpi: buildKpi(posts),
-    genres: buildGenres(posts),
+    shortPosts,
+    longPosts,
+    // KPI と Genre Split は IG×YT の比較が主旨なので、IGに出していない長尺を混ぜない
+    kpi: buildKpi(shortPosts),
+    genres: buildGenres(shortPosts),
+    formatCompare: {
+      shortCount: shortPosts.length,
+      longCount: longPosts.length,
+      shortAvgYt: averageYtViews(shortPosts),
+      longAvgYt: averageYtViews(longPosts),
+    },
     ga4Daily,
     ga4Channels,
   };

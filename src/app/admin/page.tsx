@@ -3,6 +3,7 @@ import DeltaTrace from "@/components/admin/DeltaTrace";
 import FullLog from "@/components/admin/FullLog";
 import Ga4Section from "@/components/admin/Ga4Section";
 import GenreSplit from "@/components/admin/GenreSplit";
+import LongForm from "@/components/admin/LongForm";
 import LogoutButton from "@/components/admin/LogoutButton";
 import { RANGE_OPTIONS, getTelemetry, parseRange } from "@/lib/telemetry";
 
@@ -49,7 +50,8 @@ export default async function AdminPage({
         <div className="hdr-r">
           計測期間 <b>{data.periodLabel}</b>
           <br />
-          投稿 <b>{kpi.postCount}</b> 本 ／ Instagram × YouTube
+          ショート <b>{data.formatCompare.shortCount}</b> 本 ／ 長尺{" "}
+          <b>{data.formatCompare.longCount}</b> 本
           <br />
           最終表示 {nowJst()}
         </div>
@@ -74,21 +76,21 @@ export default async function AdminPage({
 
       <div className="kpis">
         <div className="kpi" style={accent("var(--ig)")}>
-          <div className="kpi-lbl">IG Reach</div>
+          <div className="kpi-lbl">IG Reach / short</div>
           <div className="kpi-val">{num(kpi.igReachTotal)}</div>
           <div className="kpi-sub">
             {kpi.igReachCount}本合計・最高 {num(kpi.igReachMax)}
           </div>
         </div>
         <div className="kpi" style={accent("var(--yt)")}>
-          <div className="kpi-lbl">YT Views</div>
+          <div className="kpi-lbl">YT Views / short</div>
           <div className="kpi-val">{num(kpi.ytViewsTotal)}</div>
           <div className="kpi-sub">
             {kpi.ytViewsCount}本合計・最高 {num(kpi.ytViewsMax)}
           </div>
         </div>
         <div className="kpi" style={accent("var(--flag)")}>
-          <div className="kpi-lbl">IG Likes</div>
+          <div className="kpi-lbl">IG Likes / short</div>
           <div className="kpi-val">{num(kpi.igLikesTotal)}</div>
           <div className="kpi-sub">
             保存 {num(kpi.igSavesTotal)} ／ シェア {num(kpi.igSharesTotal)}
@@ -112,8 +114,10 @@ export default async function AdminPage({
           <h2>Delta Trace</h2>
         </div>
         <p className="sec-note">
-          1本の投稿を中心線から左右に振り分けたもの。左に伸びるほど Instagram、右に伸びるほど
-          YouTube で見られている。棒の長さは期間内の最大値を基準に正規化している。
+          縦型ショート（Instagram リールと同一素材）だけを対象に、1本の投稿を中心線から左右へ
+          振り分けたもの。左に伸びるほど Instagram、右に伸びるほど YouTube で見られている。
+          棒の長さは期間内の最大値を基準に正規化している。長尺は Instagram に出していないため
+          この比較には含めない。
         </p>
         <div className="legend">
           <span>
@@ -129,21 +133,35 @@ export default async function AdminPage({
             未計測（反映待ち）
           </span>
         </div>
-        <DeltaTrace posts={data.posts} />
+        <DeltaTrace posts={data.shortPosts} />
       </section>
 
       <section>
         <div className="sec-hd">
           <span className="sec-no">02</span>
-          <h2>Genre Split</h2>
+          <h2>Long Form</h2>
         </div>
-        <p className="sec-note">ジャンル別の合計。どのジャンルがどちらのプラットフォームに振れるかを見る。</p>
-        <GenreSplit genres={data.genres} />
+        <p className="sec-note">
+          YouTube 長尺だけの実績。Instagram には出していないので YouTube の再生数のみを並べる。
+          1本あたりの平均をショートと比べると、同じチャンネルでも尺で伸び方が変わることが分かる。
+        </p>
+        <LongForm posts={data.longPosts} compare={data.formatCompare} />
       </section>
 
       <section>
         <div className="sec-hd">
           <span className="sec-no">03</span>
+          <h2>Genre Split</h2>
+        </div>
+        <p className="sec-note">
+          ショートのジャンル別の合計。どのジャンルがどちらのプラットフォームに振れるかを見る。
+        </p>
+        <GenreSplit genres={data.genres} />
+      </section>
+
+      <section>
+        <div className="sec-hd">
+          <span className="sec-no">04</span>
           <h2>Google Analytics</h2>
         </div>
         <p className="sec-note">サイト側の反応。GA4 の日次サマリーと流入チャネル。</p>
@@ -152,11 +170,12 @@ export default async function AdminPage({
 
       <section>
         <div className="sec-hd">
-          <span className="sec-no">04</span>
+          <span className="sec-no">05</span>
           <h2>Full Log</h2>
         </div>
         <p className="sec-note">
-          見出しをクリックすると並べ替わる。投稿名から Instagram / YouTube の投稿へ飛べる。
+          ショート・長尺をあわせた全投稿。見出しをクリックすると並べ替わる。投稿名から
+          Instagram / YouTube の投稿へ飛べる。
         </p>
         <FullLog posts={data.posts} />
       </section>
@@ -164,7 +183,8 @@ export default async function AdminPage({
       <div className="ad-ft">
         <span>F-LABO — SNS TELEMETRY</span>
         <span>
-          優勢判定は IG リーチと YT 再生の比が 1.5 倍以上で確定・未満は拮抗
+          KPI・Delta Trace・Genre Split はショートのみ集計／優勢判定は IG リーチと YT 再生の比が
+          1.5 倍以上で確定・未満は拮抗
         </span>
       </div>
     </div>

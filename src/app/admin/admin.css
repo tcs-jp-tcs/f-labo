@@ -381,6 +381,116 @@ body:has(#admin-root)::before {
   color: var(--txt-dim);
 }
 
+/* ---------- long form ---------- */
+/* 長尺は YouTube だけなので、棒はすべて YT の赤で統一する（同じ指標＝同じ色）。
+   比較の主役は色ではなく長さ。 */
+#admin-root .lf-cmp {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 18px 20px 16px;
+  margin-bottom: 24px;
+}
+#admin-root .lf-cmp-hd {
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 11px;
+  /* 日本語を含むため字間は控えめに */
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--txt-faint);
+  margin-bottom: 16px;
+}
+#admin-root .lf-cmp-row {
+  display: grid;
+  grid-template-columns: 132px 1fr auto;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+#admin-root .lf-cmp-name { font-size: 13px; }
+#admin-root .lf-cmp-name small {
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 11px;
+  color: var(--txt-faint);
+  margin-left: 8px;
+}
+#admin-root .lf-cmp-track {
+  display: block;
+  height: 12px;
+  background: var(--line-soft);
+  border-radius: 1px;
+  overflow: hidden;
+}
+#admin-root .lf-cmp-fill {
+  display: block;
+  height: 100%;
+  background: var(--yt);
+  border-radius: 1px;
+}
+#admin-root .lf-cmp-val {
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--txt);
+  min-width: 56px;
+  text-align: right;
+}
+#admin-root .lf-cmp-note {
+  font-size: 13px;
+  color: var(--txt-dim);
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line-soft);
+}
+
+#admin-root .lf {
+  display: grid;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+#admin-root .lf-row {
+  background: var(--panel);
+  padding: 13px 20px;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 18px;
+  align-items: center;
+}
+#admin-root .lf-name { font-size: 14px; line-height: 1.45; }
+#admin-root .lf-name .d {
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 11.5px;
+  color: var(--txt-faint);
+  margin-right: 8px;
+}
+#admin-root .lf-name small {
+  display: block;
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 11px;
+  color: var(--txt-faint);
+  letter-spacing: 0.12em;
+  margin-top: 3px;
+}
+#admin-root .lf-name a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--line); }
+#admin-root .lf-name a:hover { color: var(--flag); border-bottom-color: var(--flag); }
+#admin-root .lf-bar { display: flex; align-items: center; gap: 10px; min-width: 0; }
+#admin-root .lf-bar .fill {
+  height: 12px;
+  min-width: 1px;
+  border-radius: 1px;
+  background: var(--yt);
+  flex-shrink: 0;
+  max-width: calc(100% - 68px);
+}
+#admin-root .lf-bar .v {
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--txt-dim);
+  white-space: nowrap;
+}
+#admin-root .lf-bar .v.nil { color: var(--txt-faint); font-weight: 400; }
+
 /* ---------- GA4 ---------- */
 #admin-root .ga4 {
   display: grid;
@@ -451,7 +561,7 @@ body:has(#admin-root)::before {
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
-  min-width: 940px;
+  min-width: 1020px;
 }
 #admin-root th {
   font-family: var(--font-admin-mono), monospace;
@@ -515,6 +625,8 @@ body:has(#admin-root)::before {
 #admin-root .tag.yt { color: var(--yt); border-color: rgba(255, 66, 87, 0.35); }
 #admin-root .tag.tie { color: var(--tie); border-color: rgba(107, 122, 140, 0.35); }
 #admin-root .tag.na { color: var(--txt-faint); border-color: var(--line); }
+#admin-root .tag.fmt-short { color: var(--tie); border-color: rgba(107, 122, 140, 0.35); }
+#admin-root .tag.fmt-long { color: var(--flag); border-color: rgba(201, 255, 61, 0.35); }
 
 /* ---------- footer ---------- */
 #admin-root .ad-ft {
@@ -610,6 +722,12 @@ body:has(#admin-root)::before {
   }
   #admin-root .label .d { display: block; margin: 0 0 1px; font-size: 11px; }
   #admin-root .g { grid-template-columns: 1fr; gap: 10px; }
+  #admin-root .lf-row { grid-template-columns: 1fr; gap: 9px; padding: 13px 14px; }
+  #admin-root .lf-cmp { padding: 16px 14px 14px; }
+  #admin-root .lf-cmp-row { grid-template-columns: 104px 1fr auto; gap: 10px; }
+  #admin-root .lf-cmp-name { font-size: 12.5px; }
+  #admin-root .lf-cmp-name small { display: block; margin: 2px 0 0; }
+  #admin-root .lf-cmp-val { font-size: 15px; min-width: 46px; }
   #admin-root .bar { max-width: calc(100% - 58px); }
   #admin-root .num { font-size: 12px; }
   #admin-root .bar-l, #admin-root .bar-r { gap: 6px; }

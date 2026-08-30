@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { SnsPost, Winner } from "@/lib/telemetry";
+import type { PostFormat, SnsPost, Winner } from "@/lib/telemetry";
 
 /** 全投稿ログ。列見出しクリックでソートする */
 
@@ -9,6 +9,7 @@ type SortKey =
   | "title"
   | "postedAt"
   | "genre"
+  | "format"
   | "igReach"
   | "igLikes"
   | "igSaves"
@@ -21,6 +22,7 @@ const COLUMNS: { key: SortKey; label: string }[] = [
   { key: "title", label: "投稿" },
   { key: "postedAt", label: "日付" },
   { key: "genre", label: "ジャンル" },
+  { key: "format", label: "尺" },
   { key: "igReach", label: "IGリーチ" },
   { key: "igLikes", label: "IGいいね" },
   { key: "igSaves", label: "保存" },
@@ -39,6 +41,9 @@ const WINNER_LABEL: Record<Winner, string> = {
 
 const WINNER_ORDER: Record<Winner, number> = { ig: 0, yt: 1, tie: 2, na: 3 };
 
+const FORMAT_LABEL: Record<PostFormat, string> = { short: "SHORT", long: "LONG" };
+const FORMAT_ORDER: Record<PostFormat, number> = { short: 0, long: 1 };
+
 const fmt = (value: number | null): string =>
   value == null ? "—" : value.toLocaleString("en-US");
 
@@ -48,6 +53,9 @@ export default function FullLog({ posts }: { posts: SnsPost[] }) {
 
   const rows = useMemo(() => {
     const compare = (a: SnsPost, b: SnsPost): number => {
+      if (sortKey === "format") {
+        return (FORMAT_ORDER[a.format] - FORMAT_ORDER[b.format]) * direction;
+      }
       if (sortKey === "title" || sortKey === "genre" || sortKey === "postedAt") {
         const x = a[sortKey];
         const y = b[sortKey];
@@ -127,6 +135,11 @@ export default function FullLog({ posts }: { posts: SnsPost[] }) {
                 </td>
                 <td>{post.dateLabel}</td>
                 <td>{post.genre}</td>
+                <td>
+                  <span className={`tag fmt-${post.format}`}>
+                    {FORMAT_LABEL[post.format]}
+                  </span>
+                </td>
                 <td>{fmt(post.igReach)}</td>
                 <td>{fmt(post.igLikes)}</td>
                 <td>{fmt(post.igSaves)}</td>
