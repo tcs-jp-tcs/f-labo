@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Chakra_Petch, JetBrains_Mono } from "next/font/google";
 import "./admin.css";
 
@@ -25,6 +25,23 @@ const jetBrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "SNS TELEMETRY — F-Labo",
   robots: { index: false, follow: false },
+  // ルートの /manifest.json は start_url が "/" 固定のため、ホーム画面に追加すると
+  // /admin で追加してもトップが開いてしまう。/admin 配下だけ start_url="/admin" の
+  // 専用マニフェストで上書きする（マニフェスト自体は認証の外に置く必要があるので
+  // /admin 配下ではなく public/ 直下に配置している）。
+  manifest: "/admin-manifest.json",
+  appleWebApp: {
+    capable: true,
+    title: "Telemetry",
+    statusBarStyle: "black-translucent",
+  },
+};
+
+/** ホーム画面から起動したときのステータスバーを管理画面の地色に合わせる */
+export const viewport: Viewport = {
+  themeColor: "#070A0F",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function AdminLayout({
