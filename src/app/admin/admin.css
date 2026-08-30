@@ -1,0 +1,622 @@
+/* =============================================================
+   管理画面（/admin）専用スタイル
+   - すべて #admin-root 配下にスコープしてサイト側へ漏らさない
+   - サイト共通のヘッダー/フッター/カーボン背景は :has() で無効化する
+   - デザインは sns-telemetry.html を踏襲
+   ============================================================= */
+
+/* サイト共通クロームの非表示（管理画面は独立した1枚もの） */
+body:has(#admin-root) > header,
+body:has(#admin-root) > footer,
+body:has(#admin-root) > .kerb-stripe {
+  display: none;
+}
+
+/* カーボン背景 → テレメトリーグリッドへ差し替え */
+body:has(#admin-root) {
+  background-color: #070a0f;
+}
+body:has(#admin-root)::before {
+  background-image:
+    linear-gradient(#151e29 1px, transparent 1px),
+    linear-gradient(90deg, #151e29 1px, transparent 1px);
+  background-color: #070a0f;
+  background-size: 56px 56px;
+  opacity: 0.5;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+}
+
+#admin-root {
+  --bg: #070a0f;
+  --panel: #0e141c;
+  --panel-2: #121a24;
+  --line: #1c2735;
+  --line-soft: #151e29;
+  --txt: #e8edf4;
+  --txt-dim: #7e8fa3;
+  --txt-faint: #4c5c6e;
+  --ig: #00d8f0;
+  --yt: #ff4257;
+  --tie: #6b7a8c;
+  --flag: #c9ff3d;
+
+  position: relative;
+  z-index: 1;
+  color: var(--txt);
+  font-family: var(--font-noto-sans-jp), system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 0 0 80px;
+  -webkit-font-smoothing: antialiased;
+}
+
+#admin-root .wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ---------- header ---------- */
+#admin-root .hdr {
+  border-bottom: 1px solid var(--line);
+  padding: 38px 0 22px;
+  margin-bottom: 34px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+#admin-root .hdr-l {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+#admin-root .eyebrow {
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--txt-faint);
+}
+#admin-root h1 {
+  font-family: var(--font-admin-chakra), sans-serif;
+  font-weight: 700;
+  font-size: clamp(30px, 6vw, 58px);
+  letter-spacing: 0.02em;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+#admin-root h1 .live {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--flag);
+  box-shadow: 0 0 0 4px rgba(201, 255, 61, 0.14);
+  animation: admin-blip 2.4s ease-in-out infinite;
+}
+@keyframes admin-blip {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+#admin-root .hdr-r {
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 11px;
+  color: var(--txt-dim);
+  text-align: right;
+  line-height: 1.9;
+}
+#admin-root .hdr-r b {
+  color: var(--txt);
+  font-weight: 600;
+}
+
+/* ---------- 期間フィルター / ログアウト ---------- */
+#admin-root .toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 26px;
+}
+#admin-root .ranges {
+  display: flex;
+  border: 1px solid var(--line);
+}
+#admin-root .ranges a {
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  padding: 9px 16px;
+  color: var(--txt-dim);
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  text-decoration: none;
+  transition: color 0.15s, background 0.15s;
+}
+#admin-root .ranges a:last-child { border-right: none; }
+#admin-root .ranges a:hover { color: var(--txt); background: var(--panel-2); }
+#admin-root .ranges a.on { color: var(--bg); background: var(--flag); font-weight: 600; }
+
+#admin-root .btn {
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 9px 16px;
+  color: var(--txt-dim);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+#admin-root .btn:hover { color: var(--yt); border-color: rgba(255, 66, 87, 0.45); }
+#admin-root .btn:disabled { opacity: 0.5; cursor: default; }
+
+/* ---------- 注意書き ---------- */
+#admin-root .notice {
+  border: 1px solid rgba(255, 66, 87, 0.4);
+  background: rgba(255, 66, 87, 0.07);
+  color: var(--txt);
+  font-size: 12.5px;
+  padding: 14px 18px;
+  margin-bottom: 30px;
+}
+
+/* ---------- KPI ---------- */
+#admin-root .kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  margin-bottom: 52px;
+}
+#admin-root .kpi {
+  background: var(--panel);
+  padding: 20px 20px 18px;
+  position: relative;
+  overflow: hidden;
+}
+#admin-root .kpi::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  background: var(--accent, var(--txt-faint));
+  opacity: 0.85;
+}
+#admin-root .kpi-lbl {
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--txt-faint);
+  margin-bottom: 10px;
+}
+#admin-root .kpi-val {
+  font-family: var(--font-admin-mono), monospace;
+  font-weight: 800;
+  font-size: 31px;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--txt);
+}
+#admin-root .kpi-sub {
+  font-size: 11px;
+  color: var(--txt-dim);
+  margin-top: 8px;
+}
+
+/* ---------- section ---------- */
+#admin-root section { margin-bottom: 56px; }
+#admin-root .sec-hd {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+#admin-root .sec-no {
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 10px;
+  color: var(--txt-faint);
+  letter-spacing: 0.2em;
+}
+#admin-root h2 {
+  font-family: var(--font-admin-chakra), sans-serif;
+  font-weight: 600;
+  font-size: 19px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+#admin-root h3 {
+  font-family: var(--font-admin-chakra), sans-serif;
+  font-weight: 600;
+}
+#admin-root .sec-note {
+  font-size: 12.5px;
+  color: var(--txt-dim);
+  margin-bottom: 24px;
+  max-width: 64ch;
+}
+
+/* ---------- delta trace ---------- */
+#admin-root .legend {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  color: var(--txt-dim);
+}
+#admin-root .legend span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+#admin-root .sw {
+  width: 12px;
+  height: 3px;
+  display: inline-block;
+}
+#admin-root .trace {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 6px 0;
+}
+#admin-root .axis-hd {
+  display: grid;
+  grid-template-columns: 1fr 220px 1fr;
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  color: var(--txt-faint);
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--line);
+  text-transform: uppercase;
+}
+#admin-root .axis-hd .l { text-align: right; }
+#admin-root .axis-hd .c { text-align: center; }
+#admin-root .row {
+  display: grid;
+  grid-template-columns: 1fr 220px 1fr;
+  align-items: center;
+  padding: 9px 20px;
+  border-bottom: 1px solid var(--line-soft);
+  transition: background 0.16s;
+}
+#admin-root .row:last-child { border-bottom: none; }
+#admin-root .row:hover { background: var(--panel-2); }
+#admin-root .bar-l,
+#admin-root .bar-r {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+#admin-root .bar-l { justify-content: flex-end; }
+#admin-root .bar {
+  height: 13px;
+  border-radius: 1px;
+  flex-shrink: 0;
+  /* 桁数の多い数値ラベルが列からはみ出さないよう、棒の最大幅を予約分だけ削る */
+  max-width: calc(100% - 66px);
+}
+#admin-root .bar-l .bar { background: linear-gradient(90deg, rgba(0, 216, 240, 0.22), var(--ig)); }
+#admin-root .bar-r .bar { background: linear-gradient(90deg, var(--yt), rgba(255, 66, 87, 0.22)); }
+#admin-root .num {
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--txt-dim);
+  white-space: nowrap;
+}
+#admin-root .num.hi { color: var(--txt); }
+#admin-root .num.nil { color: var(--txt-faint); font-weight: 400; }
+#admin-root .label {
+  text-align: center;
+  padding: 0 14px;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#admin-root .label .d {
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 10px;
+  color: var(--txt-faint);
+  margin-right: 8px;
+}
+
+/* ---------- genre ---------- */
+#admin-root .genres {
+  display: grid;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+#admin-root .g {
+  background: var(--panel);
+  padding: 15px 20px;
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 18px;
+  align-items: center;
+}
+#admin-root .g-name { font-size: 12.5px; font-weight: 500; }
+#admin-root .g-name small {
+  display: block;
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 9.5px;
+  color: var(--txt-faint);
+  letter-spacing: 0.12em;
+  margin-top: 2px;
+}
+#admin-root .g-bars { display: flex; flex-direction: column; gap: 5px; }
+#admin-root .g-bar { display: flex; align-items: center; gap: 10px; }
+#admin-root .g-bar .t {
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 9px;
+  color: var(--txt-faint);
+  width: 22px;
+  letter-spacing: 0.1em;
+}
+#admin-root .g-bar .fill { height: 10px; border-radius: 1px; min-width: 1px; }
+#admin-root .g-bar.ig .fill { background: var(--ig); }
+#admin-root .g-bar.yt .fill { background: var(--yt); }
+#admin-root .g-bar .v {
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 10.5px;
+  color: var(--txt-dim);
+}
+
+/* ---------- GA4 ---------- */
+#admin-root .ga4 {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+#admin-root .ga4-panel { background: var(--panel); padding: 20px; min-width: 0; }
+#admin-root .ga4-panel h3 {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--txt-dim);
+  margin-bottom: 16px;
+}
+#admin-root .chart { width: 100%; height: auto; display: block; overflow: visible; }
+#admin-root .chart .grid-line { stroke: var(--line-soft); stroke-width: 1; }
+#admin-root .chart .axis-line { stroke: var(--line); stroke-width: 1; }
+#admin-root .chart .series { fill: none; stroke: var(--flag); stroke-width: 1.5; }
+#admin-root .chart .area { fill: rgba(201, 255, 61, 0.09); stroke: none; }
+#admin-root .chart .dot { fill: var(--flag); }
+#admin-root .chart text {
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 8px;
+  fill: var(--txt-faint);
+  letter-spacing: 0.08em;
+}
+#admin-root .ch-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 10px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+#admin-root .ch-name { font-size: 11.5px; color: var(--txt); }
+#admin-root .ch-val {
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 10.5px;
+  color: var(--txt-dim);
+  white-space: nowrap;
+}
+#admin-root .ch-track {
+  grid-column: 1 / -1;
+  height: 8px;
+  background: var(--line-soft);
+  border-radius: 1px;
+  overflow: hidden;
+}
+#admin-root .ch-fill { display: block; height: 100%; background: var(--ig); border-radius: 1px; }
+#admin-root .empty {
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--txt-faint);
+  border: 1px dashed var(--line);
+  padding: 28px 16px;
+  text-align: center;
+}
+
+/* ---------- table ---------- */
+#admin-root .tbl-wrap {
+  border: 1px solid var(--line);
+  overflow-x: auto;
+  background: var(--panel);
+}
+#admin-root table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  min-width: 780px;
+}
+#admin-root th {
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--txt-faint);
+  text-align: right;
+  padding: 13px 14px;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition: color 0.15s;
+  background: none;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+}
+#admin-root th:first-child,
+#admin-root td:first-child { text-align: left; }
+#admin-root th:hover { color: var(--txt); }
+#admin-root th.on { color: var(--flag); }
+#admin-root th .ar { opacity: 0.5; margin-left: 4px; font-size: 8px; }
+#admin-root td {
+  padding: 11px 14px;
+  text-align: right;
+  border-bottom: 1px solid var(--line-soft);
+  color: var(--txt-dim);
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 11.5px;
+}
+#admin-root td:first-child {
+  font-family: var(--font-noto-sans-jp), sans-serif;
+  font-size: 12.5px;
+  color: var(--txt);
+  max-width: 270px;
+}
+#admin-root td a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--line); }
+#admin-root td a:hover { color: var(--flag); border-bottom-color: var(--flag); }
+#admin-root td .lk {
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  margin-left: 6px;
+  color: var(--txt-faint);
+}
+#admin-root tr:last-child td { border-bottom: none; }
+#admin-root tbody tr:hover td { background: var(--panel-2); }
+#admin-root .tag {
+  display: inline-block;
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  padding: 2px 7px;
+  border: 1px solid;
+  border-radius: 1px;
+  white-space: nowrap;
+}
+#admin-root .tag.ig { color: var(--ig); border-color: rgba(0, 216, 240, 0.35); }
+#admin-root .tag.yt { color: var(--yt); border-color: rgba(255, 66, 87, 0.35); }
+#admin-root .tag.tie { color: var(--tie); border-color: rgba(107, 122, 140, 0.35); }
+#admin-root .tag.na { color: var(--txt-faint); border-color: var(--line); }
+
+/* ---------- footer ---------- */
+#admin-root .ad-ft {
+  border-top: 1px solid var(--line);
+  margin-top: 56px;
+  padding-top: 20px;
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 10px;
+  color: var(--txt-faint);
+  letter-spacing: 0.12em;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* ---------- login ---------- */
+#admin-root .login {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 0;
+}
+#admin-root .login-box {
+  width: 100%;
+  max-width: 360px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 32px 28px;
+}
+#admin-root .login-box h1 { font-size: 26px; margin-bottom: 6px; }
+#admin-root .login-box p.lead {
+  font-size: 12px;
+  color: var(--txt-dim);
+  margin-bottom: 24px;
+}
+#admin-root .login-box label {
+  display: block;
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--txt-faint);
+  margin-bottom: 8px;
+}
+#admin-root .login-box input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  color: var(--txt);
+  padding: 11px 12px;
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 13px;
+  border-radius: 2px;
+}
+#admin-root .login-box input:focus {
+  outline: none;
+  border-color: var(--flag);
+}
+#admin-root .login-box button {
+  width: 100%;
+  margin-top: 18px;
+  padding: 12px;
+  background: var(--flag);
+  color: var(--bg);
+  border: none;
+  font-family: var(--font-admin-chakra), sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+#admin-root .login-box button:hover { opacity: 0.85; }
+#admin-root .login-box button:disabled { opacity: 0.4; cursor: default; }
+#admin-root .login-err {
+  margin-top: 14px;
+  font-size: 12px;
+  color: var(--yt);
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 860px) {
+  #admin-root .kpis { grid-template-columns: repeat(2, 1fr); }
+  #admin-root .ga4 { grid-template-columns: 1fr; }
+  #admin-root .row,
+  #admin-root .axis-hd { grid-template-columns: 1fr 120px 1fr; }
+  #admin-root .label {
+    font-size: 10.5px;
+    padding: 0 6px;
+    white-space: normal;
+    word-break: break-word;
+  }
+  #admin-root .label .d { display: block; margin: 0 0 1px; }
+  #admin-root .g { grid-template-columns: 1fr; gap: 10px; }
+  #admin-root .bar { max-width: calc(100% - 56px); }
+  #admin-root .num { font-size: 10.5px; }
+  #admin-root .bar-l, #admin-root .bar-r { gap: 6px; }
+  #admin-root .wrap { padding: 0 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #admin-root * { animation: none !important; transition: none !important; }
+}
