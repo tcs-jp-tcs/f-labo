@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8"><title>Autodromo Nazionale Monza</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;background:#0B1428;overflow:hidden}
+body{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;
+     font-variant-numeric:tabular-nums}
+#fit{position:absolute;top:0;left:0;transform-origin:top left}
+#stage{position:relative;width:1080px;height:1920px;background:#0B1428}
+.abs{position:absolute}
+#sectorBadge{padding:16px 34px;border-radius:10px;font-weight:800;letter-spacing:.14em;color:#fff;
+  background:#2C7BE5;display:inline-block;white-space:nowrap}
+#cornerBox .big{font-weight:800;color:#fff;line-height:1;white-space:nowrap}
+#cornerBox .sm{font-weight:700;color:#9DB2D0;margin-top:8px;letter-spacing:.06em;white-space:nowrap}
+svg{width:100%;overflow:visible}
+.cnum{fill:#0B1428;stroke:#8FA6C8;stroke-width:3}
+.clead{opacity:0}
+.cnumT{fill:#E6EEF9;pointer-events:none;font-size:30px;font-weight:800;text-anchor:middle;dominant-baseline:central}
+.axl{fill:#6C82A8;font-size:24px;font-weight:700}
+.grid{stroke:#22314F;stroke-width:1.5}
+.txt{font-weight:800;letter-spacing:.14em;color:#4A5E80;white-space:nowrap}
+
+</style></head>
+<body><div id="fit"><div id="stage">
+
+  <div class="abs" id="sectorBadge" data-k="sector">SECTOR 1</div>
+  <div class="abs" id="cornerBox" data-k="corner"><div class="big" id="lblBig">S/F</div><div class="sm" id="lblSm">Start / Finish</div></div>
+
+  <div class="abs" id="mapWrap" data-k="map">
+    <svg id="map" viewBox="-110 60 1140 810">
+      <path id="base" fill="none" stroke="#1B2A47" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+      <path id="p1" fill="none" stroke="#2C7BE5" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+      <path id="p2" fill="none" stroke="#E8323C" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+      <path id="p3" fill="none" stroke="#28A745" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+      <g id="corners"></g><g id="sf"></g>
+      <circle id="car" r="15" fill="#FFFFFF" stroke="#0B1428" stroke-width="4"/>
+    </svg>
+  </div>
+
+  <div class="abs" id="elevWrap" data-k="elev">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:24px">
+      <div style="font-size:38px;font-weight:800;letter-spacing:.22em;color:#9DB2D0">ELEVATION &middot; ONE LAP</div>
+      <div style="font-size:36px;font-weight:800;color:#4DA3FF;white-space:nowrap" id="elevVal"></div>
+    </div>
+    <svg id="elev" viewBox="0 0 960 300" preserveAspectRatio="none" style="height:300px"></svg>
+  </div>
+
+  <div class="abs txt" id="titleTxt" data-k="title"></div>
+  <div class="abs txt" id="footTxt" data-k="foot"></div>
+
+</div></div>
+
+
+<script>
+var D={"pts": [[584.33, 709.17], [402.41, 693.7], [326.15, 686.67], [323.03, 685.91], [321.24, 683.73], [320.82, 681.03], [321.24, 677.7], [321.48, 674.56], [321.24, 671.66], [319.68, 669.68], [317.47, 668.13], [315.49, 667.73], [313.27, 667.73], [271.67, 678.69], [260.35, 680.24], [250.12, 680.83], [238.98, 680.04], [184.75, 675.95], [175.88, 674.37], [167.62, 672.42], [158.76, 669.48], [149.18, 665.59], [139.84, 661.1], [129.37, 654.47], [120.74, 647.65], [110.93, 638.44], [102.25, 628.48], [94.28, 617.36], [87.4, 605.46], [80.7, 592.0], [76.03, 578.51], [71.83, 563.66], [68.91, 546.87], [67.35, 529.68], [61.6, 462.72], [56.69, 380.72], [56.27, 375.83], [54.9, 373.29], [52.68, 371.15], [43.11, 368.44], [40.47, 367.26], [38.68, 365.31], [37.59, 361.98], [35.56, 350.86], [32.92, 338.76], [27.36, 321.57], [1.56, 244.84], [0.0, 238.21], [0.0, 231.95], [1.13, 225.91], [2.88, 221.62], [5.33, 217.5], [8.02, 213.6], [13.35, 208.72], [17.55, 205.98], [22.69, 204.04], [28.44, 203.05], [64.9, 199.75], [127.16, 193.48], [132.72, 193.68], [136.31, 194.67], [139.42, 196.22], [141.64, 198.76], [144.75, 203.44], [171.87, 253.62], [194.74, 294.42], [208.75, 319.82], [215.87, 332.13], [225.64, 345.98], [233.23, 355.94], [240.78, 364.52], [279.03, 409.05], [307.7, 440.65], [366.38, 507.45], [401.75, 547.66], [407.32, 553.14], [410.85, 555.28], [414.39, 555.68], [418.64, 555.68], [427.97, 554.29], [433.07, 553.9], [440.43, 553.9], [444.44, 554.49], [449.53, 556.07], [455.52, 558.42], [461.56, 562.31], [467.78, 567.59], [472.88, 573.62], [476.65, 578.51], [479.57, 581.05], [483.54, 582.99], [490.89, 584.77], [524.47, 588.86], [560.27, 593.15], [881.28, 626.34], [892.83, 627.72], [898.21, 629.07], [903.73, 631.81], [908.21, 635.54], [912.22, 639.83], [916.18, 645.86], [918.63, 652.5], [920.0, 660.11], [919.53, 666.58], [918.21, 672.62], [915.52, 679.64], [912.41, 686.47], [908.87, 691.55], [904.2, 697.62], [896.84, 704.45], [890.19, 709.13], [883.07, 713.22], [874.63, 716.75], [865.29, 720.05], [855.71, 722.59], [847.51, 723.78], [835.06, 725.13], [822.6, 725.33], [810.81, 725.53], [787.47, 726.12], [767.0, 726.52], [744.78, 726.12], [715.68, 723.58], [623.62, 714.02], [584.33, 709.17]], "frc": [0.0, 0.07439, 0.10559, 0.1069, 0.10804, 0.10916, 0.11052, 0.11181, 0.11299, 0.11402, 0.11512, 0.11594, 0.11685, 0.13437, 0.13903, 0.1432, 0.14775, 0.16991, 0.17358, 0.17704, 0.18084, 0.18506, 0.18928, 0.19433, 0.19881, 0.20429, 0.20967, 0.21525, 0.22085, 0.22697, 0.23279, 0.23908, 0.24602, 0.25305, 0.28043, 0.3139, 0.3159, 0.31708, 0.31833, 0.32239, 0.32356, 0.32464, 0.32607, 0.33068, 0.33572, 0.34308, 0.37606, 0.37884, 0.38139, 0.38389, 0.38578, 0.38773, 0.38966, 0.39261, 0.39465, 0.39689, 0.39927, 0.41418, 0.43968, 0.44194, 0.44346, 0.44487, 0.44625, 0.44854, 0.47178, 0.49083, 0.50265, 0.50845, 0.51535, 0.52045, 0.52511, 0.54903, 0.56641, 0.60263, 0.62445, 0.62764, 0.62932, 0.63077, 0.6325, 0.63634, 0.63843, 0.64143, 0.64308, 0.64525, 0.64787, 0.6508, 0.65412, 0.65734, 0.65986, 0.66143, 0.66323, 0.66631, 0.6801, 0.69479, 0.82627, 0.83101, 0.83327, 0.83578, 0.83815, 0.84055, 0.84348, 0.84637, 0.84952, 0.85216, 0.85468, 0.85774, 0.8608, 0.86332, 0.86644, 0.87053, 0.87385, 0.87719, 0.88092, 0.88496, 0.88899, 0.89237, 0.89747, 0.90255, 0.90735, 0.91687, 0.92521, 0.93426, 0.94616, 0.98387, 1.0], "elev": [{"f": 0.0, "m": 2.0}, {"f": 0.04, "m": 2.8}, {"f": 0.08, "m": 3.5}, {"f": 0.11, "m": 3.2}, {"f": 0.14, "m": 4.2}, {"f": 0.17, "m": 5.0}, {"f": 0.2, "m": 5.5}, {"f": 0.23, "m": 6.2}, {"f": 0.26, "m": 7.0}, {"f": 0.29, "m": 8.0}, {"f": 0.32, "m": 9.5}, {"f": 0.34, "m": 10.5}, {"f": 0.36, "m": 12.0}, {"f": 0.38, "m": 13.0}, {"f": 0.4, "m": 12.2}, {"f": 0.42, "m": 10.0}, {"f": 0.44, "m": 11.0}, {"f": 0.46, "m": 12.0}, {"f": 0.48, "m": 11.2}, {"f": 0.5, "m": 11.8}, {"f": 0.53, "m": 10.5}, {"f": 0.56, "m": 10.8}, {"f": 0.59, "m": 9.5}, {"f": 0.62, "m": 9.8}, {"f": 0.65, "m": 8.5}, {"f": 0.68, "m": 8.8}, {"f": 0.71, "m": 7.0}, {"f": 0.74, "m": 7.5}, {"f": 0.77, "m": 5.5}, {"f": 0.8, "m": 4.5}, {"f": 0.83, "m": 3.0}, {"f": 0.86, "m": 1.5}, {"f": 0.88, "m": 0.0}, {"f": 0.9, "m": 0.8}, {"f": 0.93, "m": 1.0}, {"f": 0.96, "m": 1.4}, {"f": 1.0, "m": 2.0}], "lap_km": 5.793, "elev_max": 13.0, "elev_min": 0.0}, C={"START": 0.921, "S1_END": 0.375, "S2_END": 0.69, "ELEV_MAX": 30, "GRID_MAX": 15, "CORNERS": [{"f": 0.203, "name": "VARIANTE DEL RETTIFILO", "off": 52, "side": -1, "mx": 328, "my": 734}, {"f": 0.2101, "name": "", "off": 52, "side": 1, "mx": 327, "my": 627}, {"f": 0.2993, "name": "CURVA GRANDE", "off": 52, "side": -1, "mx": 74, "my": 675}, {"f": 0.4121, "name": "VARIANTE DELLA ROGGIA", "off": 52, "side": -1, "mx": 94, "my": 367}, {"f": 0.4196, "name": "", "off": 52, "side": 1, "mx": -13, "my": 360}, {"f": 0.4808, "name": "CURVA DI LESMO 1", "off": 52, "side": -1, "mx": -44, "my": 200}, {"f": 0.5399, "name": "CURVA DI LESMO 2", "off": 52, "side": -1, "mx": 166, "my": 152}, {"f": 0.7243, "name": "VARIANTE ASCARI", "off": 52, "side": 1, "mx": 348, "my": 547}, {"f": 0.7402, "name": "", "off": 108, "side": 1, "mx": 478, "my": 525}, {"f": 0.7564, "name": "", "off": 52, "side": -1, "mx": 479, "my": 623}, {"f": 0.9472, "name": "PARABOLICA / ALBORETO", "off": 52, "side": -1, "mx": 968, "my": 658}], "LAYOUT": {"sector": {"x": 329, "y": 401, "size": 42}, "corner": {"x": 28, "y": 399, "size": 112, "sub": 40}, "map": {"x": 20, "y": 560, "w": 1040, "h": 740}, "elev": {"x": 28, "y": 1367, "w": 1040}, "title": {"x": -34, "y": 316, "size": 46, "text": "AUTODROMO NAZIONALE MONZA \u00b7 ITALY"}, "foot": {"x": 381, "y": 1790, "size": 56, "text": "F-LABO"}}};
+var START=C.START,S1_END=C.S1_END,S2_END=C.S2_END,EMAX=C.ELEV_MAX,CORNERS=C.CORNERS,L=C.LAYOUT;
+var GMAX=C.GRID_MAX||EMAX;
+var LAP_MS=20000; window.TOTAL_MS=LAP_MS;
+var DEFAULT_L=JSON.parse(JSON.stringify(L));
+
+var pts=D.pts, frc=D.frc;
+function xyRaw(f){
+  f=((f%1)+1)%1;
+  for(var i=0;i<frc.length-1;i++){
+    if(f>=frc[i]&&f<=frc[i+1]){
+      var t=(frc[i+1]-frc[i])?(f-frc[i])/(frc[i+1]-frc[i]):0;
+      return [pts[i][0]+(pts[i+1][0]-pts[i][0])*t, pts[i][1]+(pts[i+1][1]-pts[i][1])*t];
+    }
+  }
+  var a=pts[pts.length-1],b=pts[0];
+  var t2=(f-frc[frc.length-1])/(1-frc[frc.length-1]);
+  return [a[0]+(b[0]-a[0])*t2, a[1]+(b[1]-a[1])*t2];
+}
+function toRaw(f){ return ((f+START)%1+1)%1; }
+function xyAt(f){ return xyRaw(toRaw(f)); }
+function normAt(f){
+  var a=xyAt(f+0.012), b=xyAt(f-0.012);
+  var nx=-(a[1]-b[1]), ny=(a[0]-b[0]), Ln=Math.hypot(nx,ny)||1;
+  return [nx/Ln,ny/Ln];
+}
+function seg(f0,f1,N){
+  N=N||150; if(f1<=f0) return "";
+  var o=[];
+  for(var i=0;i<=N;i++) o.push(xyAt(f0+(f1-f0)*i/N));
+  return "M"+o.map(function(p){return p[0].toFixed(1)+" "+p[1].toFixed(1)}).join("L");
+}
+function elevRaw(fr){
+  var e=D.elev; fr=((fr%1)+1)%1;
+  if(fr<=e[0].f) return e[0].m;
+  for(var i=0;i<e.length-1;i++){
+    if(fr>=e[i].f&&fr<=e[i+1].f){
+      var t=(fr-e[i].f)/(e[i+1].f-e[i].f);
+      return e[i].m+(e[i+1].m-e[i].m)*t;
+    }
+  }
+  return e[e.length-1].m;
+}
+function lastCorner(p){ var b=-1; for(var i=0;i<CORNERS.length;i++) if(CORNERS[i].f<=p) b=i; return b; }
+function atCorner(p){
+  var b=-1,bd=0.022;
+  for(var i=0;i<CORNERS.length;i++){ var d=Math.abs(CORNERS[i].f-p); d=Math.min(d,1-d); if(d<bd){bd=d;b=i;} }
+  return b;
+}
+var NS="http://www.w3.org/2000/svg";
+function el(n,a){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);return e;}
+
+/* ---- apply layout ---- */
+function applyLayout(){
+  var b=document.getElementById("sectorBadge");
+  b.style.left=L.sector.x+"px"; b.style.top=L.sector.y+"px"; b.style.fontSize=L.sector.size+"px";
+  var c=document.getElementById("cornerBox");
+  c.style.left=L.corner.x+"px"; c.style.top=L.corner.y+"px";
+  document.getElementById("lblBig").style.fontSize=L.corner.size+"px";
+  document.getElementById("lblSm").style.fontSize=L.corner.sub+"px";
+  var m=document.getElementById("mapWrap");
+  m.style.left=L.map.x+"px"; m.style.top=L.map.y+"px"; m.style.width=L.map.w+"px"; m.style.height=(L.map.h||L.map.w)+"px";
+  var ev=document.getElementById("elevWrap");
+  ev.style.left=L.elev.x+"px"; ev.style.top=L.elev.y+"px"; ev.style.width=L.elev.w+"px";
+  var t=document.getElementById("titleTxt");
+  t.textContent=L.title.text; t.style.fontSize=L.title.size+"px";
+  t.style.left=L.title.x+"px"; t.style.top=L.title.y+"px";
+  var f=document.getElementById("footTxt");
+  f.textContent=L.foot.text; f.style.fontSize=L.foot.size+"px";
+  f.style.left=L.foot.x+"px"; f.style.top=L.foot.y+"px";
+  f.style.color="#5E76A0"; f.style.letterSpacing=".20em";
+}
+applyLayout();
+
+/* ---- static map ---- */
+var box=document.getElementById("corners"), markers=[];
+function defaultPos(c){
+  var b=xyAt(c.f), n=normAt(c.f);
+  return [b[0]+n[0]*c.off*c.side, b[1]+n[1]*c.off*c.side];
+}
+CORNERS.forEach(function(c){ if(c.mx===undefined){ var p=defaultPos(c); c.mx=Math.round(p[0]); c.my=Math.round(p[1]); } });
+function drawMap(){
+  document.getElementById("base").setAttribute("d",seg(0,0.9999,300));
+  box.innerHTML=""; markers=[];
+  CORNERS.forEach(function(c,i){
+    var b=xyAt(c.f);
+    var g=el("g",{"class":"cmark","data-ci":i});
+    g.appendChild(el("line",{x1:b[0].toFixed(1),y1:b[1].toFixed(1),
+      x2:c.mx,y2:c.my,stroke:"#4A5E80","stroke-width":2,"class":"clead"}));
+    g.appendChild(el("circle",{cx:c.mx,cy:c.my,r:34,fill:"transparent","class":"chit"}));
+    var ci=el("circle",{cx:c.mx,cy:c.my,r:24,"class":"cnum"});
+    g.appendChild(ci);
+    var tn=el("text",{x:c.mx,y:c.my,"class":"cnumT"});
+    tn.textContent=("0"+(i+1)).slice(-2); g.appendChild(tn);
+    box.appendChild(g);
+    markers.push(ci);
+  });
+  var sfg=document.getElementById("sf"); sfg.innerHTML="";
+  var p=xyAt(0),n=normAt(0);
+  sfg.appendChild(el("line",{x1:(p[0]-n[0]*26).toFixed(1),y1:(p[1]-n[1]*26).toFixed(1),
+    x2:(p[0]+n[0]*26).toFixed(1),y2:(p[1]+n[1]*26).toFixed(1),stroke:"#FFFFFF","stroke-width":8}));
+}
+drawMap();
+
+/* ---- elevation ---- */
+var EW=960,EH=300,PL=76,PR=14,PT=14,PB=44,iw=EW-PL-PR,ih=EH-PT-PB;
+function ex(f){return PL+f*iw} function ey(m){return PT+ih-(m/EMAX)*ih}
+var g="";
+for(var v=0;v<=GMAX;v+=(GMAX>30?10:5)){
+  g+='<line class="grid" x1="'+PL+'" y1="'+ey(v).toFixed(1)+'" x2="'+(EW-PR)+'" y2="'+ey(v).toFixed(1)+'"/>'
+   +'<text class="axl" x="'+(PL-12)+'" y="'+(ey(v)+8).toFixed(1)+'" text-anchor="end">'+v+'m</text>';
+}
+function drawElev(){
+var eline="",N=200;
+for(var i=0;i<=N;i++){var f=i/N; eline+=(i?"L":"M")+ex(f).toFixed(1)+" "+ey(elevRaw(f)).toFixed(1);}
+document.getElementById("elev").innerHTML=
+ '<defs><linearGradient id="eg" x1="0" y1="0" x2="0" y2="1">'+
+ '<stop offset="0%" stop-color="#2C7BE5" stop-opacity=".5"/>'+
+ '<stop offset="100%" stop-color="#2C7BE5" stop-opacity=".04"/></linearGradient>'+
+ '<clipPath id="ec"><rect id="ecr" x="'+PL+'" y="0" width="0" height="'+EH+'"/></clipPath></defs>'+g+
+ '<path id="earea" d="'+eline+'L'+ex(1).toFixed(1)+' '+ey(0).toFixed(1)+'L'+ex(0).toFixed(1)+' '+ey(0).toFixed(1)+'Z" fill="url(#eg)" clip-path="url(#ec)"/>'+
+ '<path d="'+eline+'" fill="none" stroke="#22314F" stroke-width="4" stroke-linejoin="round"/>'+
+ '<path d="'+eline+'" fill="none" stroke="#4DA3FF" stroke-width="4" stroke-linejoin="round" clip-path="url(#ec)"/>'+
+ '<text class="axl" x="'+PL+'" y="'+(EH-12)+'">START</text>'+
+ '<text class="axl" x="'+(EW-PR)+'" y="'+(EH-12)+'" text-anchor="end">FINISH</text>'+
+ '<circle id="edot" r="10" fill="#FFFFFF" stroke="#0B1428" stroke-width="3"/>';
+edot=document.getElementById("edot"); ecr=document.getElementById("ecr");
+}
+var edot,ecr; drawElev();
+document.getElementById("elevVal").textContent=D.lap_km.toFixed(3)+" km  \u00B7  \u25B2"+(D.elev_max-D.elev_min).toFixed(1)+" m";
+
+var car=document.getElementById("car");
+var badge=document.getElementById("sectorBadge");
+var hdBig=document.getElementById("lblBig"),hdSm=document.getElementById("lblSm");
+var SECCOL=["#2C7BE5","#E8323C","#28A745"];
+
+window.seek=function(p){
+  p=p<0?0:p>1?1:p;
+  document.getElementById("p1").setAttribute("d", seg(0, Math.min(p,S1_END), 200));
+  document.getElementById("p2").setAttribute("d", p>S1_END ? seg(S1_END, Math.min(p,S2_END), 200) : "");
+  document.getElementById("p3").setAttribute("d", p>S2_END ? seg(S2_END, p, 200) : "");
+  ecr.setAttribute("width", (p*iw).toFixed(1));
+
+  var xy=xyAt(p);
+  car.setAttribute("cx",xy[0].toFixed(1)); car.setAttribute("cy",xy[1].toFixed(1));
+  edot.setAttribute("cx",ex(p).toFixed(1)); edot.setAttribute("cy",ey(elevRaw(p)).toFixed(1));
+
+  var s=p<S1_END?0:p<S2_END?1:2;
+  badge.textContent="SECTOR "+(s+1); badge.style.background=SECCOL[s];
+
+  var nearSF=(p<0.030)||(p>0.970), shown=lastCorner(p);
+  if(nearSF||shown<0){ hdBig.textContent="S/F"; hdSm.textContent="Start / Finish"; }
+  else { hdBig.textContent="T"+("0"+(shown+1)).slice(-2); hdSm.textContent=CORNERS[shown].name||""; }
+
+  var a=atCorner(p);
+  for(var i=0;i<CORNERS.length;i++){
+    markers[i].setAttribute("stroke", i===a?"#FFFFFF":"#8FA6C8");
+    markers[i].setAttribute("stroke-width", i===a?6:3);
+    markers[i].setAttribute("fill", i===a?"#1E3A63":"#0B1428");
+  }
+};
+
+var fit=document.getElementById("fit"), scale=1;
+function fitToWindow(){
+  // Web埋め込み(iframe)版: 横だけでなく縦も中央寄せする。
+  // 元の動画書き出し版は 1080x1920 のビューポートに丁度収まる前提で translateX のみだったが、
+  // サーキット図鑑の iframe は横長（既定 520px 高）で上下に余りが出るため、
+  // zandvoort 等の既存埋め込みと同じ「中央に寄せて縮小表示」に揃える。
+  scale=Math.min(window.innerWidth/1080,window.innerHeight/1920,1);
+  var tx=Math.max(0,(window.innerWidth-1080*scale)/2);
+  var ty=Math.max(0,(window.innerHeight-1920*scale)/2);
+  fit.style.transform="translate("+tx+"px,"+ty+"px) scale("+scale+")";
+}
+if(!window.__CAPTURE__){fitToWindow();window.addEventListener("resize",fitToWindow);}
+window.seek(0);
+
+/* ---- playback ---- */
+var playing=true, t0=null, rafP=0;
+function loop(ts){ if(!playing){return;} if(t0===null)t0=ts; window.seek(((ts-t0)%LAP_MS)/LAP_MS); rafP=requestAnimationFrame(loop); }
+if(!window.__CAPTURE__) rafP=requestAnimationFrame(loop);
+
+</script></body></html>
