@@ -1,4 +1,5 @@
 import Link from "next/link";
+import AdminNav from "@/components/admin/AdminNav";
 import AnalysisSection from "@/components/admin/AnalysisSection";
 import AudienceSection from "@/components/admin/AudienceSection";
 import DeltaTrace from "@/components/admin/DeltaTrace";
@@ -66,6 +67,7 @@ export default async function AdminPage({
       </div>
 
       <div className="toolbar">
+        <AdminNav current="/admin" />
         <div className="ranges">
           {RANGE_OPTIONS.map((option) => (
             <Link
