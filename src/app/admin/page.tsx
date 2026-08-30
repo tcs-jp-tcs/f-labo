@@ -1,4 +1,5 @@
 import Link from "next/link";
+import AnalysisSection from "@/components/admin/AnalysisSection";
 import AudienceSection from "@/components/admin/AudienceSection";
 import DeltaTrace from "@/components/admin/DeltaTrace";
 import FullLog from "@/components/admin/FullLog";
@@ -169,6 +170,17 @@ export default async function AdminPage({
       <section>
         <div className="sec-hd">
           <span className="sec-no">04</span>
+          <h2>Analysis</h2>
+        </div>
+        <p className="sec-note">
+          ショートの投稿を切り口を変えて見比べる。タブで表示するグラフを切り替える。
+        </p>
+        <AnalysisSection posts={data.shortPosts} />
+      </section>
+
+      <section>
+        <div className="sec-hd">
+          <span className="sec-no">05</span>
           <h2>Audience</h2>
         </div>
         <p className="sec-note">
@@ -180,7 +192,7 @@ export default async function AdminPage({
 
       <section>
         <div className="sec-hd">
-          <span className="sec-no">05</span>
+          <span className="sec-no">06</span>
           <h2>Google Analytics</h2>
         </div>
         <p className="sec-note">サイト側の反応。GA4 の日次サマリーと流入チャネル。</p>
@@ -189,7 +201,7 @@ export default async function AdminPage({
 
       <section>
         <div className="sec-hd">
-          <span className="sec-no">06</span>
+          <span className="sec-no">07</span>
           <h2>Full Log</h2>
         </div>
         <p className="sec-note">

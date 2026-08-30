@@ -41,6 +41,20 @@ export function rangeStartDate(range: RangeKey, now: Date = new Date()): string 
   return toJstDate(new Date(now.getTime() - (days - 1) * 86_400_000));
 }
 
+/**
+ * ISO 日時 → JST の「小数時刻(0-24)」と「曜日(0=月〜6=日)」。
+ * JST は DST が無いので UTC に +9h して UTC 系ゲッターで読めば正確。
+ */
+function toJstClock(iso: string): { hour: number; weekday: number } {
+  const ms = Date.parse(iso);
+  if (Number.isNaN(ms)) return { hour: 0, weekday: 0 };
+  const jst = new Date(ms + 9 * 3_600_000);
+  return {
+    hour: jst.getUTCHours() + jst.getUTCMinutes() / 60,
+    weekday: (jst.getUTCDay() + 6) % 7,
+  };
+}
+
 /** ISO 日時 → JST の MM/DD */
 function toJstMonthDay(iso: string): string {
   const d = new Date(iso);
@@ -67,6 +81,10 @@ export type SnsPost = {
   title: string;
   genre: string;
   format: PostFormat;
+  /** JST の投稿時刻。9:30 なら 9.5（散布図・ヒートマップの横軸） */
+  jstHour: number;
+  /** JST の曜日。0=月 … 6=日 */
+  jstWeekday: number;
   igReach: number | null;
   igLikes: number | null;
   igSaves: number | null;
@@ -290,6 +308,7 @@ type Ga4ChannelRow = {
 };
 
 function toPost(row: SnsPostRow): SnsPost {
+  const clock = toJstClock(row.posted_at);
   return {
     id: row.id,
     postedAt: row.posted_at,
@@ -297,6 +316,8 @@ function toPost(row: SnsPostRow): SnsPost {
     title: row.title,
     genre: row.genre,
     format: row.format === "long" ? "long" : "short",
+    jstHour: clock.hour,
+    jstWeekday: clock.weekday,
     igReach: row.ig_reach,
     igLikes: row.ig_likes,
     igSaves: row.ig_saves,

@@ -491,6 +491,182 @@ body:has(#admin-root)::before {
 }
 #admin-root .lf-bar .v.nil { color: var(--txt-faint); font-weight: 400; }
 
+/* ---------- analysis ---------- */
+#admin-root .an { position: relative; }
+
+#admin-root .an-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid var(--line);
+  margin-bottom: 18px;
+}
+#admin-root .an-tabs button {
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  padding: 11px 18px;
+  color: var(--txt-dim);
+  background: var(--panel);
+  border: none;
+  border-right: 1px solid var(--line);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+#admin-root .an-tabs button:last-child { border-right: none; }
+#admin-root .an-tabs button:hover { color: var(--txt); background: var(--panel-2); }
+#admin-root .an-tabs button.on { color: var(--bg); background: var(--flag); font-weight: 600; }
+
+#admin-root .an-panel {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 20px;
+  animation: an-fade 200ms ease-out both;
+}
+#admin-root .an-subbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+#admin-root .an-toggle { display: flex; border: 1px solid var(--line); }
+#admin-root .an-toggle button {
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  padding: 7px 13px;
+  color: var(--txt-dim);
+  background: var(--bg);
+  border: none;
+  border-right: 1px solid var(--line);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+#admin-root .an-toggle button:last-child { border-right: none; }
+#admin-root .an-toggle button:hover { color: var(--txt); }
+#admin-root .an-toggle button.on { color: var(--bg); background: var(--ig); font-weight: 600; }
+#admin-root .an-legend { margin-bottom: 0; gap: 14px; font-size: 11.5px; }
+
+#admin-root .an-scroll { overflow-x: auto; }
+#admin-root .an-chart { width: 100%; height: auto; }
+#admin-root .an-chart .an-axis-title { fill: var(--txt-faint); }
+#admin-root .an-chart .an-quad {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  fill: var(--txt-faint);
+  font-weight: 600;
+  /* 端にプロットが来ても点が読めるよう薄めに敷く */
+  opacity: 0.5;
+}
+#admin-root .an-chart .an-median {
+  stroke: var(--flag);
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+  opacity: 0.6;
+}
+#admin-root .an-chart .an-row-label {
+  font-family: var(--font-noto-sans-jp), sans-serif;
+  font-size: 12.5px;
+  fill: var(--txt);
+  letter-spacing: 0;
+}
+#admin-root .an-chart .an-row-n { font-size: 9.5px; fill: var(--txt-faint); }
+#admin-root .an-chart .an-whisker { stroke-width: 1.5; opacity: 0.7; }
+#admin-root .an-chart .an-cap { stroke-width: 1.5; opacity: 0.7; }
+#admin-root .an-chart .an-med-line { stroke-width: 2.5; }
+#admin-root .an-chart circle { cursor: default; }
+
+/* タブ切替時のアニメーション（prefers-reduced-motion では末尾の一括指定で無効化される） */
+@keyframes an-fade {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes an-appear {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes an-grow-x {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes an-cell {
+  from { opacity: 0; transform: scale(0.86); }
+  to { opacity: 1; transform: none; }
+}
+#admin-root .an-pop { animation: an-appear 320ms ease-out both; animation-delay: 90ms; }
+#admin-root .an-grow {
+  transform-box: view-box;
+  transform-origin: var(--grow-x, 0) center;
+  animation: an-grow-x 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+#admin-root .an-tip {
+  position: absolute;
+  z-index: 5;
+  pointer-events: none;
+  transform: translate(14px, -50%);
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  padding: 9px 12px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--txt-dim);
+  max-width: 260px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+}
+#admin-root .an-tip.flip { transform: translate(calc(-100% - 14px), -50%); }
+#admin-root .an-tip-hd { color: var(--txt); font-weight: 600; margin-bottom: 4px; }
+
+#admin-root .an-warn {
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--txt);
+  border-left: 2px solid var(--flag);
+  background: rgba(201, 255, 61, 0.06);
+  padding: 10px 14px;
+  margin-top: 12px;
+}
+
+/* ヒートマップ */
+#admin-root .heat {
+  display: grid;
+  grid-template-columns: 48px repeat(8, minmax(58px, 1fr));
+  gap: 3px;
+}
+#admin-root .heat-line { display: contents; }
+#admin-root .heat-col {
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 10px;
+  color: var(--txt-faint);
+  text-align: center;
+  padding-bottom: 4px;
+  letter-spacing: 0.04em;
+}
+#admin-root .heat-row {
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 12px;
+  color: var(--txt-dim);
+  display: flex;
+  align-items: center;
+}
+#admin-root .heat-cell {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--txt);
+  background: rgba(0, 216, 240, var(--i, 0));
+  border-radius: 2px;
+  cursor: default;
+  animation: an-cell 260ms ease-out both;
+}
+#admin-root .heat-cell.hot { color: #05171d; }
+#admin-root .heat-cell.nil { background: none; border: 1px dashed var(--line-soft); }
+
 /* ---------- audience ---------- */
 #admin-root .aud-hd {
   display: flex;
@@ -859,6 +1035,11 @@ body:has(#admin-root)::before {
   #admin-root .aud { grid-template-columns: 1fr; }
   #admin-root .aud-panel { padding: 16px 14px; }
   #admin-root .ag-row { grid-template-columns: 48px 1fr auto; gap: 8px; }
+  #admin-root .an-panel { padding: 14px; }
+  #admin-root .an-tabs button { flex: 1 1 auto; padding: 10px 10px; font-size: 11px; letter-spacing: 0.04em; }
+  #admin-root .an-chart { min-width: 620px; }
+  #admin-root .heat { min-width: 560px; }
+  #admin-root .an-tip { max-width: 220px; font-size: 11.5px; }
   #admin-root .bar { max-width: calc(100% - 58px); }
   #admin-root .num { font-size: 12px; }
   #admin-root .bar-l, #admin-root .bar-r { gap: 6px; }
