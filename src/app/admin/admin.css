@@ -12,20 +12,8 @@ body:has(#admin-root) > .kerb-stripe {
   display: none;
 }
 
-/* カーボン背景 → テレメトリーグリッドへ差し替え */
-body:has(#admin-root) {
-  background-color: #070a0f;
-}
-body:has(#admin-root)::before {
-  background-image:
-    linear-gradient(#151e29 1px, transparent 1px),
-    linear-gradient(90deg, #151e29 1px, transparent 1px);
-  background-color: #070a0f;
-  background-size: 56px 56px;
-  opacity: 0.5;
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
-}
+/* 背景はサイト共通のカーボン柄をそのまま使う（globals.css の body::before）。
+   以前はテレメトリーグリッドに差し替えていたが、サイト全体と揃える。 */
 
 #admin-root {
   --bg: #070a0f;
