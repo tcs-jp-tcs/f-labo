@@ -1179,142 +1179,239 @@ body:has(#admin-root)::before {
 #admin-root .pl-lead-flow i { font-style: normal; color: var(--txt-faint); }
 #admin-root .pl-lead p { font-size: 14px; line-height: 1.9; color: var(--txt-dim); max-width: 78ch; }
 
-#admin-root .pl-filters { display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 16px; }
-#admin-root .pl-filter { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-#admin-root .pl-filter-lbl {
-  font-family: var(--font-admin-mono), monospace;
-  font-size: 10.5px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--txt-faint);
-}
-#admin-root .pl-strip {
+/* --- 週ナビ --- */
+#admin-root .cal-nav {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 12px;
   flex-wrap: wrap;
-  font-size: 12.5px;
-  color: var(--txt-dim);
-  border-top: 1px solid var(--line-soft);
-  border-bottom: 1px solid var(--line-soft);
-  padding: 12px 2px;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
-#admin-root .pl-strip b { color: var(--txt); font-family: var(--font-admin-mono), monospace; }
-#admin-root .pl-openall {
+#admin-root .cal-nav-btn {
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--txt-dim);
+  text-decoration: none;
+  transition: color 0.15s, background 0.15s;
+}
+#admin-root .cal-nav-btn:hover { color: var(--txt); background: var(--panel-2); }
+#admin-root .cal-nav-label {
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  color: var(--txt);
+}
+#admin-root .cal-nav-label em {
+  font-style: normal;
+  margin-left: 8px;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: var(--bg);
+  background: var(--flag);
+  padding: 2px 7px;
+  font-weight: 600;
+}
+#admin-root .cal-nav-today {
   margin-left: auto;
   font-family: var(--font-admin-mono), monospace;
   font-size: 11px;
-  letter-spacing: 0.1em;
-  color: var(--txt-dim);
-  background: none;
-  border: 1px solid var(--line);
-  padding: 6px 12px;
-  cursor: pointer;
-  transition: color 0.15s, border-color 0.15s;
+  color: var(--txt-faint);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
 }
-#admin-root .pl-openall:hover { color: var(--flag); border-color: var(--flag); }
+#admin-root .cal-nav-today:hover { color: var(--flag); border-bottom-color: var(--flag); }
+#admin-root .cal-empty-note { font-size: 13px; color: var(--txt-dim); margin-bottom: 14px; }
+#admin-root .cal-empty-note a { color: var(--flag); }
 
-#admin-root .pl { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); }
-#admin-root .pl-row {
-  background: var(--panel);
-  padding: 18px 20px;
+/* --- カレンダー本体 ---
+   ラベル列 + 7日。.cal-day は display:contents なので、DOM は日ごとにまとまったまま
+   デスクトップでは「ヘッダ行 / 投稿行 / 制作行」の3行に展開される。 */
+#admin-root .cal {
   display: grid;
-  grid-template-columns: 92px 1fr 92px;
-  gap: 18px;
-  align-items: start;
+  grid-template-columns: 54px repeat(7, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
 }
-#admin-root .pl-date {
+#admin-root .cal-day { display: contents; }
+#admin-root .cal-rail {
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  color: var(--txt-faint);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  grid-column: 1;
+}
+#admin-root .cal-corner { grid-row: 1; background: var(--panel); }
+#admin-root .cal-rail-post { grid-row: 2; background: var(--panel); color: var(--txt-dim); }
+#admin-root .cal-rail-prod { grid-row: 3; background: var(--bg); }
+
+#admin-root .cal-head {
+  grid-column: var(--col);
+  grid-row: 1;
+  background: var(--panel);
+  padding: 10px 12px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+#admin-root .cal-date {
   font-family: var(--font-admin-mono), monospace;
   font-size: 13px;
   color: var(--txt);
-  padding-top: 2px;
-  white-space: nowrap;
 }
-#admin-root .pl-title { font-size: 15px; line-height: 1.6; color: var(--txt); margin-bottom: 10px; }
-#admin-root .pl-badges { display: flex; gap: 7px; flex-wrap: wrap; }
-#admin-root .badge {
-  display: inline-block;
+#admin-root .cal-wd { font-size: 11px; color: var(--txt-faint); }
+#admin-root .cal-head.is-sat .cal-wd { color: #7ea6ff; }
+#admin-root .cal-head.is-sun .cal-wd { color: var(--yt); }
+#admin-root .cal-head.is-today {
+  background: var(--panel-2);
+  box-shadow: inset 0 2px 0 var(--flag);
+}
+/* レース開催日。schedules との紐付けは未実装で今は付かないが、
+   PlanDay.isRaceDay を埋めればこの見た目に切り替わる。 */
+#admin-root .cal-head.is-race {
+  background: rgba(255, 66, 87, 0.12);
+  box-shadow: inset 0 2px 0 var(--yt);
+}
+
+#admin-root .cal-cell {
+  grid-column: var(--col);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 104px;
+}
+/* 上段=投稿が主、下段=制作が従。背景を落として関係を出す */
+#admin-root .cal-cell.is-post { grid-row: 2; background: var(--panel); }
+#admin-root .cal-cell.is-prod {
+  grid-row: 3;
+  background: var(--bg);
+  border-top: 1px solid var(--line);
+}
+#admin-root .cal-band-lbl { display: none; }
+#admin-root .cal-none {
   font-family: var(--font-admin-mono), monospace;
-  font-size: 10.5px;
-  letter-spacing: 0.08em;
-  padding: 3px 9px;
+  font-size: 12px;
+  color: #2a3542;
+}
+
+/* --- 計画カード --- */
+#admin-root .pcard {
+  border: 1px solid var(--line);
+  border-left-width: 4px;
+  background: var(--panel-2);
+}
+#admin-root .cal-cell.is-prod .pcard { background: var(--panel); }
+#admin-root .pcard-main {
+  position: relative;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 9px 22px 9px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+}
+#admin-root .pcard-main:disabled { cursor: default; }
+#admin-root .pcard-main:hover:not(:disabled) { background: rgba(255, 255, 255, 0.03); }
+#admin-root .pcard-title { font-size: 12.5px; line-height: 1.55; color: var(--txt); }
+#admin-root .pcard-badges { display: flex; gap: 5px; flex-wrap: wrap; }
+#admin-root .pb {
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  padding: 2px 6px;
   border: 1px solid var(--line);
   border-radius: 1px;
   color: var(--txt-dim);
   white-space: nowrap;
 }
-#admin-root .badge.pf-ig { color: var(--ig); border-color: rgba(0, 216, 240, 0.4); }
-#admin-root .badge.pf-yt { color: var(--yt); border-color: rgba(255, 66, 87, 0.4); }
-/* 「両方」は IG と YT のストライプで両方に出すことを示す。
-   1px だと縞が潰れるので枠を 2px にして周期も詰める */
-#admin-root .badge.pf-both {
-  color: var(--txt);
-  padding: 2px 8px;
-  border: 2px solid transparent;
-  background:
-    linear-gradient(var(--panel), var(--panel)) padding-box,
-    repeating-linear-gradient(135deg, var(--ig) 0 4px, var(--yt) 4px 8px) border-box;
+#admin-root .pb.pf-yt { color: #ff4257; border-color: rgba(255, 66, 87, 0.4); }
+#admin-root .pb.pf-ig { color: #c77dff; border-color: rgba(199, 125, 255, 0.45); }
+#admin-root .pb.pf-both { color: var(--txt-dim); border-color: var(--line); }
+#admin-root .pb.pf-tbd { color: #3f4b58; border-color: #232e3a; border-style: dashed; }
+#admin-root .pb.pb-prod { color: var(--txt-faint); }
+#admin-root .pcard-caret {
+  position: absolute;
+  right: 8px;
+  top: 10px;
+  font-size: 8px;
+  color: var(--txt-faint);
 }
-#admin-root .badge.prod { color: var(--txt-faint); }
-
-#admin-root .pl-why {
-  margin-top: 12px;
-  font-family: var(--font-admin-mono), monospace;
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  color: var(--flag);
-  background: none;
-  border: 1px solid rgba(201, 255, 61, 0.35);
-  padding: 6px 12px;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-#admin-root .pl-why:hover { background: rgba(201, 255, 61, 0.08); }
-#admin-root .pl-rationale {
-  margin-top: 12px;
-  border: 1px solid var(--line);
-  border-left: 2px solid var(--flag);
-  background: var(--bg);
-  padding: 12px 14px;
-  display: flex;
-  gap: 14px;
-  align-items: baseline;
-  flex-wrap: wrap;
+#admin-root .pcard-why {
+  border-top: 1px solid var(--line);
+  padding: 10px;
   animation: an-fade 200ms ease-out both;
 }
-#admin-root .pl-rationale-lbl {
+#admin-root .pcard-why-lbl {
+  display: block;
   font-family: var(--font-admin-mono), monospace;
-  font-size: 9.5px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  font-size: 9px;
+  letter-spacing: 0.16em;
   color: var(--txt-faint);
-  flex-shrink: 0;
+  margin-bottom: 6px;
 }
-#admin-root .pl-rationale code {
-  font-family: var(--font-admin-mono), monospace;
-  font-size: 12.5px;
-  line-height: 1.9;
-  color: var(--txt);
-  word-break: break-word;
-}
-#admin-root .pl-norationale { margin-top: 12px; font-size: 12px; color: var(--txt-faint); }
+#admin-root .pcard-why p { font-size: 12px; line-height: 1.85; color: var(--txt-dim); }
 
-#admin-root .pl-status { text-align: right; }
-#admin-root .st {
-  display: inline-block;
-  font-family: var(--font-admin-mono), monospace;
-  font-size: 10.5px;
-  letter-spacing: 0.1em;
-  padding: 4px 10px;
-  border: 1px solid;
-  border-radius: 1px;
-  white-space: nowrap;
+/* status の色帯。未定だけカード全体を点線にして仮であることを示す */
+#admin-root .pcard.st-plan { border-left-color: #6b7a8c; }
+#admin-root .pcard.st-wip { border-left-color: #ffa23d; }
+#admin-root .pcard.st-done { border-left-color: #4da3ff; }
+#admin-root .pcard.st-posted { border-left-color: #3dd68c; }
+#admin-root .pcard.st-tbd {
+  border-style: dashed;
+  border-left-color: #333f4c;
+  background: none;
 }
-#admin-root .st-idea { color: var(--txt-faint); border-color: var(--line); }
-#admin-root .st-wip { color: #ffa23d; border-color: rgba(255, 162, 61, 0.4); }
-#admin-root .st-done { color: var(--flag); border-color: rgba(201, 255, 61, 0.4); }
-#admin-root .st-posted { color: var(--ig); border-color: rgba(0, 216, 240, 0.4); }
+
+#admin-root .cal-legend {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  font-family: var(--font-admin-mono), monospace;
+  font-size: 11px;
+  color: var(--txt-dim);
+}
+#admin-root .cal-legend span { display: flex; align-items: center; gap: 7px; }
+#admin-root .cal-sw { width: 4px; height: 14px; display: inline-block; }
+#admin-root .cal-sw.st-plan { background: #6b7a8c; }
+#admin-root .cal-sw.st-wip { background: #ffa23d; }
+#admin-root .cal-sw.st-done { background: #4da3ff; }
+#admin-root .cal-sw.st-posted { background: #3dd68c; }
+#admin-root .cal-sw.st-tbd { background: #333f4c; }
+
+/* 768px 未満は7列が破綻するので日付ごとの縦積みに切り替える */
+@media (max-width: 767px) {
+  #admin-root .cal { display: block; background: none; border: none; }
+  #admin-root .cal-rail { display: none; }
+  #admin-root .cal-day {
+    display: block;
+    border: 1px solid var(--line);
+    margin-bottom: 12px;
+  }
+  #admin-root .cal-cell { min-height: 0; padding: 12px 14px; }
+  #admin-root .cal-cell.is-post { border-top: 1px solid var(--line); }
+  #admin-root .cal-band-lbl {
+    display: block;
+    font-family: var(--font-admin-mono), monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    color: var(--txt-faint);
+  }
+  #admin-root .cal-nav-today { margin-left: 0; }
+}
 
 /* ---------- login ---------- */
 #admin-root .login {
