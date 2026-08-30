@@ -12,8 +12,49 @@ body:has(#admin-root) > .kerb-stripe {
   display: none;
 }
 
-/* 背景はサイト共通のカーボン柄をそのまま使う（globals.css の body::before）。
-   以前はテレメトリーグリッドに差し替えていたが、サイト全体と揃える。 */
+/* 背景はサイト共通のカーボン柄（globals.css の body::before）。
+   管理画面は情報量が多く画面も広いので、織り目だけ 2倍のスケールにする。
+   グラデーションは px 指定なので background-size だけでは拡大できず、
+   ストップ位置ごと倍にしている（糸 1px→2px / 周期 4px→8px、
+   シェブロン 4px→8px / 周期 8px→16px）。コーナーの色味はサイトと同じ。 */
+body:has(#admin-root)::before {
+  background-image:
+    /* 織り糸のハイライト */
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.06) 0px,
+      rgba(255, 255, 255, 0.06) 2px,
+      transparent 2px,
+      transparent 8px
+    ),
+    /* 糸の間の影 */
+      repeating-linear-gradient(
+        -45deg,
+        rgba(0, 0, 0, 0.55) 0px,
+        rgba(0, 0, 0, 0.55) 2px,
+        transparent 2px,
+        transparent 8px
+      ),
+    /* シェブロンのブロック交互 */
+      repeating-linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.018) 0px,
+        rgba(255, 255, 255, 0.018) 8px,
+        transparent 8px,
+        transparent 16px
+      ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(255, 255, 255, 0.018) 0px,
+      rgba(255, 255, 255, 0.018) 8px,
+      transparent 8px,
+      transparent 16px
+    ),
+    /* コーナーのブランドカラー */
+      radial-gradient(circle at 25% 15%, rgba(225, 6, 0, 0.08) 0, transparent 45%),
+    radial-gradient(circle at 85% 85%, rgba(0, 170, 255, 0.06) 0, transparent 50%);
+  background-size: 8px 8px, 8px 8px, 16px 16px, 16px 16px, 100% 100%, 100% 100%;
+}
 
 #admin-root {
   --bg: #070a0f;
