@@ -332,7 +332,8 @@ export async function getTelemetry(range: RangeKey): Promise<Telemetry> {
     .select(
       "id, posted_at, title, genre, ig_reach, ig_likes, ig_saves, ig_shares, ig_url, yt_views, yt_likes, yt_url, note",
     )
-    .order("posted_at", { ascending: true });
+    // 新しい投稿を先頭に（Delta Trace はこの順で上から並ぶ）
+    .order("posted_at", { ascending: false });
   if (startTimestamp) postsQuery.gte("posted_at", startTimestamp);
 
   const dailyQuery = supabase
