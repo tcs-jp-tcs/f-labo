@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8"><title>MADRING — Circuit</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;background:#070E1C;overflow:hidden}
+body{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;
+     font-variant-numeric:tabular-nums}
+#fit{position:absolute;top:0;left:0;transform-origin:top left}
+#stage{position:relative;width:1080px;height:1920px;background:#070E1C;overflow:hidden}
+.abs{position:absolute}
+
+/* スペイン国旗の帯 */
+#flag{left:0;top:0;width:1080px;height:12px;display:flex}
+#flag i:nth-child(1),#flag i:nth-child(3){flex:1;background:#AA151B}
+#flag i:nth-child(2){flex:2;background:#F1BF00}
+#flag2{left:0;bottom:0;width:1080px;height:12px;display:flex}
+#flag2 i:nth-child(1),#flag2 i:nth-child(3){flex:1;background:#AA151B}
+#flag2 i:nth-child(2){flex:2;background:#F1BF00}
+
+#kick{left:0;width:1080px;top:64px;text-align:center;
+  font-size:26px;font-weight:800;letter-spacing:.30em;color:#AA151B}
+#ttl{left:0;width:1080px;top:100px;text-align:center;
+  font-size:82px;font-weight:800;letter-spacing:-.01em;color:#fff;line-height:1}
+#sub{left:0;width:1080px;top:196px;text-align:center;
+  font-size:28px;font-weight:700;letter-spacing:.18em;color:#7A90AE}
+
+#cnrNum{left:0;width:1080px;top:250px;text-align:center;
+  font-size:78px;font-weight:800;color:#fff;line-height:1}
+#cnrName{left:0;width:1080px;top:338px;text-align:center;
+  font-size:30px;font-weight:800;letter-spacing:.08em;color:#E10600}
+
+#mapWrap{left:6px;top:430px;width:1068px;height:474px}
+svg{width:100%;height:100%;display:block;overflow:visible}
+
+#barWrap{left:70px;top:960px;width:940px;height:12px;border-radius:6px;background:#16233D;overflow:hidden}
+#bar{height:100%;width:0;background:#E10600}
+
+#statWrap{left:70px;width:940px;top:1000px}
+.stat{display:flex;align-items:baseline;justify-content:space-between;
+  border-top:1px solid #22314F;padding:22px 4px 18px}
+.stat .k{font-size:28px;font-weight:800;letter-spacing:.16em;color:#6C82A8}
+.stat .v{font-size:56px;font-weight:800;color:#fff;white-space:nowrap}
+.stat .v em{font-style:normal;font-size:28px;color:#9DB2D0;margin-left:8px;font-weight:700}
+
+#keys{left:70px;width:940px;top:1424px}
+.key{display:flex;gap:20px;align-items:baseline;padding:8px 4px}
+.key .kn{width:96px;flex:none;font-size:27px;font-weight:800;color:#E10600;letter-spacing:.04em}
+.key .kv{flex:1;font-size:25px;font-weight:800;color:#E6EEF9;line-height:1.3}
+.key .kv i{display:block;font-style:normal;margin-top:5px;font-size:20px;font-weight:700;color:#7A90AE}
+#note{left:0;width:1080px;top:1826px;text-align:center;
+  font-size:18px;font-weight:700;color:#31456B;line-height:1.5}
+#edPanel{right:16px;top:16px;width:320px;background:rgba(8,16,32,.96);
+  border:1px solid #2E4670;border-radius:12px;padding:14px;z-index:50;
+  font-size:13px;color:#C7D6EC}
+#edHead{font-size:15px;font-weight:800;letter-spacing:.08em;color:#9DB2D0;margin-bottom:10px}
+.edRow{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.edRow span{width:120px;flex:none;color:#7A90AE}
+.edRow input{flex:1;accent-color:#E10600}
+.edRow b{width:34px;text-align:right}
+.edHint{color:#6C82A8;line-height:1.6;margin:6px 0 10px}
+#edBtns{display:flex;gap:8px;margin-bottom:8px}
+#edBtns button{flex:1;background:#22355A;color:#DCE7F7;border:1px solid #2E4670;
+  border-radius:7px;padding:6px;font-size:12px;font-weight:700;cursor:pointer}
+#edJson{width:100%;height:90px;background:#070E1C;color:#8FE3A8;border:1px solid #22314F;
+  border-radius:7px;padding:6px;font-family:ui-monospace,Menlo,monospace;font-size:10.5px}
+.cmark{cursor:grab}
+#foot{left:0;width:1080px;top:1868px;text-align:center;
+  font-size:32px;font-weight:800;letter-spacing:.26em;color:#5E76A0}
+</style></head>
+<body><div id="fit"><div id="stage">
+  <div class="abs" id="flag"><i></i><i></i><i></i></div>
+  <div class="abs" id="kick">SPANISH GRAND PRIX · SEPT 11-13</div>
+  <div class="abs" id="ttl">MADRING</div>
+  <div class="abs" id="sub">CIRCUITO DE MADRING · MADRID</div>
+
+  <div class="abs" id="cnrNum"></div>
+  <div class="abs" id="cnrName"></div>
+
+  <div class="abs" id="mapWrap">
+    <svg id="map" preserveAspectRatio="xMidYMid meet">
+      <path id="edge" fill="none" stroke="#2B3E63" stroke-linecap="round" stroke-linejoin="round"/>
+      <path id="fillp" fill="none" stroke="#141F35" stroke-linecap="round" stroke-linejoin="round"/>
+      <path id="prog" fill="none" stroke="#E10600" stroke-linecap="round" stroke-linejoin="round"/>
+      <g id="marks"></g><g id="sfg"></g>
+      <circle id="car" r="13" fill="#fff" stroke="#070E1C" stroke-width="4"/>
+    </svg>
+  </div>
+
+  <div class="abs" id="barWrap"><div id="bar"></div></div>
+  <div class="abs" id="statWrap"></div>
+  <div class="abs" id="keys">
+    <div class="key"><span class="kn">T1</span><span class="kv">320 → 100 km/h — the first overtaking spot<i>589mのメインストレートから320→100km/h。最初の追い越しポイント</i></span></div>
+    <div class="key"><span class="kn">T3</span><span class="kv">Hortaleza — leads onto the longest straight, 837 m<i>ホルタレサ。この先が最長837mのストレート</i></span></div>
+    <div class="key"><span class="kn">T12</span><span class="kv">La Monumental — 547.82 m, 24% banking<i>ラ・モヌメンタル。547.82m・バンク24%</i></span></div>
+    <div class="key"><span class="kn">T17</span><span class="kv">280 → 100 km/h — the other overtaking spot<i>280→100km/h。もう一つの追い越しポイント</i></span></div>
+    <div class="key"><span class="kn">WIDTH</span><span class="kv">12 m throughout — 15 m on the main straight and T1<i>コース幅は12m。メインストレートとT1のみ15m</i></span></div>
+  </div>
+
+  <div class="abs" id="note">Corner positions derived from GPS data · Official figures for length, corners and laps</div>
+  <div class="abs" id="foot">F-LABO</div>
+  <div class="abs" id="edPanel" style="display:none">
+    <div id="edHead">配置エディタ</div>
+    <div id="edBody">
+      <div class="edRow"><span>番号サイズ</span>
+        <input id="edSize" type="range" min="10" max="34" step="0.5" value="16">
+        <b id="edSizeV">16</b></div>
+      <div class="edRow"><span>コースからの距離</span>
+        <input id="edOff" type="range" min="10" max="70" step="1" value="25">
+        <b id="edOffV">25</b></div>
+      <div class="edHint">丸をドラッグで個別に移動／Rでその番号をリセット</div>
+      <div id="edBtns"><button id="edCopy">JSONをコピー</button><button id="edLoad">読み込み</button></div>
+      <textarea id="edJson" readonly></textarea>
+    </div>
+  </div>
+  <div class="abs" id="flag2"><i></i><i></i><i></i></div>
+</div></div>
+<script>
+var D={"pts": [[71.82, 163.21], [105.71, 79.4], [105.79, 73.17], [89.04, 61.71], [87.71, 57.74], [93.08, 44.14], [99.74, 28.59], [108.23, 16.6], [124.35, 5.2], [141.66, 0.77], [270.86, 0.89], [339.23, 0.0], [364.44, 2.64], [381.18, 5.12], [390.89, 7.38], [419.55, 16.27], [447.82, 29.8], [467.1, 43.22], [486.81, 59.34], [502.3, 79.43], [510.09, 94.65], [512.43, 100.29], [515.89, 102.45], [521.05, 99.79], [526.69, 98.46], [530.63, 101.64], [533.0, 107.25], [536.89, 112.11], [547.44, 117.32], [568.89, 123.46], [584.13, 126.76], [598.38, 126.64], [609.25, 125.83], [619.82, 128.3], [656.04, 140.2], [670.37, 143.26], [679.34, 141.6], [683.48, 143.85], [684.19, 150.52], [685.28, 162.27], [689.64, 170.88], [696.6, 175.23], [706.75, 177.77], [737.45, 179.62], [744.4, 182.58], [787.99, 209.16], [804.16, 220.97], [808.14, 230.39], [809.75, 246.6], [812.1, 265.03], [818.61, 275.7], [830.23, 282.58], [837.97, 285.38], [883.37, 292.98], [896.25, 298.94], [907.85, 307.57], [915.54, 319.64], [920.0, 333.5], [918.5, 349.19], [912.39, 363.37], [902.96, 376.86], [887.46, 386.18], [867.49, 392.04], [849.09, 391.61], [832.01, 384.07], [818.43, 374.21], [806.94, 359.43], [797.76, 342.24], [793.44, 333.66], [767.86, 260.57], [749.21, 220.55], [744.82, 215.39], [736.2, 212.09], [722.54, 215.67], [683.68, 232.19], [665.74, 237.61], [653.76, 237.39], [643.26, 234.3], [598.8, 206.52], [589.17, 202.54], [576.01, 200.92], [561.1, 201.3], [548.23, 203.61], [535.6, 209.92], [524.18, 219.41], [489.8, 274.42], [488.13, 286.48], [487.55, 299.61], [485.84, 305.15], [479.42, 307.03], [447.72, 307.98], [403.33, 306.18], [392.78, 304.76], [382.85, 305.16], [371.93, 310.45], [365.17, 317.96], [349.18, 352.96], [339.26, 368.23], [324.03, 380.52], [307.16, 384.52], [294.57, 383.58], [183.19, 338.87], [169.79, 332.93], [162.41, 331.45], [157.61, 337.43], [158.7, 351.27], [156.62, 357.9], [137.38, 399.18], [131.48, 400.34], [101.65, 392.1], [63.71, 379.47], [15.27, 359.55], [3.35, 353.15], [0.0, 342.41], [3.82, 331.3], [71.82, 163.21]], "frc": [0.0, 0.03496, 0.03736, 0.04521, 0.04683, 0.05248, 0.05902, 0.0647, 0.07234, 0.07925, 0.1292, 0.15564, 0.16544, 0.17199, 0.17584, 0.18744, 0.19956, 0.20864, 0.21849, 0.2283, 0.23491, 0.23727, 0.23885, 0.24109, 0.24333, 0.24529, 0.24765, 0.25005, 0.2546, 0.26323, 0.26926, 0.27477, 0.27898, 0.28318, 0.29792, 0.30358, 0.30711, 0.30894, 0.31153, 0.31609, 0.31982, 0.323, 0.32704, 0.33894, 0.34186, 0.3616, 0.36934, 0.37329, 0.37959, 0.38677, 0.39161, 0.39683, 0.40001, 0.41781, 0.4233, 0.42889, 0.43442, 0.44005, 0.44615, 0.45212, 0.45848, 0.46547, 0.47352, 0.48064, 0.48786, 0.49434, 0.50158, 0.50912, 0.51283, 0.54277, 0.55984, 0.56246, 0.56603, 0.57149, 0.58782, 0.59507, 0.5997, 0.60393, 0.6242, 0.62823, 0.63336, 0.63913, 0.64418, 0.64964, 0.65538, 0.68046, 0.68517, 0.69025, 0.69249, 0.69508, 0.70734, 0.72452, 0.72864, 0.73248, 0.73717, 0.74108, 0.75595, 0.76299, 0.77056, 0.77726, 0.78215, 0.82855, 0.83422, 0.83713, 0.8401, 0.84546, 0.84815, 0.86576, 0.86809, 0.88005, 0.89551, 0.91577, 0.921, 0.92535, 0.92989, 1.0], "lap_km": 5.416}, C={"START": 0.00441, "CORNERS": [{"f": 0.0368, "name": ""}, {"f": 0.0639, "name": ""}, {"f": 0.2404, "name": "HORTALEZA"}, {"f": 0.3019, "name": ""}, {"f": 0.3152, "name": ""}, {"f": 0.3343, "name": "SUBIDA DE LAS CARCAVAS"}, {"f": 0.3652, "name": "SUBIDA DE LAS CARCAVAS"}, {"f": 0.3847, "name": "EL BUNKER"}, {"f": 0.4189, "name": ""}, {"f": 0.4418, "name": ""}, {"f": 0.4576, "name": "LA CHICANE"}, {"f": 0.476, "name": "LA MONUMENTAL"}, {"f": 0.5594, "name": ""}, {"f": 0.5952, "name": "LAS ENLAZADAS DE VALDEBEBAS"}, {"f": 0.651, "name": "LAS ENLAZADAS DE VALDEBEBAS"}, {"f": 0.676, "name": "LAS ENLAZADAS DE VALDEBEBAS"}, {"f": 0.6881, "name": ""}, {"f": 0.7347, "name": "NORTE"}, {"f": 0.7687, "name": ""}, {"f": 0.8374, "name": ""}, {"f": 0.8623, "name": ""}, {"f": 0.9189, "name": "EL PARQUE"}]};
+var START=C.START, CORNERS=C.CORNERS, pts=D.pts, frc=D.frc;
+var ROAD_W=13;
+var NS="http://www.w3.org/2000/svg";
+function el(n,a,t){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);
+  if(t!==undefined)e.textContent=t;return e;}
+function clamp(v,a,b){return v<a?a:v>b?b:v}
+
+function xyRaw(f){
+  f=((f%1)+1)%1;
+  for(var i=0;i<frc.length-1;i++){
+    if(f>=frc[i]&&f<=frc[i+1]){
+      var t=(frc[i+1]-frc[i])?(f-frc[i])/(frc[i+1]-frc[i]):0;
+      return [pts[i][0]+(pts[i+1][0]-pts[i][0])*t, pts[i][1]+(pts[i+1][1]-pts[i][1])*t];
+    }
+  }
+  var a=pts[pts.length-1],b=pts[0];
+  var t2=(f-frc[frc.length-1])/(1-frc[frc.length-1]);
+  return [a[0]+(b[0]-a[0])*t2, a[1]+(b[1]-a[1])*t2];
+}
+function xyAt(f){ return xyRaw(((f+START)%1+1)%1); }
+function dirAt(f){ var a=xyAt(f+0.004),b=xyAt(f-0.004); return [a[0]-b[0],a[1]-b[1]]; }
+function normAt(f){ var d=dirAt(f),L=Math.hypot(-d[1],d[0])||1; return [-d[1]/L,d[0]/L]; }
+function seg(f0,f1,N){
+  if(f1<=f0) return "";
+  N=N||300; var o=[];
+  for(var i=0;i<=N;i++) o.push(xyAt(f0+(f1-f0)*i/N));
+  return "M"+o.map(function(p){return p[0].toFixed(1)+" "+p[1].toFixed(1)}).join("L");
+}
+
+(function(){
+  var xs=pts.map(function(p){return p[0]}), ys=pts.map(function(p){return p[1]});
+  var m=22;
+  var bx0=Math.min.apply(null,xs)-m, by0=Math.min.apply(null,ys)-m;
+  var bw=Math.max.apply(null,xs)-Math.min.apply(null,xs)+m*2;
+  var bh=Math.max.apply(null,ys)-Math.min.apply(null,ys)+m*2;
+  var AR=1068/474;                       /* コンテナの縦横比 */
+  var w=bw, h=bh;
+  if(bw/bh > AR) h = bw/AR; else w = bh*AR;
+  var x0=bx0-(w-bw)/2, y0=by0-(h-bh)/2;
+  document.getElementById("map").setAttribute("viewBox",x0+" "+y0+" "+w+" "+h);
+})();
+
+var FULL=seg(0,0.9999,500);
+document.getElementById("edge").setAttribute("d",FULL);
+document.getElementById("edge").setAttribute("stroke-width",ROAD_W+3);
+document.getElementById("fillp").setAttribute("d",FULL);
+document.getElementById("fillp").setAttribute("stroke-width",ROAD_W);
+document.getElementById("prog").setAttribute("stroke-width",ROAD_W-3);
+
+/* ---- コーナー番号（ドラッグで配置調整できる） ---- */
+var MARK = {size:25, off:25, pos:{"0":[72.5,2.7],"1":[-51,64.5],"2":[-453.9,-96.8],"3":[-303.5,-153.1],"4":[-223,-32.2],"5":[-182.6,-80.6],"6":[-198.8,-115.5],"7":[-120.9,-131.6],"8":[-247.1,-91.3],"9":[-96.8,-126.3],"10":[-69.8,-80.5],"11":[83.3,-21.5],"12":[-26.9,61.7],"13":[-16.1,56.4],"14":[-2.7,-67.2],"15":[16.1,8.1],"16":[-8,16.1],"17":[-8.1,-13.4],"18":[-8.1,10.8],"19":[2.7,-40.3],"20":[10.7,5.4],"21":[5.4,40.3]}};
+if(window.__MARK__) MARK = Object.assign(MARK, window.__MARK__);
+
+var markG=document.getElementById("marks");
+var cx0=0, cy0=0;
+pts.forEach(function(q){cx0+=q[0];cy0+=q[1];});
+cx0/=pts.length; cy0/=pts.length;
+
+function basePos(i){
+  var c=CORNERS[i], p=xyAt(c.f), n=normAt(c.f);
+  var sgn = ((p[0]-cx0)*n[0]+(p[1]-cy0)*n[1]) >= 0 ? 1 : -1;
+  return [p[0]+n[0]*MARK.off*sgn, p[1]+n[1]*MARK.off*sgn];
+}
+function markPos(i){
+  var b=basePos(i), d=MARK.pos[i]||[0,0];
+  return [b[0]+d[0], b[1]+d[1]];
+}
+function drawMarks(){
+  markG.innerHTML="";
+  CORNERS.forEach(function(c,i){
+    var q=markPos(i);
+    var g=el("g",{"class":"cmark","data-i":i,
+      transform:"translate("+q[0].toFixed(1)+" "+q[1].toFixed(1)+")"});
+    g.appendChild(el("circle",{cx:0,cy:0,r:MARK.size*0.86,
+      fill:"#0B1428",stroke:"#5E76A0","stroke-width":2}));
+    g.appendChild(el("text",{x:0,y:0,fill:"#E6EEF9","font-size":MARK.size,
+      "font-weight":800,"text-anchor":"middle","dominant-baseline":"central"},
+      String(i+1)));
+    markG.appendChild(g);
+  });
+}
+drawMarks();
+
+(function(){
+  var p=xyAt(0),n=normAt(0);
+  document.getElementById("sfg").appendChild(el("line",{
+    x1:(p[0]-n[0]*7).toFixed(1),y1:(p[1]-n[1]*7).toFixed(1),
+    x2:(p[0]+n[0]*7).toFixed(1),y2:(p[1]+n[1]*7).toFixed(1),
+    stroke:"#FFFFFF","stroke-width":3.5}));
+})();
+
+document.getElementById("statWrap").innerHTML=
+ '<div class="stat"><span class="k">LAP LENGTH</span><span class="v">5.416<em>km</em></span></div>'+
+ '<div class="stat"><span class="k">CORNERS</span><span class="v">22</span></div>'+
+ '<div class="stat"><span class="k">RACE</span><span class="v">57<em>laps · 308.524 km</em></span></div>'+
+ '<div class="stat"><span class="k">LA MONUMENTAL</span><span class="v">24<em>% banking</em></span></div>';
+
+var car=document.getElementById("car"), prog=document.getElementById("prog");
+var cnrNum=document.getElementById("cnrNum"), cnrName=document.getElementById("cnrName");
+var bar=document.getElementById("bar");
+
+window.TOTAL_MS=22000;
+window.seek=function(p){
+  p=clamp(p,0,1);
+  prog.setAttribute("d", seg(0,p,400));
+  var xy=xyAt(p);
+  car.setAttribute("cx",xy[0].toFixed(1)); car.setAttribute("cy",xy[1].toFixed(1));
+  bar.style.width=(p*100).toFixed(2)+"%";
+
+  var best=-1, bd=0.016;
+  for(var i=0;i<CORNERS.length;i++){
+    var dd=Math.abs(CORNERS[i].f-p); dd=Math.min(dd,1-dd);
+    if(dd<bd){bd=dd;best=i;}
+  }
+  if(p<0.020||p>0.986){ cnrNum.textContent="S/F"; cnrName.textContent="START / FINISH"; }
+  else if(best>=0){
+    cnrNum.textContent="T"+("0"+(best+1)).slice(-2);
+    cnrName.textContent=CORNERS[best].name||"";
+  } else { cnrNum.textContent=""; cnrName.textContent=""; }
+};
+
+/* ---- 配置エディタ（Eキーで開閉） ---- */
+(function(){
+  var panel=document.getElementById("edPanel");
+  var svg=document.getElementById("map");
+  var dragging=null, hoverI=-1;
+  function dump(){
+    document.getElementById("edJson").value =
+      JSON.stringify({size:MARK.size, off:MARK.off, pos:MARK.pos});
+  }
+  function toLocal(ev){
+    var pt=svg.createSVGPoint(); pt.x=ev.clientX; pt.y=ev.clientY;
+    return pt.matrixTransform(svg.getScreenCTM().inverse());
+  }
+  document.addEventListener("keydown",function(e){
+    if(e.key==="e"||e.key==="E"){
+      panel.style.display = panel.style.display==="none" ? "block" : "none";
+      dump();
+    }
+    if((e.key==="r"||e.key==="R") && hoverI>=0){
+      delete MARK.pos[hoverI]; drawMarks(); dump();
+    }
+  });
+  markG.addEventListener("mousedown",function(ev){
+    var g=ev.target.closest(".cmark"); if(!g) return;
+    var i=+g.dataset.i, l=toLocal(ev), b=markPos(i);
+    dragging={i:i, ox:l.x-b[0], oy:l.y-b[1]};
+    ev.preventDefault();
+  });
+  markG.addEventListener("mouseover",function(ev){
+    var g=ev.target.closest(".cmark"); hoverI = g? +g.dataset.i : -1;
+  });
+  window.addEventListener("mousemove",function(ev){
+    if(!dragging) return;
+    var l=toLocal(ev), b=basePos(dragging.i);
+    MARK.pos[dragging.i]=[+(l.x-dragging.ox-b[0]).toFixed(1),
+                          +(l.y-dragging.oy-b[1]).toFixed(1)];
+    drawMarks(); dump();
+  });
+  window.addEventListener("mouseup",function(){ dragging=null; });
+
+  document.getElementById("edSize").addEventListener("input",function(){
+    MARK.size=+this.value; document.getElementById("edSizeV").textContent=this.value;
+    drawMarks(); dump();
+  });
+  document.getElementById("edOff").addEventListener("input",function(){
+    MARK.off=+this.value; document.getElementById("edOffV").textContent=this.value;
+    drawMarks(); dump();
+  });
+  document.getElementById("edCopy").addEventListener("click",function(){
+    var t=document.getElementById("edJson"); t.select();
+    navigator.clipboard.writeText(t.value);
+    this.textContent="コピーしました"; var b=this;
+    setTimeout(function(){b.textContent="JSONをコピー"},1200);
+  });
+  document.getElementById("edLoad").addEventListener("click",function(){
+    var v=prompt("JSONを貼り付け"); if(!v) return;
+    try{ var o=JSON.parse(v);
+      MARK.size=o.size||MARK.size; MARK.off=o.off||MARK.off; MARK.pos=o.pos||{};
+      document.getElementById("edSize").value=MARK.size;
+      document.getElementById("edOff").value=MARK.off;
+      document.getElementById("edSizeV").textContent=MARK.size;
+      document.getElementById("edOffV").textContent=MARK.off;
+      drawMarks(); dump();
+    }catch(err){ alert("読み取れませんでした"); }
+  });
+  dump();
+})();
+
+var fit=document.getElementById("fit");
+function fitToWindow(){
+  // Web埋め込み(iframe)版: 横だけでなく縦も中央寄せする。
+  // 元の動画書き出し版は 1080x1920 のビューポートに丁度収まる前提で translateX のみだったが、
+  // サーキット図鑑の iframe は横長（既定 520px 高）で上下に余りが出るため、
+  // monza 等の既存埋め込みと同じ「中央に寄せて縮小表示」に揃える。
+  var k=Math.min(window.innerWidth/1080,window.innerHeight/1920,1);
+  var tx=Math.max(0,(window.innerWidth-1080*k)/2);
+  var ty=Math.max(0,(window.innerHeight-1920*k)/2);
+  fit.style.transform="translate("+tx+"px,"+ty+"px) scale("+k+")";
+}
+if(!window.__CAPTURE__){fitToWindow();window.addEventListener("resize",fitToWindow);}
+window.seek(0);
+if(!window.__CAPTURE__){
+  var t0=null;
+  (function loop(ts){ if(t0===null)t0=ts;
+    window.seek(((ts-t0)%window.TOTAL_MS)/window.TOTAL_MS); requestAnimationFrame(loop); })(performance.now());
+}
+</script></body></html>
