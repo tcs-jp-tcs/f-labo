@@ -160,6 +160,8 @@ export async function getReport(): Promise<Report> {
       .from("insights")
       .select("id, written_on, section, headline, body, evidence")
       .eq("active", true)
+      // 新しい所見が上。同じ日に書いたものの中では display_order の昇順を保つ
+      .order("written_on", { ascending: false })
       .order("display_order", { ascending: true }),
   ]);
 
