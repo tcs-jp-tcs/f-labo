@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Embed } from "@/lib/data";
 
 /**
@@ -9,7 +9,7 @@ import type { Embed } from "@/lib/data";
  * 旧 TikTokEmbed.tsx のハードコードを廃止し、embeds テーブルを単一ソースにする。
  *
  * - TikTok:    blockquote.tiktok-embed + tiktok/embed.js（data-video-id は URL から抽出）
- * - Instagram: blockquote.instagram-media + instagram/embed.js（data-instgrm-permalink=URL）
+ * - Instagram: iframe（/embed/ を直接埋める。instagram/embed.js は使わない。理由は InstagramEmbed 参照）
  * - YouTube:   iframe（外部スクリプト不要。URL から video-id を抽出）
  * TikTok/Instagram は縦型(9:16)なので max-w 330px、YouTube は横型(16:9)なので max-w 720px。
  * いずれも中央寄せ。SPA 遷移での再マウントにも追従させる。
@@ -48,42 +48,89 @@ function youtubeVideoId(url: string): string {
   return byQuery ? byQuery[1] : "";
 }
 
-type InstagramEmbeds = { Embeds?: { process: () => void } };
+/**
+ * Instagram のパーマリンク（/reel/{code}/ や /p/{code}/）を埋め込み用 URL に変換。
+ * クエリ・ハッシュを落として末尾に embed/ を付ける（embed.js と同じ組み立て）。
+ */
+function instagramEmbedSrc(url: string, width: number): string {
+  const base = url.replace(/^(.*?)\/?(\?.*|#.*|$)/, "$1/");
+  // SSR とクライアントで同じ URL になるよう window 依存の値は入れない
+  // （embed.js が付ける rd= は計測用で、表示には不要）
+  return `${base}embed/?cr=1&v=14&wp=${width}`;
+}
+
+/** wp=330 で埋め込んだときの実測値。MEASURE が届くまでの初期高さに使う */
+const INSTAGRAM_EMBED_WIDTH = 330;
+const INSTAGRAM_INITIAL_HEIGHT = 618;
+
+const INSTAGRAM_ORIGIN = /^https?:\/\/(www\.)?instagram\.com$/;
+
+/**
+ * Instagram 埋め込み。公式の embed.js（blockquote → iframe 置換）は使わない。
+ *
+ * embed.js は iframe 内から届く postMessage を順に処理して高さを決めるが、
+ * MOUNTED の処理で「元の blockquote の clientHeight」を高さとして書き戻す。
+ * MEASURE（正しい高さ）が MOUNTED より先に届くと、その値がフォールバック用
+ * blockquote の高さ（数十 px）で上書きされ、iframe が潰れてヘッダー部分しか
+ * 見えなくなる（＝プロフィールカードだけが出る状態）。到着順はネットワーク次第で
+ * 揺れるため、環境によって出たり出なかったりする。
+ *
+ * ここでは iframe を自前で置き、MEASURE の height だけを採用して追従させる。
+ */
+function InstagramEmbed({ url }: { url: string }) {
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [height, setHeight] = useState(INSTAGRAM_INITIAL_HEIGHT);
+  const src = instagramEmbedSrc(url, INSTAGRAM_EMBED_WIDTH);
+
+  useEffect(() => {
+    const onMessage = (e: MessageEvent) => {
+      if (!INSTAGRAM_ORIGIN.test(e.origin)) return;
+      if (e.source !== iframeRef.current?.contentWindow) return;
+      try {
+        const payload = JSON.parse(String(e.data));
+        if (
+          payload?.type === "MEASURE" &&
+          typeof payload?.details?.height === "number" &&
+          payload.details.height > 0
+        ) {
+          setHeight(payload.details.height);
+        }
+      } catch {
+        // Instagram 以外の形式のメッセージは無視
+      }
+    };
+    window.addEventListener("message", onMessage);
+    return () => window.removeEventListener("message", onMessage);
+  }, []);
+
+  return (
+    <iframe
+      ref={iframeRef}
+      src={src}
+      title="@flabo.jp の Instagram 投稿"
+      className="block w-full rounded-[3px] border border-white/10 bg-white"
+      style={{ height, maxWidth: INSTAGRAM_EMBED_WIDTH }}
+      scrolling="no"
+      allowFullScreen
+      allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+      referrerPolicy="strict-origin-when-cross-origin"
+    />
+  );
+}
 
 export default function EmbedList({ embeds }: { embeds: Embed[] }) {
   const hasTikTok = embeds.some((e) => e.platform === "tiktok");
-  const hasInstagram = embeds.some((e) => e.platform === "instagram");
 
   useEffect(() => {
-    const scripts: HTMLScriptElement[] = [];
-
-    if (hasTikTok) {
-      const s = document.createElement("script");
-      s.async = true;
-      s.src = "https://www.tiktok.com/embed.js";
-      document.body.appendChild(s);
-      scripts.push(s);
-    }
-
-    if (hasInstagram) {
-      const instgrm = (window as unknown as { instgrm?: InstagramEmbeds })
-        .instgrm;
-      if (instgrm?.Embeds) {
-        // SPA 再マウント時：スクリプト既読込なら未処理 blockquote を処理し直す
-        instgrm.Embeds.process();
-      } else {
-        const s = document.createElement("script");
-        s.async = true;
-        s.src = "https://www.instagram.com/embed.js";
-        document.body.appendChild(s);
-        scripts.push(s);
-      }
-    }
-
+    if (!hasTikTok) return;
+    const s = document.createElement("script");
+    s.async = true;
+    s.src = "https://www.tiktok.com/embed.js";
+    document.body.appendChild(s);
     return () => {
-      scripts.forEach((s) => s.remove());
+      s.remove();
     };
-  }, [hasTikTok, hasInstagram]);
+  }, [hasTikTok]);
 
   if (embeds.length === 0) return null;
 
@@ -119,30 +166,7 @@ export default function EmbedList({ embeds }: { embeds: Embed[] }) {
             </blockquote>
           )}
 
-          {e.platform === "instagram" && (
-            <blockquote
-              className="instagram-media"
-              data-instgrm-permalink={e.url}
-              data-instgrm-version="14"
-              style={{
-                maxWidth: 330,
-                minWidth: 280,
-                width: "100%",
-                margin: "0 auto",
-                background: "#000",
-              }}
-            >
-              {/* embed.js 読み込み前／失敗時のフォールバック */}
-              <a
-                href={e.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-flabo-grey hover:text-white text-sm transition-colors"
-              >
-                @flabo.jp の Instagram を見る
-              </a>
-            </blockquote>
-          )}
+          {e.platform === "instagram" && <InstagramEmbed url={e.url} />}
 
           {e.platform === "youtube" &&
             (youtubeVideoId(e.url) ? (
