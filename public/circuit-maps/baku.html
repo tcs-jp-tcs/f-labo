@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8"><title>Baku City Circuit</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;background:#0B1428;overflow:hidden}
+body{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;
+     font-variant-numeric:tabular-nums}
+#fit{position:absolute;top:0;left:0;transform-origin:top left}
+#stage{position:relative;width:1080px;height:1920px;background:#0B1428}
+.abs{position:absolute}
+#sectorBadge{padding:16px 34px;border-radius:10px;font-weight:800;letter-spacing:.14em;color:#fff;
+  background:#2C7BE5;display:inline-block;white-space:nowrap}
+#cornerBox .big{font-weight:800;color:#fff;line-height:1;white-space:nowrap}
+#cornerBox .sm{font-weight:700;color:#9DB2D0;margin-top:8px;letter-spacing:.06em;white-space:nowrap}
+svg{width:100%;overflow:visible}
+.cnum{fill:#0B1428;stroke:#8FA6C8;stroke-width:3}
+.clead{opacity:.5}
+.cnumT{fill:#E6EEF9;pointer-events:none;font-size:30px;font-weight:800;text-anchor:middle;dominant-baseline:central}
+.axl{fill:#6C82A8;font-size:24px;font-weight:700}
+.grid{stroke:#22314F;stroke-width:1.5}
+#edPanel{position:absolute;right:16px;top:16px;width:320px;background:rgba(8,16,32,.96);
+  border:1px solid #2E4670;border-radius:12px;padding:14px;z-index:50;font-size:13px;color:#C7D6EC;
+  font-family:"Helvetica Neue",Helvetica,Arial,sans-serif}
+#edHead{font-size:15px;font-weight:800;letter-spacing:.08em;color:#9DB2D0;margin-bottom:10px}
+.edRow{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.edRow span{width:120px;flex:none;color:#7A90AE}
+.edRow input{flex:1;accent-color:#E8323C}
+.edHint{color:#6C82A8;line-height:1.6;margin:6px 0 10px}
+#edBtns{display:flex;gap:8px;margin-bottom:8px}
+#edBtns button{flex:1;background:#22355A;color:#DCE7F7;border:1px solid #2E4670;
+  border-radius:7px;padding:6px;font-size:12px;font-weight:700;cursor:pointer}
+#edJson{width:100%;height:90px;background:#070E1C;color:#8FE3A8;border:1px solid #22314F;
+  border-radius:7px;padding:6px;font-family:ui-monospace,Menlo,monospace;font-size:10.5px}
+.cmark{cursor:grab}
+.txt{font-weight:800;letter-spacing:.14em;color:#4A5E80;white-space:nowrap}
+
+</style></head>
+<body><div id="fit"><div id="stage">
+
+  <div class="abs" id="sectorBadge" data-k="sector">SECTOR 1</div>
+  <div class="abs" id="cornerBox" data-k="corner"><div class="big" id="lblBig">S/F</div><div class="sm" id="lblSm">Start / Finish</div></div>
+
+  <div class="abs" id="mapWrap" data-k="map">
+    <svg id="map" viewBox="-40 -30 1120 800">
+      <path id="base" fill="none" stroke="#1B2A47" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      <path id="p1" fill="none" stroke="#2C7BE5" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      <path id="p2" fill="none" stroke="#E8323C" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      <path id="p3" fill="none" stroke="#28A745" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      <g id="corners"></g><g id="sf"></g>
+      <circle id="car" r="15" fill="#FFFFFF" stroke="#0B1428" stroke-width="4"/>
+    </svg>
+  </div>
+
+  <div class="abs" id="elevWrap" data-k="elev">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:24px">
+      <div style="font-size:38px;font-weight:800;letter-spacing:.22em;color:#9DB2D0">ELEVATION &middot; ONE LAP</div>
+      <div style="font-size:36px;font-weight:800;color:#4DA3FF;white-space:nowrap" id="elevVal"></div>
+    </div>
+    <svg id="elev" viewBox="0 0 960 300" preserveAspectRatio="none" style="height:300px"></svg>
+  </div>
+
+  <div class="abs txt" id="titleTxt" data-k="title"></div>
+  <div class="abs txt" id="footTxt" data-k="foot"></div>
+
+  <div id="edPanel" style="display:none">
+    <div id="edHead">配置エディタ</div>
+    <div id="edBody">
+      <div class="edRow"><span>番号サイズ</span>
+        <input id="edSize" type="range" min="14" max="48" step="1" value="30"><b id="edSizeV">30</b></div>
+      <div class="edRow"><span>コースからの距離</span>
+        <input id="edOff" type="range" min="20" max="160" step="1" value="52"><b id="edOffV">52</b></div>
+      <div class="edRow"><span>引き出し線</span>
+        <input id="edLead" type="range" min="0" max="100" step="5" value="50"><b id="edLeadV">50</b></div>
+      <div class="edHint">丸をドラッグで個別に移動／Rでその番号をリセット</div>
+      <div id="edBtns"><button id="edCopy">JSONをコピー</button><button id="edLoad">読み込み</button></div>
+      <textarea id="edJson" readonly></textarea>
+    </div>
+  </div>
+</div></div>
+
+
+<script>
+var D={"pts":[[863.75,248.31],[879.01,242.89],[894.25,237.41],[909.5,231.93],[924.77,226.55],[939.94,220.86],[955.32,215.8],[970.44,210.11],[980.0,197.68],[977.56,181.94],[971.78,166.81],[966.29,151.57],[960.43,136.47],[954.63,121.35],[948.86,106.21],[943.09,91.07],[937.26,75.96],[926.57,65.49],[910.85,69.05],[895.46,74.11],[879.97,78.87],[864.53,83.74],[849.07,88.59],[833.63,93.48],[818.19,98.38],[802.74,103.25],[787.37,108.38],[772.13,113.86],[756.96,119.54],[741.77,125.16],[726.59,130.81],[711.4,136.43],[696.2,142.04],[681.02,147.7],[665.88,153.45],[650.75,159.25],[635.63,165.06],[620.5,170.83],[605.38,176.66],[590.27,182.49],[576.06,190.01],[575.82,205.02],[581.86,220.03],[586.2,235.64],[591.68,250.87],[597.69,265.91],[601.08,281.63],[590.47,292.51],[575.09,297.58],[559.87,303.11],[544.66,308.67],[529.67,314.79],[515.25,322.18],[500.92,329.73],[486.36,336.83],[473.64,346.66],[472.3,361.07],[471.34,370.12],[461.6,375.62],[449.9,382.1],[436.43,389.06],[423.38,397.55],[409.85,406.42],[395.68,415.89],[380.82,425.31],[365.18,434.33],[347.74,442.84],[328.7,467.6],[327.11,460.76],[322.68,445.24],[318.95,429.48],[315.02,413.77],[311.23,398.02],[304.98,383.55],[290.1,377.23],[274.11,374.67],[261.77,365.65],[258.53,350.43],[242.82,348.16],[226.96,351.25],[211.8,356.93],[196.57,362.44],[181.62,368.67],[166.83,375.27],[151.97,381.73],[137.41,388.81],[123.02,396.26],[108.43,403.29],[95.63,412.97],[87.85,427.09],[82.05,442.21],[76.53,457.44],[70.77,472.58],[65.86,488.0],[62.63,503.83],[61.68,519.99],[61.92,536.18],[62.36,552.37],[62.15,568.56],[60.0,584.61],[60.89,600.4],[74.31,609.19],[88.29,617.38],[102.4,625.33],[116.38,633.51],[130.0,642.28],[143.63,651.02],[157.53,659.34],[171.2,668.01],[185.96,674.51],[200.53,669.95],[209.36,656.43],[217.32,642.33],[225.17,628.16],[233.74,614.42],[243.47,601.48],[254.69,589.83],[267.18,579.53],[279.94,569.55],[292.08,558.84],[303.93,547.81],[316.1,537.14],[324.7,523.49],[330.41,508.35],[334.89,492.78],[340.41,477.6],[354.7,467.95],[366.0,462.23],[377.95,456.98],[389.69,449.75],[401.69,441.71],[414.35,433.99],[427.36,425.64],[440.76,416.88],[454.52,407.73],[473.58,398.69],[493.76,383.3],[502.6,373.86],[517.93,368.62],[533.24,363.32],[548.53,357.98],[563.81,352.59],[579.06,347.14],[594.33,341.73],[609.56,336.21],[624.79,330.7],[640.02,325.18],[655.25,319.66],[670.48,314.14],[685.71,308.63],[700.92,303.06],[716.17,297.58],[731.48,292.3],[746.9,287.35],[762.37,282.53],[777.8,277.62],[793.26,272.76],[808.7,267.89],[824.04,262.67],[839.25,257.09]],"frc":[0.0,0.00626,0.01252,0.01879,0.02505,0.03132,0.03758,0.04382,0.04989,0.05605,0.06231,0.06857,0.07484,0.0811,0.08736,0.09363,0.09989,0.10568,0.11191,0.11817,0.12444,0.1307,0.13697,0.14323,0.14949,0.15576,0.16202,0.16829,0.17455,0.18081,0.18708,0.19334,0.1996,0.20587,0.21213,0.2184,0.22466,0.23092,0.23719,0.24345,0.24967,0.25547,0.26173,0.26799,0.27425,0.28051,0.28673,0.29261,0.29887,0.30513,0.3114,0.31766,0.32392,0.33018,0.33645,0.34267,0.34826,0.35178,0.35611,0.36128,0.36714,0.37316,0.37941,0.38601,0.39281,0.39979,0.4073,0.41937,0.42209,0.42833,0.43459,0.44086,0.44712,0.45322,0.45947,0.46573,0.47164,0.47766,0.48379,0.49004,0.4963,0.50257,0.50883,0.51509,0.52136,0.52762,0.53388,0.54015,0.54635,0.55259,0.55885,0.56511,0.57138,0.57763,0.58388,0.59014,0.5964,0.60266,0.60892,0.61519,0.6213,0.6275,0.63377,0.64003,0.6463,0.65256,0.65882,0.66509,0.67134,0.67758,0.68348,0.68973,0.69599,0.70225,0.70852,0.71478,0.72103,0.72729,0.73355,0.73981,0.74607,0.75233,0.75857,0.76483,0.77109,0.77734,0.78401,0.7889,0.79395,0.79929,0.80487,0.8106,0.81658,0.82277,0.82916,0.83732,0.84713,0.85213,0.8584,0.86466,0.87092,0.87719,0.88345,0.88972,0.89598,0.90224,0.90851,0.91477,0.92103,0.9273,0.93356,0.93983,0.94609,0.95235,0.95862,0.96488,0.97115,0.97741,0.98367,0.98994],"elev":[{"f":0.0,"m":0.1},{"f":0.026,"m":0.2},{"f":0.051,"m":0.1},{"f":0.077,"m":0.7},{"f":0.103,"m":1.5},{"f":0.128,"m":1.7},{"f":0.154,"m":1.6},{"f":0.179,"m":1.3},{"f":0.205,"m":1.6},{"f":0.231,"m":2.2},{"f":0.256,"m":2.0},{"f":0.282,"m":1.3},{"f":0.308,"m":0.7},{"f":0.333,"m":0.7},{"f":0.359,"m":0.6},{"f":0.385,"m":0.9},{"f":0.41,"m":1.0},{"f":0.436,"m":1.8},{"f":0.462,"m":5.7},{"f":0.487,"m":10.3},{"f":0.513,"m":20.1},{"f":0.538,"m":24.5},{"f":0.564,"m":26.4},{"f":0.59,"m":25.4},{"f":0.615,"m":23.2},{"f":0.641,"m":12.8},{"f":0.667,"m":3.3},{"f":0.692,"m":0.7},{"f":0.718,"m":0.5},{"f":0.744,"m":0.6},{"f":0.769,"m":0.9},{"f":0.795,"m":1.0},{"f":0.821,"m":0.9},{"f":0.846,"m":0.6},{"f":0.872,"m":0.4},{"f":0.897,"m":0.8},{"f":0.923,"m":1.4},{"f":0.949,"m":0.9},{"f":0.974,"m":0.3},{"f":1.0,"m":0.0}],"lap_km":6.003,"elev_max":26.4,"elev_min":0.0}, C={"START":0.0,"S1_END":0.3373,"S2_END":0.6737,"ELEV_MAX":30,"GRID_MAX":30,"CORNERS":[{"f":0.048,"name":"","off":52,"side":-1,"_number":1,"mx":1027,"my":227},{"f":0.1036,"name":"","off":52,"side":-1,"_number":2,"mx":959,"my":21},{"f":0.2474,"name":"","off":52,"side":-1,"_number":3,"mx":542,"my":147},{"f":0.2855,"name":"","off":52,"side":-1,"_number":4,"mx":658,"my":268},{"f":0.3412,"name":"","off":52,"side":-1,"_number":5,"mx":480,"my":303},{"f":0.3512,"name":"","off":52,"side":-1,"_number":6,"mx":430,"my":349},{"f":0.4144,"name":"","off":52,"side":-1,"_number":7,"mx":354,"my":399},{"f":0.446,"name":"","off":52,"side":-1,"_number":8,"mx":322,"my":337},{"f":0.4505,"name":"","off":52,"side":-1,"_number":9,"mx":271,"my":417},{"f":0.4573,"name":"","off":52,"side":-1,"_number":10,"mx":250,"my":310},{"f":0.4645,"name":"","off":52,"side":-1,"_number":11,"mx":196,"my":408},{"f":0.474,"name":"","off":52,"side":-1,"_number":12,"mx":166,"my":321},{"f":0.5414,"name":"","off":52,"side":-1,"_number":13,"mx":53,"my":389},{"f":0.5751,"name":"","off":52,"side":-1,"_number":14,"mx":14,"my":496},{"f":0.6149,"name":"","off":52,"side":-1,"_number":15,"mx":13,"my":624},{"f":0.6742,"name":"","off":52,"side":-1,"_number":16,"mx":185,"my":715},{"f":0.7055,"name":"","off":52,"side":-1,"_number":17,"mx":191,"my":579},{"f":0.7441,"name":"","off":52,"side":-1,"_number":18,"mx":320,"my":598},{"f":0.7696,"name":"","off":52,"side":-1,"_number":19,"mx":397,"my":550},{"f":0.826,"name":"","off":52,"side":-1,"_number":20,"mx":477,"my":460}],"LAYOUT":{"sector":{"x":329,"y":401,"size":42},"corner":{"x":28,"y":399,"size":112,"sub":40},"map":{"x":20,"y":560,"w":1040,"h":740},"elev":{"x":28,"y":1367,"w":1040},"title":{"x":40,"y":316,"size":40,"text":"BAKU CITY CIRCUIT · AZERBAIJAN"},"foot":{"x":381,"y":1790,"size":56,"text":"F-LABO"}}};
+var START=C.START,S1_END=C.S1_END,S2_END=C.S2_END,EMAX=C.ELEV_MAX,CORNERS=C.CORNERS,L=C.LAYOUT;
+var GMAX=C.GRID_MAX||EMAX;
+var LAP_MS=20000; window.TOTAL_MS=LAP_MS;
+var DEFAULT_L=JSON.parse(JSON.stringify(L));
+
+var pts=D.pts, frc=D.frc;
+function xyRaw(f){
+  f=((f%1)+1)%1;
+  for(var i=0;i<frc.length-1;i++){
+    if(f>=frc[i]&&f<=frc[i+1]){
+      var t=(frc[i+1]-frc[i])?(f-frc[i])/(frc[i+1]-frc[i]):0;
+      return [pts[i][0]+(pts[i+1][0]-pts[i][0])*t, pts[i][1]+(pts[i+1][1]-pts[i][1])*t];
+    }
+  }
+  var a=pts[pts.length-1],b=pts[0];
+  var t2=(f-frc[frc.length-1])/(1-frc[frc.length-1]);
+  return [a[0]+(b[0]-a[0])*t2, a[1]+(b[1]-a[1])*t2];
+}
+function toRaw(f){ return ((f+START)%1+1)%1; }
+function xyAt(f){ return xyRaw(toRaw(f)); }
+function normAt(f){
+  var a=xyAt(f+0.012), b=xyAt(f-0.012);
+  var nx=-(a[1]-b[1]), ny=(a[0]-b[0]), Ln=Math.hypot(nx,ny)||1;
+  return [nx/Ln,ny/Ln];
+}
+function seg(f0,f1,N){
+  N=N||150; if(f1<=f0) return "";
+  var o=[];
+  for(var i=0;i<=N;i++) o.push(xyAt(f0+(f1-f0)*i/N));
+  return "M"+o.map(function(p){return p[0].toFixed(1)+" "+p[1].toFixed(1)}).join("L");
+}
+function elevRaw(fr){
+  var e=D.elev; fr=((fr%1)+1)%1;
+  if(fr<=e[0].f) return e[0].m;
+  for(var i=0;i<e.length-1;i++){
+    if(fr>=e[i].f&&fr<=e[i+1].f){
+      var t=(fr-e[i].f)/(e[i+1].f-e[i].f);
+      return e[i].m+(e[i+1].m-e[i].m)*t;
+    }
+  }
+  return e[e.length-1].m;
+}
+function lastCorner(p){ var b=-1; for(var i=0;i<CORNERS.length;i++) if(CORNERS[i].f<=p) b=i; return b; }
+function atCorner(p){
+  var b=-1,bd=0.022;
+  for(var i=0;i<CORNERS.length;i++){ var d=Math.abs(CORNERS[i].f-p); d=Math.min(d,1-d); if(d<bd){bd=d;b=i;} }
+  return b;
+}
+var NS="http://www.w3.org/2000/svg";
+function el(n,a){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);return e;}
+
+/* ---- apply layout ---- */
+function applyLayout(){
+  var b=document.getElementById("sectorBadge");
+  b.style.left=L.sector.x+"px"; b.style.top=L.sector.y+"px"; b.style.fontSize=L.sector.size+"px";
+  var c=document.getElementById("cornerBox");
+  c.style.left=L.corner.x+"px"; c.style.top=L.corner.y+"px";
+  document.getElementById("lblBig").style.fontSize=L.corner.size+"px";
+  document.getElementById("lblSm").style.fontSize=L.corner.sub+"px";
+  var m=document.getElementById("mapWrap");
+  m.style.left=L.map.x+"px"; m.style.top=L.map.y+"px"; m.style.width=L.map.w+"px"; m.style.height=(L.map.h||L.map.w)+"px";
+  var ev=document.getElementById("elevWrap");
+  ev.style.left=L.elev.x+"px"; ev.style.top=L.elev.y+"px"; ev.style.width=L.elev.w+"px";
+  var t=document.getElementById("titleTxt");
+  t.textContent=L.title.text; t.style.fontSize=L.title.size+"px";
+  t.style.left=L.title.x+"px"; t.style.top=L.title.y+"px";
+  var f=document.getElementById("footTxt");
+  f.textContent=L.foot.text; f.style.fontSize=L.foot.size+"px";
+  f.style.left=L.foot.x+"px"; f.style.top=L.foot.y+"px";
+  f.style.color="#5E76A0"; f.style.letterSpacing=".20em";
+}
+applyLayout();
+
+/* ---- static map ---- */
+var box=document.getElementById("corners"), markers=[];
+function defaultPos(c){
+  var b=xyAt(c.f), n=normAt(c.f);
+  return [b[0]+n[0]*c.off*c.side, b[1]+n[1]*c.off*c.side];
+}
+CORNERS.forEach(function(c){ if(c.mx===undefined){ var p=defaultPos(c); c.mx=Math.round(p[0]); c.my=Math.round(p[1]); } });
+function drawMap(){
+  document.getElementById("base").setAttribute("d",seg(0,0.9999,300));
+  box.innerHTML=""; markers=[];
+  CORNERS.forEach(function(c,i){
+    var b=xyAt(c.f);
+    var g=el("g",{"class":"cmark","data-ci":i});
+    g.appendChild(el("line",{x1:b[0].toFixed(1),y1:b[1].toFixed(1),
+      x2:c.mx,y2:c.my,stroke:"#4A5E80","stroke-width":2,"class":"clead"}));
+    g.appendChild(el("circle",{cx:c.mx,cy:c.my,r:34,fill:"transparent","class":"chit"}));
+    var ci=el("circle",{cx:c.mx,cy:c.my,r:30,"class":"cnum"});
+    g.appendChild(ci);
+    var tn=el("text",{x:c.mx,y:c.my,"class":"cnumT"});
+    tn.textContent=("0"+(i+1)).slice(-2); g.appendChild(tn);
+    box.appendChild(g);
+    markers.push(ci);
+  });
+  var sfg=document.getElementById("sf"); sfg.innerHTML="";
+  var p=xyAt(0),n=normAt(0);
+  sfg.appendChild(el("line",{x1:(p[0]-n[0]*26).toFixed(1),y1:(p[1]-n[1]*26).toFixed(1),
+    x2:(p[0]+n[0]*26).toFixed(1),y2:(p[1]+n[1]*26).toFixed(1),stroke:"#FFFFFF","stroke-width":8}));
+}
+drawMap();
+
+/* ---- elevation ---- */
+var EW=960,EH=300,PL=76,PR=14,PT=14,PB=44,iw=EW-PL-PR,ih=EH-PT-PB;
+function ex(f){return PL+f*iw} function ey(m){return PT+ih-(m/EMAX)*ih}
+var g="";
+for(var v=0;v<=GMAX;v+=(GMAX>30?10:5)){
+  g+='<line class="grid" x1="'+PL+'" y1="'+ey(v).toFixed(1)+'" x2="'+(EW-PR)+'" y2="'+ey(v).toFixed(1)+'"/>'
+   +'<text class="axl" x="'+(PL-12)+'" y="'+(ey(v)+8).toFixed(1)+'" text-anchor="end">'+v+'m</text>';
+}
+function drawElev(){
+var eline="",N=200;
+for(var i=0;i<=N;i++){var f=i/N; eline+=(i?"L":"M")+ex(f).toFixed(1)+" "+ey(elevRaw(f)).toFixed(1);}
+document.getElementById("elev").innerHTML=
+ '<defs><linearGradient id="eg" x1="0" y1="0" x2="0" y2="1">'+
+ '<stop offset="0%" stop-color="#2C7BE5" stop-opacity=".5"/>'+
+ '<stop offset="100%" stop-color="#2C7BE5" stop-opacity=".04"/></linearGradient>'+
+ '<clipPath id="ec"><rect id="ecr" x="'+PL+'" y="0" width="0" height="'+EH+'"/></clipPath></defs>'+g+
+ '<path id="earea" d="'+eline+'L'+ex(1).toFixed(1)+' '+ey(0).toFixed(1)+'L'+ex(0).toFixed(1)+' '+ey(0).toFixed(1)+'Z" fill="url(#eg)" clip-path="url(#ec)"/>'+
+ '<path d="'+eline+'" fill="none" stroke="#22314F" stroke-width="4" stroke-linejoin="round"/>'+
+ '<path d="'+eline+'" fill="none" stroke="#4DA3FF" stroke-width="4" stroke-linejoin="round" clip-path="url(#ec)"/>'+
+ '<text class="axl" x="'+PL+'" y="'+(EH-12)+'">START</text>'+
+ '<text class="axl" x="'+(EW-PR)+'" y="'+(EH-12)+'" text-anchor="end">FINISH</text>'+
+ '<circle id="edot" r="10" fill="#FFFFFF" stroke="#0B1428" stroke-width="3"/>';
+edot=document.getElementById("edot"); ecr=document.getElementById("ecr");
+}
+var edot,ecr; drawElev();
+document.getElementById("elevVal").textContent=D.lap_km.toFixed(3)+" km  \u00B7  \u25B2"+(D.elev_max-D.elev_min).toFixed(1)+" m";
+
+var car=document.getElementById("car");
+var badge=document.getElementById("sectorBadge");
+var hdBig=document.getElementById("lblBig"),hdSm=document.getElementById("lblSm");
+var SECCOL=["#2C7BE5","#E8323C","#28A745"];
+
+window.seek=function(p){
+  p=p<0?0:p>1?1:p;
+  document.getElementById("p1").setAttribute("d", seg(0, Math.min(p,S1_END), 200));
+  document.getElementById("p2").setAttribute("d", p>S1_END ? seg(S1_END, Math.min(p,S2_END), 200) : "");
+  document.getElementById("p3").setAttribute("d", p>S2_END ? seg(S2_END, p, 200) : "");
+  ecr.setAttribute("width", (p*iw).toFixed(1));
+
+  var xy=xyAt(p);
+  car.setAttribute("cx",xy[0].toFixed(1)); car.setAttribute("cy",xy[1].toFixed(1));
+  edot.setAttribute("cx",ex(p).toFixed(1)); edot.setAttribute("cy",ey(elevRaw(p)).toFixed(1));
+
+  var s=p<S1_END?0:p<S2_END?1:2;
+  badge.textContent="SECTOR "+(s+1); badge.style.background=SECCOL[s];
+
+  var nearSF=(p<0.030)||(p>0.970), shown=lastCorner(p);
+  if(nearSF||shown<0){ hdBig.textContent="S/F"; hdSm.textContent="Start / Finish"; }
+  else { hdBig.textContent="T"+("0"+(shown+1)).slice(-2); hdSm.textContent=CORNERS[shown].name||""; }
+
+  var a=atCorner(p);
+  for(var i=0;i<CORNERS.length;i++){
+    markers[i].setAttribute("stroke", i===a?"#FFFFFF":"#8FA6C8");
+    markers[i].setAttribute("stroke-width", i===a?6:3);
+    markers[i].setAttribute("fill", i===a?"#1E3A63":"#0B1428");
+  }
+};
+
+var fit=document.getElementById("fit"), scale=1;
+function fitToWindow(){
+  scale=Math.min(window.innerWidth/1080,window.innerHeight/1920,1);
+  fit.style.transform="translateX("+Math.max(0,(window.innerWidth-1080*scale)/2)+"px) scale("+scale+")";
+}
+if(!window.__CAPTURE__){fitToWindow();window.addEventListener("resize",fitToWindow);}
+window.seek(0);
+
+/* ---- 配置エディタ（Eキーで開閉） ---- */
+(function(){
+  var panel=document.getElementById("edPanel");
+  var svg=document.getElementById("map");
+  var dragging=null, hoverI=-1;
+  var MARK={size:30, off:52, lead:50};
+  function dump(){
+    var o={size:MARK.size, off:MARK.off, lead:MARK.lead, pos:{}};
+    CORNERS.forEach(function(c,i){ o.pos[i]=[c.mx,c.my]; });
+    document.getElementById("edJson").value=JSON.stringify(o);
+  }
+  function toLocal(ev){
+    var pt=svg.createSVGPoint(); pt.x=ev.clientX; pt.y=ev.clientY;
+    return pt.matrixTransform(svg.getScreenCTM().inverse());
+  }
+  function restyle(){
+    document.querySelectorAll(".cnum").forEach(function(e){ e.setAttribute("r", MARK.size); });
+    document.querySelectorAll(".cnumT").forEach(function(e){ e.setAttribute("font-size", MARK.size*1.25); });
+    document.querySelectorAll(".chit").forEach(function(e){ e.setAttribute("r", MARK.size*1.4); });
+    document.querySelectorAll(".clead").forEach(function(e){ e.setAttribute("opacity", MARK.lead/100); });
+  }
+  document.addEventListener("keydown",function(e){
+    if(e.key==="e"||e.key==="E"){
+      panel.style.display = panel.style.display==="none" ? "block" : "none"; dump();
+    }
+    if((e.key==="r"||e.key==="R") && hoverI>=0){
+      var c=CORNERS[hoverI], p=defaultPos({f:c.f, off:MARK.off, side:c.side});
+      c.mx=Math.round(p[0]); c.my=Math.round(p[1]); drawMap(); restyle(); dump();
+    }
+  });
+  box.addEventListener("mousedown",function(ev){
+    var g=ev.target.closest(".cmark"); if(!g) return;
+    var i=+g.dataset.ci, l=toLocal(ev);
+    dragging={i:i, ox:l.x-CORNERS[i].mx, oy:l.y-CORNERS[i].my};
+    ev.preventDefault();
+  });
+  box.addEventListener("mouseover",function(ev){
+    var g=ev.target.closest(".cmark"); hoverI = g? +g.dataset.ci : -1;
+  });
+  window.addEventListener("mousemove",function(ev){
+    if(!dragging) return;
+    var l=toLocal(ev);
+    CORNERS[dragging.i].mx=Math.round(l.x-dragging.ox);
+    CORNERS[dragging.i].my=Math.round(l.y-dragging.oy);
+    drawMap(); restyle(); dump();
+  });
+  window.addEventListener("mouseup",function(){ dragging=null; });
+  document.getElementById("edSize").addEventListener("input",function(){
+    MARK.size=+this.value; document.getElementById("edSizeV").textContent=this.value; restyle(); dump(); });
+  document.getElementById("edOff").addEventListener("input",function(){
+    MARK.off=+this.value; document.getElementById("edOffV").textContent=this.value; dump(); });
+  document.getElementById("edLead").addEventListener("input",function(){
+    MARK.lead=+this.value; document.getElementById("edLeadV").textContent=this.value; restyle(); dump(); });
+  document.getElementById("edCopy").addEventListener("click",function(){
+    var t=document.getElementById("edJson"); t.select();
+    navigator.clipboard.writeText(t.value);
+    this.textContent="コピーしました"; var b=this;
+    setTimeout(function(){b.textContent="JSONをコピー"},1200);
+  });
+  document.getElementById("edLoad").addEventListener("click",function(){
+    var v=prompt("JSONを貼り付け"); if(!v) return;
+    try{ var o=JSON.parse(v);
+      if(o.size){MARK.size=o.size; document.getElementById("edSize").value=o.size; document.getElementById("edSizeV").textContent=o.size;}
+      if(o.off){MARK.off=o.off; document.getElementById("edOff").value=o.off; document.getElementById("edOffV").textContent=o.off;}
+      if(o.lead!==undefined){MARK.lead=o.lead; document.getElementById("edLead").value=o.lead; document.getElementById("edLeadV").textContent=o.lead;}
+      if(o.pos){ CORNERS.forEach(function(c,i){ if(o.pos[i]){ c.mx=o.pos[i][0]; c.my=o.pos[i][1]; } }); }
+      drawMap(); restyle(); dump();
+    }catch(err){ alert("読み取れませんでした"); }
+  });
+  restyle(); dump();
+})();
+
+/* ---- playback ---- */
+var playing=true, t0=null, rafP=0;
+function loop(ts){ if(!playing){return;} if(t0===null)t0=ts; window.seek(((ts-t0)%LAP_MS)/LAP_MS); rafP=requestAnimationFrame(loop); }
+if(!window.__CAPTURE__) rafP=requestAnimationFrame(loop);
+
+</script></body></html>
