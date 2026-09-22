@@ -145,11 +145,23 @@ export type FormatCompare = {
   longAvgYt: number | null;
 };
 
+/** 直近の取込実行（sync_runs の最新行）。取込がまだ一度も走っていなければ null */
+export type LastSync = {
+  /** JST の「YYYY/MM/DD HH:mm」 */
+  finishedAtLabel: string;
+  /** 3プラットフォーム＋日次スナップショットが全て成功したか */
+  ok: boolean;
+  /** 取込完了からの経過分。鮮度の判断に使う */
+  ageMinutes: number;
+};
+
 export type Telemetry = {
   configured: boolean;
   error: string | null;
   range: RangeKey;
   periodLabel: string;
+  /** データを最後に取り込んだ時刻（画面を開いた時刻とは別物） */
+  lastSync: LastSync | null;
   /** 全投稿（Full Log 用） */
   posts: SnsPost[];
   /** format='short' のみ（Delta Trace / KPI / Genre Split 用） */
@@ -348,6 +360,33 @@ const EMPTY_KPI: Kpi = {
   pending: 0,
 };
 
+/* ------------------------------------------------------- 取込の最終実行 */
+
+/**
+ * sync_runs の最新行 → 画面表示用。
+ * sns_posts.updated_at は手作業のジャンル付け替えでも動いてしまうので使わない。
+ * 「いつ取り込んだか」の正は sync_runs だけ。
+ */
+function toLastSync(
+  row: { finished_at: string; ok: boolean } | undefined,
+): LastSync | null {
+  if (!row?.finished_at) return null;
+  const ms = Date.parse(row.finished_at);
+  if (Number.isNaN(ms)) return null;
+  return {
+    finishedAtLabel: new Intl.DateTimeFormat("ja-JP", {
+      timeZone: "Asia/Tokyo",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(new Date(ms)),
+    ok: row.ok === true,
+    ageMinutes: Math.max(0, Math.round((Date.now() - ms) / 60_000)),
+  };
+}
+
 /* ------------------------------------------------------------------ 取得 */
 
 /** 指定期間のSNS実績とGA4データをまとめて取得・集計する */
@@ -357,6 +396,7 @@ export async function getTelemetry(range: RangeKey): Promise<Telemetry> {
     error: null,
     range,
     periodLabel: "データなし",
+    lastSync: null,
     posts: [],
     shortPosts: [],
     longPosts: [],
@@ -400,15 +440,26 @@ export async function getTelemetry(range: RangeKey): Promise<Telemetry> {
     .select("date, channel, sessions, users");
   if (startDate) channelQuery.gte("date", startDate);
 
-  const [postsRes, dailyRes, channelRes] = await Promise.all([
+  // 取込の最終実行。期間フィルタとは無関係なので常に最新1件だけ見る
+  const syncQuery = supabase
+    .from("sync_runs")
+    .select("finished_at, ok")
+    .order("finished_at", { ascending: false })
+    .limit(1);
+
+  const [postsRes, dailyRes, channelRes, syncRes] = await Promise.all([
     postsQuery,
     dailyQuery,
     channelQuery,
+    syncQuery,
   ]);
 
   const errors = [postsRes.error, dailyRes.error, channelRes.error].filter(
     (e) => e != null,
   );
+  if (syncRes.error) {
+    console.error("[admin/telemetry] sync_runs fetch failed:", syncRes.error.message);
+  }
   if (errors.length > 0) {
     for (const e of errors) console.error("[admin/telemetry] fetch failed:", e.message);
   }
@@ -425,12 +476,16 @@ export async function getTelemetry(range: RangeKey): Promise<Telemetry> {
     engagementRate: row.engagement_rate == null ? null : Number(row.engagement_rate),
   }));
   const ga4Channels = buildChannels((channelRes.data ?? []) as Ga4ChannelRow[]);
+  const lastSync = toLastSync(
+    (syncRes.data ?? [])[0] as { finished_at: string; ok: boolean } | undefined,
+  );
 
   return {
     configured: true,
     error: errors.length > 0 ? "一部のデータ取得に失敗しました。" : null,
     range,
     periodLabel: buildPeriodLabel(range, posts, ga4Daily, startDate),
+    lastSync,
     posts,
     shortPosts,
     longPosts,

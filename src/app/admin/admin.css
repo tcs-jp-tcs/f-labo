@@ -144,6 +144,12 @@ body:has(#admin-root)::before {
   font-weight: 600;
 }
 
+/* 取込が古い／失敗した場合だけ出す注意書き。正常時は無表示なので目立たせてよい */
+#admin-root .hdr-r .stale {
+  color: var(--yt);
+  font-weight: 600;
+}
+
 /* ---------- 期間フィルター / ログアウト ---------- */
 #admin-root .toolbar {
   display: flex;

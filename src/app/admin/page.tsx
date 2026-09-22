@@ -62,7 +62,19 @@ export default async function AdminPage({
           ショート <b>{data.formatCompare.shortCount}</b> 本 ／ 長尺{" "}
           <b>{data.formatCompare.longCount}</b> 本
           <br />
-          最終表示 {nowJst()}
+          {/* 「更新」＝データを取り込んだ時刻。「表示」＝この画面を開いた時刻。別物なので両方出す */}
+          更新 <b>{data.lastSync ? data.lastSync.finishedAtLabel : "記録なし"}</b>
+          {data.lastSync && !data.lastSync.ok && (
+            <span className="stale"> 取込エラーあり</span>
+          )}
+          {data.lastSync && data.lastSync.ok && data.lastSync.ageMinutes > 420 && (
+            <span className="stale">
+              {" "}
+              {Math.floor(data.lastSync.ageMinutes / 60)}時間前
+            </span>
+          )}
+          <br />
+          表示 {nowJst()}
         </div>
       </div>
 
