@@ -1,6 +1,6 @@
 import type { GenreStat } from "@/lib/telemetry";
 
-/** ジャンル別に IG リーチ・YT 再生の合計を並べた横棒グラフ */
+/** ジャンル別に IG 再生数・YT 再生の合計を並べた横棒グラフ */
 export default function GenreSplit({ genres }: { genres: GenreStat[] }) {
   if (genres.length === 0) {
     return <div className="empty">データなし</div>;

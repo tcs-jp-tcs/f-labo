@@ -30,7 +30,7 @@ import {
 type TabKey = "time" | "map" | "box" | "heat";
 
 const TABS: { key: TabKey; label: string }[] = [
-  { key: "time", label: "時間帯 × リーチ" },
+  { key: "time", label: "時間帯 × 再生数" },
   { key: "map", label: "ポジショニング" },
   { key: "box", label: "ジャンル別の分布" },
   { key: "heat", label: "曜日 × 時間帯" },
@@ -121,7 +121,7 @@ function MetricToggle({
   );
 }
 
-/* --------------------------------------------------- 01 時間帯 × リーチ */
+/* ------------------------------------------------- 01 時間帯 × 再生数 */
 
 function TimeScatter({
   posts,
@@ -150,7 +150,7 @@ function TimeScatter({
     4 + Math.sqrt(engagementOf(post) / maxEngagement) * 8;
 
   return (
-    <svg className="chart an-chart" viewBox={`0 0 ${W} ${H}`} role="img" aria-label="時間帯とリーチの散布図">
+    <svg className="chart an-chart" viewBox={`0 0 ${W} ${H}`} role="img" aria-label="時間帯と再生数の散布図">
       {domain.ticks.map((tick) => (
         <g key={tick}>
           <line className="grid-line" x1={PAD.left} y1={y(tick)} x2={W - PAD.right} y2={y(tick)} />
@@ -211,10 +211,10 @@ function PositioningMap({
   showTip: ShowTip;
   hideTip: () => void;
 }) {
-  const rows = posts.filter((p) => p.igReach != null && p.ytViews != null);
+  const rows = posts.filter((p) => p.igViews != null && p.ytViews != null);
   if (rows.length === 0) return <div className="empty">データなし</div>;
 
-  const igDomain = logDomain(rows.map((p) => p.igReach ?? 0));
+  const igDomain = logDomain(rows.map((p) => p.igViews ?? 0));
   const ytDomain = logDomain(rows.map((p) => p.ytViews ?? 0));
 
   const x = (value: number) =>
@@ -222,7 +222,7 @@ function PositioningMap({
   const y = (value: number) =>
     PAD.top + IH - ((logScale(value) - ytDomain.lo) / (ytDomain.hi - ytDomain.lo)) * IH;
 
-  const medIg = median(rows.map((p) => p.igReach ?? 0));
+  const medIg = median(rows.map((p) => p.igViews ?? 0));
   const medYt = median(rows.map((p) => p.ytViews ?? 0));
   const cx = x(medIg);
   const cy = y(medYt);
@@ -235,7 +235,7 @@ function PositioningMap({
   ];
 
   return (
-    <svg className="chart an-chart" viewBox={`0 0 ${W} ${H}`} role="img" aria-label="IGリーチとYT再生のポジショニングマップ">
+    <svg className="chart an-chart" viewBox={`0 0 ${W} ${H}`} role="img" aria-label="IG再生とYT再生のポジショニングマップ">
       {igDomain.ticks.map((tick) => (
         <g key={`x${tick}`}>
           <line className="grid-line" x1={x(tick)} y1={PAD.top} x2={x(tick)} y2={PAD.top + IH} />
@@ -260,14 +260,14 @@ function PositioningMap({
         </text>
       ))}
       <text x={PAD.left + IW / 2} y={H - 6} textAnchor="middle" className="an-axis-title">
-        IGリーチ（対数）／ 縦軸 YT再生（対数）・十字は中央値 IG {num(Math.round(medIg))} × YT{" "}
+        IG再生（対数）／ 縦軸 YT再生（対数）・十字は中央値 IG {num(Math.round(medIg))} × YT{" "}
         {num(Math.round(medYt))}
       </text>
       <g className="an-pop">
         {rows.map((post) => (
           <circle
             key={post.id}
-            cx={x(post.igReach ?? 0)}
+            cx={x(post.igViews ?? 0)}
             cy={y(post.ytViews ?? 0)}
             r={6}
             fill={colors.get(post.genre) ?? "#8FA3B8"}
@@ -277,7 +277,7 @@ function PositioningMap({
             onMouseEnter={(e) => showTip(e, [
                   post.title,
                   `${post.dateLabel} ／ ${post.genre}`,
-                  `IG ${num(post.igReach ?? 0)} ／ YT ${num(post.ytViews ?? 0)}`,
+                  `IG ${num(post.igViews ?? 0)} ／ YT ${num(post.ytViews ?? 0)}`,
                 ])}
             onMouseLeave={hideTip}
           />
@@ -409,7 +409,7 @@ function GenreBox({
 type HeatMetric = "ig" | "yt" | "count";
 
 const HEAT_LABEL: Record<HeatMetric, string> = {
-  ig: "平均IGリーチ",
+  ig: "平均IG再生",
   yt: "平均YT再生",
   count: "投稿数",
 };
@@ -576,7 +576,7 @@ export default function AnalysisSection({ posts }: { posts: SnsPost[] }) {
               <PositioningMap posts={posts} colors={colors} showTip={showTip} hideTip={hideTip} />
             </div>
             <p className="aud-note">
-              IGリーチと YT再生の両方が計測済みの投稿のみ。十字は両軸の中央値。
+              IG再生と YT再生の両方が計測済みの投稿のみ。十字は両軸の中央値。
             </p>
           </>
         )}

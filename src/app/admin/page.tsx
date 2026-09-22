@@ -98,10 +98,12 @@ export default async function AdminPage({
 
       <div className="kpis">
         <div className="kpi" style={accent("var(--ig)")}>
-          <div className="kpi-lbl">IG Reach / short</div>
-          <div className="kpi-val">{num(kpi.igReachTotal)}</div>
+          <div className="kpi-lbl">IG Views / short</div>
+          <div className="kpi-val">{num(kpi.igViewsTotal)}</div>
           <div className="kpi-sub">
-            {kpi.igReachCount}本合計・最高 {num(kpi.igReachMax)}
+            {kpi.igViewsCount}本合計・最高 {num(kpi.igViewsMax)}
+            <br />
+            リーチ {num(kpi.igReachTotal)}・最高 {num(kpi.igReachMax)}
           </div>
         </div>
         <div className="kpi" style={accent("var(--yt)")}>
@@ -138,13 +140,14 @@ export default async function AdminPage({
         <p className="sec-note">
           縦型ショート（Instagram リールと同一素材）だけを対象に、1本の投稿を中心線から左右へ
           振り分けたもの。左に伸びるほど Instagram、右に伸びるほど YouTube で見られている。
-          棒の長さは期間内の最大値を基準に正規化している。長尺は Instagram に出していないため
-          この比較には含めない。
+          左右とも再生数で揃えてある。Instagram の丸カッコ内はリーチ（届いたアカウント数）で、
+          再生数はこれより大きくなるのが普通。棒の長さは期間内の最大値を基準に正規化している。
+          長尺は Instagram に出していないためこの比較には含めない。
         </p>
         <div className="legend">
           <span>
             <i className="sw" style={{ background: "var(--ig)" }} />
-            Instagram リーチ
+            Instagram 再生（カッコ内はリーチ）
           </span>
           <span>
             <i className="sw" style={{ background: "var(--yt)" }} />
@@ -228,7 +231,7 @@ export default async function AdminPage({
       <div className="ad-ft">
         <span>F-LABO — SNS TELEMETRY</span>
         <span>
-          KPI・Delta Trace・Genre Split はショートのみ集計／優勢判定は IG リーチと YT 再生の比が
+          KPI・Delta Trace・Genre Split はショートのみ集計／優勢判定は IG 再生と YT 再生の比が
           1.5 倍以上で確定・未満は拮抗
         </span>
       </div>

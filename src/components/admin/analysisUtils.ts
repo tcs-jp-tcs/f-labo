@@ -5,12 +5,12 @@ import type { SnsPost } from "@/lib/telemetry";
 export type Metric = "ig" | "yt";
 
 export const METRIC_LABEL: Record<Metric, string> = {
-  ig: "IGリーチ",
+  ig: "IG再生",
   yt: "YT再生",
 };
 
 export const metricValue = (post: SnsPost, metric: Metric): number | null =>
-  metric === "ig" ? post.igReach : post.ytViews;
+  metric === "ig" ? post.igViews : post.ytViews;
 
 /** ジャンルの色。未知のジャンルはフォールバック配列から順に割り当てる */
 const GENRE_COLORS: Record<string, string> = {

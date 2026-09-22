@@ -10,6 +10,7 @@ type SortKey =
   | "postedAt"
   | "genre"
   | "format"
+  | "igViews"
   | "igReach"
   | "igLikes"
   | "igSaves"
@@ -23,6 +24,7 @@ const COLUMNS: { key: SortKey; label: string }[] = [
   { key: "postedAt", label: "日付" },
   { key: "genre", label: "ジャンル" },
   { key: "format", label: "尺" },
+  { key: "igViews", label: "IG再生" },
   { key: "igReach", label: "IGリーチ" },
   { key: "igLikes", label: "IGいいね" },
   { key: "igSaves", label: "保存" },
@@ -48,7 +50,7 @@ const fmt = (value: number | null): string =>
   value == null ? "—" : value.toLocaleString("en-US");
 
 export default function FullLog({ posts }: { posts: SnsPost[] }) {
-  const [sortKey, setSortKey] = useState<SortKey>("igReach");
+  const [sortKey, setSortKey] = useState<SortKey>("igViews");
   const [direction, setDirection] = useState<-1 | 1>(-1);
 
   const rows = useMemo(() => {
@@ -140,6 +142,7 @@ export default function FullLog({ posts }: { posts: SnsPost[] }) {
                     {FORMAT_LABEL[post.format]}
                   </span>
                 </td>
+                <td>{fmt(post.igViews)}</td>
                 <td>{fmt(post.igReach)}</td>
                 <td>{fmt(post.igLikes)}</td>
                 <td>{fmt(post.igSaves)}</td>

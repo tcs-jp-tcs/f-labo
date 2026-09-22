@@ -86,6 +86,7 @@ export type SnsPost = {
   /** JST の曜日。0=月 … 6=日 */
   jstWeekday: number;
   igReach: number | null;
+  igViews: number | null;
   igLikes: number | null;
   igSaves: number | null;
   igShares: number | null;
@@ -102,6 +103,9 @@ export type Kpi = {
   igReachTotal: number;
   igReachMax: number;
   igReachCount: number;
+  igViewsTotal: number;
+  igViewsMax: number;
+  igViewsCount: number;
   ytViewsTotal: number;
   ytViewsMax: number;
   ytViewsCount: number;
@@ -179,19 +183,22 @@ export type Telemetry = {
 
 /**
  * どちらで伸びたかの判定。
- * - IG リーチ / YT 再生のどちらかが未計測（null）なら「計測中」
+ * Instagram 側は再生数（ig_views）を使う。YouTube 側も再生数なので、
+ * 同じ種類の指標どうしの比較になる。
+ * （2026-09-22 以前はリーチと再生数を比べていた。ig_views 追加に伴い揃えた）
+ * - どちらかが未計測（null）なら「計測中」
  * - 大きい方が小さい方の 1.5 倍以上なら、その方が優勢
  * - それ未満は拮抗
  */
 const WIN_RATIO = 1.5;
 
-function judgeWinner(igReach: number | null, ytViews: number | null): Winner {
-  if (igReach == null || ytViews == null) return "na";
-  if (igReach === 0 && ytViews === 0) return "tie";
-  const high = Math.max(igReach, ytViews);
-  const low = Math.min(igReach, ytViews);
+function judgeWinner(igViews: number | null, ytViews: number | null): Winner {
+  if (igViews == null || ytViews == null) return "na";
+  if (igViews === 0 && ytViews === 0) return "tie";
+  const high = Math.max(igViews, ytViews);
+  const low = Math.min(igViews, ytViews);
   if (low === 0 || high / low >= WIN_RATIO) {
-    return igReach > ytViews ? "ig" : "yt";
+    return igViews > ytViews ? "ig" : "yt";
   }
   return "tie";
 }
@@ -211,11 +218,15 @@ function averageYtViews(posts: SnsPost[]): number | null {
 }
 
 function buildKpi(posts: SnsPost[]): Kpi {
+  const igViewValues = posts.map((p) => p.igViews).filter((v): v is number => v != null);
   const igValues = posts.map((p) => p.igReach).filter((v): v is number => v != null);
   const ytValues = posts.map((p) => p.ytViews).filter((v): v is number => v != null);
 
   return {
     postCount: posts.length,
+    igViewsTotal: sum(igViewValues),
+    igViewsMax: igViewValues.length ? Math.max(...igViewValues) : 0,
+    igViewsCount: igViewValues.length,
     igReachTotal: sum(igValues),
     igReachMax: igValues.length ? Math.max(...igValues) : 0,
     igReachCount: igValues.length,
@@ -232,12 +243,13 @@ function buildKpi(posts: SnsPost[]): Kpi {
   };
 }
 
+/** ジャンル別の合計。ig は Instagram の再生数（2026-09-22 以前はリーチだった） */
 function buildGenres(posts: SnsPost[]): GenreStat[] {
   const map = new Map<string, GenreStat>();
   for (const post of posts) {
     const stat = map.get(post.genre) ?? { genre: post.genre, count: 0, ig: 0, yt: 0 };
     stat.count += 1;
-    stat.ig += post.igReach ?? 0;
+    stat.ig += post.igViews ?? 0;
     stat.yt += post.ytViews ?? 0;
     map.set(post.genre, stat);
   }
@@ -293,6 +305,7 @@ type SnsPostRow = {
   genre: string;
   format: string;
   ig_reach: number | null;
+  ig_views: number | null;
   ig_likes: number | null;
   ig_saves: number | null;
   ig_shares: number | null;
@@ -331,6 +344,7 @@ function toPost(row: SnsPostRow): SnsPost {
     jstHour: clock.hour,
     jstWeekday: clock.weekday,
     igReach: row.ig_reach,
+    igViews: row.ig_views,
     igLikes: row.ig_likes,
     igSaves: row.ig_saves,
     igShares: row.ig_shares,
@@ -339,7 +353,7 @@ function toPost(row: SnsPostRow): SnsPost {
     ytLikes: row.yt_likes,
     ytUrl: row.yt_url,
     note: row.note,
-    winner: judgeWinner(row.ig_reach, row.yt_views),
+    winner: judgeWinner(row.ig_views, row.yt_views),
   };
 }
 
@@ -348,6 +362,9 @@ const EMPTY_KPI: Kpi = {
   igReachTotal: 0,
   igReachMax: 0,
   igReachCount: 0,
+  igViewsTotal: 0,
+  igViewsMax: 0,
+  igViewsCount: 0,
   ytViewsTotal: 0,
   ytViewsMax: 0,
   ytViewsCount: 0,
@@ -423,7 +440,7 @@ export async function getTelemetry(range: RangeKey): Promise<Telemetry> {
   const postsQuery = supabase
     .from("sns_posts")
     .select(
-      "id, posted_at, title, genre, format, ig_reach, ig_likes, ig_saves, ig_shares, ig_url, yt_views, yt_likes, yt_url, note",
+      "id, posted_at, title, genre, format, ig_reach, ig_views, ig_likes, ig_saves, ig_shares, ig_url, yt_views, yt_likes, yt_url, note",
     )
     // 新しい投稿を先頭に（Delta Trace はこの順で上から並ぶ）
     .order("posted_at", { ascending: false });

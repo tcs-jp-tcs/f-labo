@@ -1,7 +1,7 @@
 import type { SnsPost } from "@/lib/telemetry";
 
 /**
- * Delta Trace — 1投稿を1行として、中心線から左に IG リーチ、右に YT 再生を伸ばす。
+ * Delta Trace — 1投稿を1行として、中心線から左に IG 再生数、右に YT 再生数を伸ばす。
  * 全投稿の最大値を基準に幅を正規化するので、どちらで伸びたかが横方向で読める。
  */
 const fmt = (value: number | null): string =>
@@ -14,7 +14,7 @@ export default function DeltaTrace({ posts }: { posts: SnsPost[] }) {
 
   const max = Math.max(
     1,
-    ...posts.flatMap((p) => [p.igReach ?? 0, p.ytViews ?? 0]),
+    ...posts.flatMap((p) => [p.igViews ?? 0, p.ytViews ?? 0]),
   );
 
   return (
@@ -25,13 +25,14 @@ export default function DeltaTrace({ posts }: { posts: SnsPost[] }) {
         <div>YouTube →</div>
       </div>
       {posts.map((post) => {
-        const leftWidth = ((post.igReach ?? 0) / max) * 100;
+        const leftWidth = ((post.igViews ?? 0) / max) * 100;
         const rightWidth = ((post.ytViews ?? 0) / max) * 100;
         return (
           <div className="row" key={post.id}>
             <div className="bar-l">
-              <span className={`num ${post.winner === "ig" ? "hi" : ""} ${post.igReach == null ? "nil" : ""}`}>
-                {fmt(post.igReach)}
+              <span className={`num ${post.winner === "ig" ? "hi" : ""} ${post.igViews == null ? "nil" : ""}`}>
+                {fmt(post.igViews)}
+                {post.igReach != null && <span className="sub">（{fmt(post.igReach)}）</span>}
               </span>
               <span className="bar" style={{ width: `${leftWidth}%` }} />
             </div>

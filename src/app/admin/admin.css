@@ -359,6 +359,12 @@ body:has(#admin-root)::before {
 }
 #admin-root .num.hi { color: var(--txt); }
 #admin-root .num.nil { color: var(--txt-faint); font-weight: 400; }
+/* 再生数の後ろに併記するリーチ。主役ではないので弱める */
+#admin-root .trace .num .sub {
+  color: var(--txt-faint);
+  font-size: 0.82em;
+  margin-left: 2px;
+}
 #admin-root .label {
   text-align: center;
   padding: 0 14px;
