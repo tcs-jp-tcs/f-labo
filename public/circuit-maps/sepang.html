@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8"><title>Sepang International Circuit</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;background:#0B1428;overflow:hidden}
+body{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;
+     font-variant-numeric:tabular-nums}
+#fit{position:absolute;top:0;left:0;transform-origin:top left}
+#stage{position:relative;width:1080px;height:1920px;background:#0B1428}
+.abs{position:absolute}
+#sectorBadge{padding:16px 34px;border-radius:10px;font-weight:800;letter-spacing:.14em;color:#fff;
+  background:#2C7BE5;display:inline-block;white-space:nowrap}
+#cornerBox .big{font-weight:800;color:#fff;line-height:1;white-space:nowrap}
+#cornerBox .sm{font-weight:700;color:#9DB2D0;margin-top:8px;letter-spacing:.06em;white-space:nowrap}
+svg{width:100%;overflow:visible}
+.cnum{fill:#0B1428;stroke:#8FA6C8;stroke-width:3}
+.clead{opacity:.5}
+.cnumT{fill:#E6EEF9;pointer-events:none;font-size:30px;font-weight:800;text-anchor:middle;dominant-baseline:central}
+.axl{fill:#6C82A8;font-size:24px;font-weight:700}
+.grid{stroke:#22314F;stroke-width:1.5}
+#edPanel{position:absolute;right:16px;top:16px;width:320px;background:rgba(8,16,32,.96);
+  border:1px solid #2E4670;border-radius:12px;padding:14px;z-index:50;font-size:13px;color:#C7D6EC;
+  font-family:"Helvetica Neue",Helvetica,Arial,sans-serif}
+#edHead{font-size:15px;font-weight:800;letter-spacing:.08em;color:#9DB2D0;margin-bottom:10px}
+.edRow{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.edRow span{width:120px;flex:none;color:#7A90AE}
+.edRow input{flex:1;accent-color:#E8323C}
+.edHint{color:#6C82A8;line-height:1.6;margin:6px 0 10px}
+#edBtns{display:flex;gap:8px;margin-bottom:8px}
+#edBtns button{flex:1;background:#22355A;color:#DCE7F7;border:1px solid #2E4670;
+  border-radius:7px;padding:6px;font-size:12px;font-weight:700;cursor:pointer}
+#edJson{width:100%;height:90px;background:#070E1C;color:#8FE3A8;border:1px solid #22314F;
+  border-radius:7px;padding:6px;font-family:ui-monospace,Menlo,monospace;font-size:10.5px}
+.cmark{cursor:grab}
+.txt{font-weight:800;letter-spacing:.14em;color:#4A5E80;white-space:nowrap}
+
+</style></head>
+<body><div id="fit"><div id="stage">
+
+  <div class="abs" id="sectorBadge" data-k="sector">SECTOR 1</div>
+  <div class="abs" id="cornerBox" data-k="corner"><div class="big" id="lblBig">S/F</div><div class="sm" id="lblSm">Start / Finish</div></div>
+
+  <div class="abs" id="mapWrap" data-k="map">
+    <svg id="map" viewBox="-40 -30 1120 800">
+      <path id="base" fill="none" stroke="#1B2A47" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      <path id="p1" fill="none" stroke="#2C7BE5" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      <path id="p2" fill="none" stroke="#E8323C" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      <path id="p3" fill="none" stroke="#28A745" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      <g id="corners"></g><g id="sf"></g><g id="secH"></g>
+      <circle id="car" r="15" fill="#FFFFFF" stroke="#0B1428" stroke-width="4"/>
+    </svg>
+  </div>
+
+  <div class="abs" id="elevWrap" data-k="elev">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:24px">
+      <div style="font-size:38px;font-weight:800;letter-spacing:.22em;color:#9DB2D0">ELEVATION &middot; ONE LAP</div>
+      <div style="font-size:36px;font-weight:800;color:#4DA3FF;white-space:nowrap" id="elevVal"></div>
+    </div>
+    <svg id="elev" viewBox="0 0 960 300" preserveAspectRatio="none" style="height:300px"></svg>
+  </div>
+
+  <div class="abs txt" id="titleTxt" data-k="title"></div>
+  <div class="abs txt" id="footTxt" data-k="foot"></div>
+
+  <div id="edPanel" style="display:none">
+    <div id="edHead">配置エディタ</div>
+    <div id="edBody">
+      <div class="edRow"><span>番号サイズ</span>
+        <input id="edSize" type="range" min="14" max="48" step="1" value="30"><b id="edSizeV">30</b></div>
+      <div class="edRow"><span>コースからの距離</span>
+        <input id="edOff" type="range" min="20" max="160" step="1" value="52"><b id="edOffV">52</b></div>
+      <div class="edRow"><span>引き出し線</span>
+        <input id="edLead" type="range" min="0" max="100" step="5" value="50"><b id="edLeadV">50</b></div>
+      <div class="edRow"><span>S/Fライン</span>
+        <input id="edSF" type="range" min="-0.06" max="0.06" step="0.0005" value="0"><b id="edSFV">0</b></div>
+      <div class="edRow"><span>S1終わり</span>
+        <input id="edS1" type="range" min="0.01" max="0.99" step="0.0005"><b id="edS1V"></b></div>
+      <div class="edRow"><span>S2終わり</span>
+        <input id="edS2" type="range" min="0.01" max="0.99" step="0.0005"><b id="edS2V"></b></div>
+      <div class="edHint">番号の丸をドラッグで個別に移動／Rでその番号をリセット<br>赤い丸（S1|S2）と緑の丸（S2|S3）をコースに沿ってドラッグすると、セクターの境目が動きます</div>
+      <div id="edBtns"><button id="edCopy">JSONをコピー</button><button id="edLoad">読み込み</button></div>
+      <textarea id="edJson" readonly></textarea>
+    </div>
+  </div>
+</div></div>
+
+
+<script>
+var D={"pts": [[336.61, 399.39], [107.99, 418.08], [97.48, 417.24], [88.0, 412.53], [81.48, 405.71], [77.92, 396.44], [77.49, 386.0], [81.31, 375.05], [90.2, 366.8], [102.23, 363.01], [116.29, 365.79], [142.38, 375.05], [151.1, 373.62], [158.47, 366.38], [160.85, 357.54], [158.47, 345.92], [150.68, 334.13], [132.89, 312.48], [125.35, 299.26], [120.44, 283.6], [118.07, 267.85], [118.07, 250.0], [122.39, 206.04], [129.33, 185.41], [140.26, 164.36], [151.27, 150.8], [168.21, 135.56], [186.0, 123.94], [204.64, 117.12], [309.34, 83.18], [387.69, 52.53], [440.12, 29.96], [473.92, 14.72], [485.61, 10.0], [494.33, 10.34], [501.87, 15.05], [504.58, 24.48], [519.15, 105.24], [528.05, 146.84], [540.58, 197.28], [549.73, 216.74], [559.98, 230.63], [577.6, 244.61], [595.05, 253.87], [612.41, 258.17], [629.44, 258.93], [648.84, 255.98], [668.66, 248.32], [682.72, 238.29], [710.17, 209.07], [723.63, 200.99], [744.81, 193.75], [762.85, 193.16], [780.64, 195.52], [795.04, 201.41], [807.92, 211.6], [961.66, 385.75], [962.51, 394.25], [958.95, 403.94], [932.77, 462.29], [924.9, 467.77], [915.58, 469.96], [775.22, 478.04], [643.42, 493.37], [571.16, 505.16], [564.3, 510.72], [562.1, 519.89], [568.2, 530.17], [619.7, 558.46], [630.97, 569.75], [638.84, 586.42], [642.82, 603.77], [642.23, 628.53], [638.84, 649.33], [634.18, 669.62], [621.9, 695.56], [603.52, 722.08], [593.44, 728.4], [583.78, 730.0], [572.86, 727.98], [564.13, 722.34], [403.11, 590.55], [391.84, 586.42], [377.35, 585.58], [361.51, 589.54], [302.81, 619.43], [287.14, 624.32], [268.51, 626.84], [252.16, 626.67], [221.66, 621.2], [200.91, 612.69], [187.44, 602.08], [169.4, 578.51], [163.05, 560.82], [162.12, 550.04], [169.65, 537.92], [185.83, 531.26], [824.43, 414.63], [833.58, 406.63], [840.27, 391.31], [836.89, 378.51], [825.28, 366.55], [806.22, 363.6]], "frc": [0.0, 0.05431, 0.05681, 0.05931, 0.06155, 0.0639, 0.06637, 0.06912, 0.07199, 0.07498, 0.07837, 0.08492, 0.08702, 0.08946, 0.09163, 0.09444, 0.09778, 0.10442, 0.10802, 0.11191, 0.11568, 0.11991, 0.13036, 0.13552, 0.14113, 0.14527, 0.15066, 0.15569, 0.16039, 0.18645, 0.20637, 0.21989, 0.22867, 0.23165, 0.23372, 0.23582, 0.23815, 0.25758, 0.26765, 0.27995, 0.28504, 0.28913, 0.29446, 0.29913, 0.30337, 0.3074, 0.31205, 0.31708, 0.32117, 0.33066, 0.33438, 0.33968, 0.34395, 0.3482, 0.35189, 0.35577, 0.41077, 0.4128, 0.41524, 0.43038, 0.43266, 0.43492, 0.46821, 0.49962, 0.51696, 0.51905, 0.52128, 0.52411, 0.53803, 0.5418, 0.54617, 0.55038, 0.55624, 0.56123, 0.56616, 0.57296, 0.5806, 0.58342, 0.58573, 0.58836, 0.59082, 0.64009, 0.64293, 0.64637, 0.65023, 0.66583, 0.66972, 0.67417, 0.67804, 0.68538, 0.69069, 0.69474, 0.70177, 0.70622, 0.70878, 0.71217, 0.71631, 0.87001, 0.87288, 0.87684, 0.87998, 0.88392, 0.88849], "elev": [{"f": 0.0, "m": 13.56}, {"f": 0.0031, "m": 13.56}, {"f": 0.0125, "m": 13.3}, {"f": 0.0219, "m": 13.81}, {"f": 0.0313, "m": 14.07}, {"f": 0.0408, "m": 14.84}, {"f": 0.0502, "m": 15.35}, {"f": 0.0596, "m": 15.35}, {"f": 0.069, "m": 15.09}, {"f": 0.0784, "m": 14.33}, {"f": 0.0878, "m": 13.3}, {"f": 0.0972, "m": 11.77}, {"f": 0.1066, "m": 9.47}, {"f": 0.116, "m": 6.4}, {"f": 0.1254, "m": 3.84}, {"f": 0.1348, "m": 1.79}, {"f": 0.1442, "m": 0.26}, {"f": 0.1536, "m": 0}, {"f": 0.163, "m": 0}, {"f": 0.1724, "m": 0.77}, {"f": 0.1818, "m": 2.56}, {"f": 0.1912, "m": 4.6}, {"f": 0.2006, "m": 6.91}, {"f": 0.21, "m": 9.21}, {"f": 0.2194, "m": 11.26}, {"f": 0.2288, "m": 13.3}, {"f": 0.2382, "m": 15.09}, {"f": 0.2476, "m": 16.88}, {"f": 0.2571, "m": 18.16}, {"f": 0.2665, "m": 18.42}, {"f": 0.2759, "m": 18.16}, {"f": 0.2853, "m": 16.88}, {"f": 0.2947, "m": 15.09}, {"f": 0.3041, "m": 14.07}, {"f": 0.3135, "m": 14.07}, {"f": 0.3229, "m": 14.33}, {"f": 0.3323, "m": 15.35}, {"f": 0.3417, "m": 16.12}, {"f": 0.3511, "m": 16.12}, {"f": 0.3605, "m": 16.37}, {"f": 0.3699, "m": 16.37}, {"f": 0.3793, "m": 16.63}, {"f": 0.3887, "m": 16.88}, {"f": 0.3981, "m": 16.63}, {"f": 0.4075, "m": 16.63}, {"f": 0.4169, "m": 16.12}, {"f": 0.4263, "m": 15.86}, {"f": 0.4357, "m": 15.35}, {"f": 0.4451, "m": 15.09}, {"f": 0.4545, "m": 15.09}, {"f": 0.4639, "m": 14.58}, {"f": 0.4734, "m": 14.33}, {"f": 0.4828, "m": 14.07}, {"f": 0.4922, "m": 13.56}, {"f": 0.5016, "m": 12.53}, {"f": 0.511, "m": 11.51}, {"f": 0.5204, "m": 12.02}, {"f": 0.5298, "m": 14.58}, {"f": 0.5392, "m": 17.14}, {"f": 0.5486, "m": 19.19}, {"f": 0.558, "m": 20.72}, {"f": 0.5674, "m": 21.74}, {"f": 0.5768, "m": 22.26}, {"f": 0.5862, "m": 22.0}, {"f": 0.5956, "m": 21.49}, {"f": 0.605, "m": 20.21}, {"f": 0.6144, "m": 18.93}, {"f": 0.6238, "m": 17.65}, {"f": 0.6332, "m": 16.12}, {"f": 0.6426, "m": 14.58}, {"f": 0.652, "m": 13.3}, {"f": 0.6614, "m": 11.77}, {"f": 0.6708, "m": 10.49}, {"f": 0.6803, "m": 9.98}, {"f": 0.6897, "m": 10.49}, {"f": 0.6991, "m": 12.02}, {"f": 0.7085, "m": 12.44}, {"f": 0.7179, "m": 12.85}, {"f": 0.7273, "m": 13.26}, {"f": 0.7367, "m": 13.68}, {"f": 0.7461, "m": 13.56}, {"f": 0.7555, "m": 13.56}, {"f": 0.7649, "m": 13.81}, {"f": 0.7743, "m": 13.81}, {"f": 0.7837, "m": 13.81}, {"f": 0.7931, "m": 13.81}, {"f": 0.8025, "m": 13.81}, {"f": 0.8119, "m": 13.3}, {"f": 0.8213, "m": 13.3}, {"f": 0.8307, "m": 13.3}, {"f": 0.8401, "m": 13.3}, {"f": 0.8495, "m": 13.3}, {"f": 0.8589, "m": 13.56}, {"f": 0.8683, "m": 14.07}, {"f": 0.8777, "m": 15.09}, {"f": 0.8871, "m": 14.84}, {"f": 0.8966, "m": 14.07}, {"f": 0.906, "m": 13.56}, {"f": 0.9154, "m": 13.3}, {"f": 0.9248, "m": 13.3}, {"f": 0.9342, "m": 13.3}, {"f": 0.9436, "m": 13.3}, {"f": 0.953, "m": 13.3}, {"f": 0.9624, "m": 13.3}, {"f": 0.9718, "m": 13.56}, {"f": 0.9812, "m": 13.3}, {"f": 0.9906, "m": 13.56}, {"f": 1.0, "m": 13.56}], "lap_km": 5.543, "elev_max": 22.26, "elev_min": 0}, C={"START": 0.94784, "S1_END": 0.245, "S2_END": 0.5955, "ELEV_MAX": 25, "GRID_MAX": 25, "CORNERS": [{"f": 0.1161, "name": "", "off": 52, "side": -1, "mx": 27, "my": 408}, {"f": 0.1392, "name": "", "off": 52, "side": -1, "mx": 216, "my": 350}, {"f": 0.1877, "name": "", "off": 52, "side": -1, "mx": 193, "my": 195}, {"f": 0.2859, "name": "", "off": 52, "side": -1, "mx": 516, "my": -37}, {"f": 0.3467, "name": "", "off": 52, "side": -1, "mx": 618, "my": 210}, {"f": 0.3866, "name": "", "off": 52, "side": -1, "mx": 762, "my": 244}, {"f": 0.463, "name": "", "off": 52, "side": -1, "mx": 1013, "my": 375}, {"f": 0.4849, "name": "", "off": 52, "side": -1, "mx": 952, "my": 512}, {"f": 0.5735, "name": "", "off": 52, "side": -1, "mx": 512, "my": 524}, {"f": 0.594, "name": "", "off": 52, "side": 1, "mx": 694, "my": 572}, {"f": 0.6356, "name": "", "off": 52, "side": 1, "mx": 580, "my": 678}, {"f": 0.6951, "name": "", "off": 52, "side": -1, "mx": 382, "my": 638}, {"f": 0.7469, "name": "", "off": 52, "side": -1, "mx": 230, "my": 670}, {"f": 0.761, "name": "", "off": 52, "side": -1, "mx": 116, "my": 522}, {"f": 0.9322, "name": "", "off": 52, "side": -1, "mx": 895, "my": 383}], "LAYOUT": {"sector": {"x": 329, "y": 401, "size": 42}, "corner": {"x": 28, "y": 399, "size": 112, "sub": 40}, "map": {"x": 20, "y": 560, "w": 1040, "h": 740}, "elev": {"x": 28, "y": 1367, "w": 1040}, "title": {"x": 40, "y": 316, "size": 30, "text": "SEPANG INTERNATIONAL CIRCUIT · MALAYSIA"}, "foot": {"x": 381, "y": 1790, "size": 56, "text": "F-LABO"}}};
+var START0=C.START, START=C.START,S1_END=C.S1_END,S2_END=C.S2_END,EMAX=C.ELEV_MAX,CORNERS=C.CORNERS,L=C.LAYOUT;
+var GMAX=C.GRID_MAX||EMAX;
+var LAP_MS=20000; window.TOTAL_MS=LAP_MS;
+var DEFAULT_L=JSON.parse(JSON.stringify(L));
+
+var pts=D.pts, frc=D.frc;
+function xyRaw(f){
+  f=((f%1)+1)%1;
+  for(var i=0;i<frc.length-1;i++){
+    if(f>=frc[i]&&f<=frc[i+1]){
+      var t=(frc[i+1]-frc[i])?(f-frc[i])/(frc[i+1]-frc[i]):0;
+      return [pts[i][0]+(pts[i+1][0]-pts[i][0])*t, pts[i][1]+(pts[i+1][1]-pts[i][1])*t];
+    }
+  }
+  var a=pts[pts.length-1],b=pts[0];
+  var t2=(f-frc[frc.length-1])/(1-frc[frc.length-1]);
+  return [a[0]+(b[0]-a[0])*t2, a[1]+(b[1]-a[1])*t2];
+}
+function toRaw(f){ return ((f+START)%1+1)%1; }
+function xyAt(f){ return xyRaw(toRaw(f)); }
+function normAt(f){
+  var a=xyAt(f+0.012), b=xyAt(f-0.012);
+  var nx=-(a[1]-b[1]), ny=(a[0]-b[0]), Ln=Math.hypot(nx,ny)||1;
+  return [nx/Ln,ny/Ln];
+}
+function seg(f0,f1,N){
+  N=N||150; if(f1<=f0) return "";
+  var o=[];
+  for(var i=0;i<=N;i++) o.push(xyAt(f0+(f1-f0)*i/N));
+  return "M"+o.map(function(p){return p[0].toFixed(1)+" "+p[1].toFixed(1)}).join("L");
+}
+function elevRaw(fr){
+  var e=D.elev; fr=toRaw(fr);
+  if(fr<=e[0].f) return e[0].m;
+  for(var i=0;i<e.length-1;i++){
+    if(fr>=e[i].f&&fr<=e[i+1].f){
+      var t=(fr-e[i].f)/(e[i+1].f-e[i].f);
+      return e[i].m+(e[i+1].m-e[i].m)*t;
+    }
+  }
+  return e[e.length-1].m;
+}
+function lastCorner(p){ var b=-1; for(var i=0;i<CORNERS.length;i++) if(CORNERS[i].f<=p) b=i; return b; }
+function atCorner(p){
+  var b=-1,bd=0.022;
+  for(var i=0;i<CORNERS.length;i++){ var d=Math.abs(CORNERS[i].f-p); d=Math.min(d,1-d); if(d<bd){bd=d;b=i;} }
+  return b;
+}
+var NS="http://www.w3.org/2000/svg";
+function el(n,a){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);return e;}
+
+/* ---- apply layout ---- */
+function applyLayout(){
+  var b=document.getElementById("sectorBadge");
+  b.style.left=L.sector.x+"px"; b.style.top=L.sector.y+"px"; b.style.fontSize=L.sector.size+"px";
+  var c=document.getElementById("cornerBox");
+  c.style.left=L.corner.x+"px"; c.style.top=L.corner.y+"px";
+  document.getElementById("lblBig").style.fontSize=L.corner.size+"px";
+  document.getElementById("lblSm").style.fontSize=L.corner.sub+"px";
+  var m=document.getElementById("mapWrap");
+  m.style.left=L.map.x+"px"; m.style.top=L.map.y+"px"; m.style.width=L.map.w+"px"; m.style.height=(L.map.h||L.map.w)+"px";
+  var ev=document.getElementById("elevWrap");
+  ev.style.left=L.elev.x+"px"; ev.style.top=L.elev.y+"px"; ev.style.width=L.elev.w+"px";
+  var t=document.getElementById("titleTxt");
+  t.textContent=L.title.text; t.style.fontSize=L.title.size+"px";
+  t.style.left=L.title.x+"px"; t.style.top=L.title.y+"px";
+  var f=document.getElementById("footTxt");
+  f.textContent=L.foot.text; f.style.fontSize=L.foot.size+"px";
+  f.style.left=L.foot.x+"px"; f.style.top=L.foot.y+"px";
+  f.style.color="#5E76A0"; f.style.letterSpacing=".20em";
+}
+applyLayout();
+
+/* ---- static map ---- */
+var box=document.getElementById("corners"), markers=[];
+function defaultPos(c){
+  var b=xyAt(c.f), n=normAt(c.f);
+  return [b[0]+n[0]*c.off*c.side, b[1]+n[1]*c.off*c.side];
+}
+CORNERS.forEach(function(c){ if(c.mx===undefined){ var p=defaultPos(c); c.mx=Math.round(p[0]); c.my=Math.round(p[1]); } });
+function drawMap(){
+  document.getElementById("base").setAttribute("d",seg(0,0.9999,300));
+  box.innerHTML=""; markers=[];
+  CORNERS.forEach(function(c,i){
+    var b=xyAt(c.f);
+    var g=el("g",{"class":"cmark","data-ci":i});
+    g.appendChild(el("line",{x1:b[0].toFixed(1),y1:b[1].toFixed(1),
+      x2:c.mx,y2:c.my,stroke:"#4A5E80","stroke-width":2,"class":"clead"}));
+    g.appendChild(el("circle",{cx:c.mx,cy:c.my,r:34,fill:"transparent","class":"chit"}));
+    var ci=el("circle",{cx:c.mx,cy:c.my,r:30,"class":"cnum"});
+    g.appendChild(ci);
+    var tn=el("text",{x:c.mx,y:c.my,"class":"cnumT"});
+    tn.textContent=("0"+(i+1)).slice(-2); g.appendChild(tn);
+    box.appendChild(g);
+    markers.push(ci);
+  });
+  var sfg=document.getElementById("sf"); sfg.innerHTML="";
+  var p=xyAt(0),n=normAt(0);
+  sfg.appendChild(el("line",{x1:(p[0]-n[0]*26).toFixed(1),y1:(p[1]-n[1]*26).toFixed(1),
+    x2:(p[0]+n[0]*26).toFixed(1),y2:(p[1]+n[1]*26).toFixed(1),stroke:"#FFFFFF","stroke-width":8}));
+}
+drawMap();
+
+/* ---- elevation ---- */
+var EW=960,EH=300,PL=76,PR=14,PT=14,PB=44,iw=EW-PL-PR,ih=EH-PT-PB;
+function ex(f){return PL+f*iw} function ey(m){return PT+ih-(m/EMAX)*ih}
+var g="";
+for(var v=0;v<=GMAX;v+=(GMAX>30?10:5)){
+  g+='<line class="grid" x1="'+PL+'" y1="'+ey(v).toFixed(1)+'" x2="'+(EW-PR)+'" y2="'+ey(v).toFixed(1)+'"/>'
+   +'<text class="axl" x="'+(PL-12)+'" y="'+(ey(v)+8).toFixed(1)+'" text-anchor="end">'+v+'m</text>';
+}
+function drawElev(){
+var eline="",N=200;
+for(var i=0;i<=N;i++){var f=i/N; eline+=(i?"L":"M")+ex(f).toFixed(1)+" "+ey(elevRaw(f)).toFixed(1);}
+document.getElementById("elev").innerHTML=
+ '<defs><linearGradient id="eg" x1="0" y1="0" x2="0" y2="1">'+
+ '<stop offset="0%" stop-color="#2C7BE5" stop-opacity=".5"/>'+
+ '<stop offset="100%" stop-color="#2C7BE5" stop-opacity=".04"/></linearGradient>'+
+ '<clipPath id="ec"><rect id="ecr" x="'+PL+'" y="0" width="0" height="'+EH+'"/></clipPath></defs>'+g+
+ '<path id="earea" d="'+eline+'L'+ex(1).toFixed(1)+' '+ey(0).toFixed(1)+'L'+ex(0).toFixed(1)+' '+ey(0).toFixed(1)+'Z" fill="url(#eg)" clip-path="url(#ec)"/>'+
+ '<path d="'+eline+'" fill="none" stroke="#22314F" stroke-width="4" stroke-linejoin="round"/>'+
+ '<path d="'+eline+'" fill="none" stroke="#4DA3FF" stroke-width="4" stroke-linejoin="round" clip-path="url(#ec)"/>'+
+ '<text class="axl" x="'+PL+'" y="'+(EH-12)+'">START</text>'+
+ '<text class="axl" x="'+(EW-PR)+'" y="'+(EH-12)+'" text-anchor="end">FINISH</text>'+
+ '<circle id="edot" r="10" fill="#FFFFFF" stroke="#0B1428" stroke-width="3"/>';
+edot=document.getElementById("edot"); ecr=document.getElementById("ecr");
+}
+var edot,ecr; drawElev();
+document.getElementById("elevVal").textContent=D.lap_km.toFixed(3)+" km  \u00B7  \u25B2"+(D.elev_max-D.elev_min).toFixed(1)+" m";
+
+var car=document.getElementById("car");
+var badge=document.getElementById("sectorBadge");
+var hdBig=document.getElementById("lblBig"),hdSm=document.getElementById("lblSm");
+var SECCOL=["#2C7BE5","#E8323C","#28A745"];
+
+window.seek=function(p){
+  p=p<0?0:p>1?1:p;
+  document.getElementById("p1").setAttribute("d", seg(0, Math.min(p,S1_END), 200));
+  document.getElementById("p2").setAttribute("d", p>S1_END ? seg(S1_END, Math.min(p,S2_END), 200) : "");
+  document.getElementById("p3").setAttribute("d", p>S2_END ? seg(S2_END, p, 200) : "");
+  ecr.setAttribute("width", (p*iw).toFixed(1));
+
+  var xy=xyAt(p);
+  car.setAttribute("cx",xy[0].toFixed(1)); car.setAttribute("cy",xy[1].toFixed(1));
+  edot.setAttribute("cx",ex(p).toFixed(1)); edot.setAttribute("cy",ey(elevRaw(p)).toFixed(1));
+
+  var s=p<S1_END?0:p<S2_END?1:2;
+  badge.textContent="SECTOR "+(s+1); badge.style.background=SECCOL[s];
+
+  var nearSF=(p<0.030)||(p>0.970), shown=lastCorner(p);
+  if(nearSF||shown<0){ hdBig.textContent="S/F"; hdSm.textContent="Start / Finish"; }
+  else { hdBig.textContent="T"+("0"+(shown+1)).slice(-2); hdSm.textContent=CORNERS[shown].name||""; }
+
+  var a=atCorner(p);
+  for(var i=0;i<CORNERS.length;i++){
+    markers[i].setAttribute("stroke", i===a?"#FFFFFF":"#8FA6C8");
+    markers[i].setAttribute("stroke-width", i===a?6:3);
+    markers[i].setAttribute("fill", i===a?"#1E3A63":"#0B1428");
+  }
+};
+
+var fit=document.getElementById("fit"), scale=1;
+function fitToWindow(){
+  scale=Math.min(window.innerWidth/1080,window.innerHeight/1920,1);
+  fit.style.transform="translateX("+Math.max(0,(window.innerWidth-1080*scale)/2)+"px) scale("+scale+")";
+}
+if(!window.__CAPTURE__){fitToWindow();window.addEventListener("resize",fitToWindow);}
+window.seek(0);
+
+/* ---- 配置エディタ（Eキーで開閉） ---- */
+(function(){
+  var panel=document.getElementById("edPanel");
+  var svg=document.getElementById("map");
+  var dragging=null, hoverI=-1;
+  var MARK={size:30, off:52, lead:50};
+  function dump(){
+    var o={size:MARK.size, off:MARK.off, lead:MARK.lead, start:+START.toFixed(4), s1:+S1_END.toFixed(4), s2:+S2_END.toFixed(4), cornerF:CORNERS.map(function(c){return +c.f.toFixed(4)}), pos:{}};
+    CORNERS.forEach(function(c,i){ o.pos[i]=[c.mx,c.my]; });
+    document.getElementById("edJson").value=JSON.stringify(o);
+  }
+  function toLocal(ev){
+    var pt=svg.createSVGPoint(); pt.x=ev.clientX; pt.y=ev.clientY;
+    return pt.matrixTransform(svg.getScreenCTM().inverse());
+  }
+  function restyle(){
+    document.querySelectorAll(".cnum").forEach(function(e){ e.setAttribute("r", MARK.size); });
+    document.querySelectorAll(".cnumT").forEach(function(e){ e.setAttribute("font-size", MARK.size*1.25); });
+    document.querySelectorAll(".chit").forEach(function(e){ e.setAttribute("r", MARK.size*1.4); });
+    document.querySelectorAll(".clead").forEach(function(e){ e.setAttribute("opacity", MARK.lead/100); });
+  }
+  document.addEventListener("keydown",function(e){
+    if(e.key==="e"||e.key==="E"){
+      var open = panel.style.display==="none";
+      panel.style.display = open ? "block" : "none"; dump();
+      if(open){ playing=false; window.seek(0.9999); }
+      else { playing=true; t0=null; requestAnimationFrame(loop); }
+    }
+    if((e.key==="r"||e.key==="R") && hoverI>=0){
+      var c=CORNERS[hoverI], p=defaultPos({f:c.f, off:MARK.off, side:c.side});
+      c.mx=Math.round(p[0]); c.my=Math.round(p[1]); drawMap(); restyle(); dump();
+    }
+  });
+  box.addEventListener("mousedown",function(ev){
+    var g=ev.target.closest(".cmark"); if(!g) return;
+    var i=+g.dataset.ci, l=toLocal(ev);
+    dragging={i:i, ox:l.x-CORNERS[i].mx, oy:l.y-CORNERS[i].my};
+    ev.preventDefault();
+  });
+  box.addEventListener("mouseover",function(ev){
+    var g=ev.target.closest(".cmark"); hoverI = g? +g.dataset.ci : -1;
+  });
+  window.addEventListener("mousemove",function(ev){
+    if(!dragging) return;
+    var l=toLocal(ev);
+    CORNERS[dragging.i].mx=Math.round(l.x-dragging.ox);
+    CORNERS[dragging.i].my=Math.round(l.y-dragging.oy);
+    drawMap(); restyle(); dump();
+  });
+  window.addEventListener("mouseup",function(){ dragging=null; });
+  document.getElementById("edSize").addEventListener("input",function(){
+    MARK.size=+this.value; document.getElementById("edSizeV").textContent=this.value; restyle(); dump(); });
+  document.getElementById("edOff").addEventListener("input",function(){
+    MARK.off=+this.value; document.getElementById("edOffV").textContent=this.value; dump(); });
+  document.getElementById("edLead").addEventListener("input",function(){
+    MARK.lead=+this.value; document.getElementById("edLeadV").textContent=this.value; restyle(); dump(); });
+  document.getElementById("edCopy").addEventListener("click",function(){
+    var t=document.getElementById("edJson"); t.select();
+    navigator.clipboard.writeText(t.value);
+    this.textContent="コピーしました"; var b=this;
+    setTimeout(function(){b.textContent="JSONをコピー"},1200);
+  });
+  document.getElementById("edLoad").addEventListener("click",function(){
+    var v=prompt("JSONを貼り付け"); if(!v) return;
+    try{ var o=JSON.parse(v);
+      if(o.size){MARK.size=o.size; document.getElementById("edSize").value=o.size; document.getElementById("edSizeV").textContent=o.size;}
+      if(o.off){MARK.off=o.off; document.getElementById("edOff").value=o.off; document.getElementById("edOffV").textContent=o.off;}
+      if(o.lead!==undefined){MARK.lead=o.lead; document.getElementById("edLead").value=o.lead; document.getElementById("edLeadV").textContent=o.lead;}
+      if(o.pos){ CORNERS.forEach(function(c,i){ if(o.pos[i]){ c.mx=o.pos[i][0]; c.my=o.pos[i][1]; } }); }
+      if(o.start!==undefined){ var dv=o.start-START0; sf.value=dv; document.getElementById("edSFV").textContent=dv.toFixed(4); applyStart(dv); }
+      if(o.s1!==undefined){ S1_END=o.s1; RAW.s1=(S1_END+START)%1; e1.value=S1_END; document.getElementById("edS1V").textContent=S1_END.toFixed(3); }
+      if(o.s2!==undefined){ S2_END=o.s2; RAW.s2=(S2_END+START)%1; e2.value=S2_END; document.getElementById("edS2V").textContent=S2_END.toFixed(3); }
+      drawMap(); restyle(); dump();
+    }catch(err){ alert("読み取れませんでした"); }
+  });
+  // --- S/F line & sector boundaries (kept fixed on the track when S/F moves) ---
+  var RAW={s1:(S1_END+START)%1, s2:(S2_END+START)%1, c:CORNERS.map(function(c){return (c.f+START)%1})};
+  function applyStart(v){
+    START=((START0+v)%1+1)%1;
+    S1_END=((RAW.s1-START)%1+1)%1; S2_END=((RAW.s2-START)%1+1)%1;
+    CORNERS.forEach(function(c,i){ c.f=((RAW.c[i]-START)%1+1)%1; });
+    e1.value=S1_END; e2.value=S2_END;
+    document.getElementById("edS1V").textContent=S1_END.toFixed(3); document.getElementById("edS2V").textContent=S2_END.toFixed(3);
+    drawMap(); restyle(); drawElev(); window.seek(0.9999); dump(); if(window.__drawSecH) window.__drawSecH();
+  }
+  var sf=document.getElementById("edSF"), e1=document.getElementById("edS1"), e2=document.getElementById("edS2");
+  e1.value=S1_END; e2.value=S2_END;
+  document.getElementById("edS1V").textContent=S1_END.toFixed(3); document.getElementById("edS2V").textContent=S2_END.toFixed(3);
+  sf.addEventListener("input",function(){ document.getElementById("edSFV").textContent=(+this.value).toFixed(4); applyStart(+this.value); });
+  e1.addEventListener("input",function(){ S1_END=+this.value; RAW.s1=(S1_END+START)%1; document.getElementById("edS1V").textContent=S1_END.toFixed(3); window.seek(0.999); dump(); });
+  e2.addEventListener("input",function(){ S2_END=+this.value; RAW.s2=(S2_END+START)%1; document.getElementById("edS2V").textContent=S2_END.toFixed(3); window.seek(0.999); dump(); });
+  var _load=document.getElementById("edLoad");
+  _load.addEventListener("click",function(){ /* start/s1/s2 in pasted JSON are applied below if present */ });
+  restyle(); dump();
+})();
+
+
+/* ---- sector boundary handles: drag along the track (editor open) ---- */
+(function(){
+  var svg=document.getElementById("map"), gH=document.getElementById("secH");
+  var HN=[{k:"s1",col:"#E8323C",lab:"S1|S2"},{k:"s2",col:"#28A745",lab:"S2|S3"}];
+  var drag=-1;
+  function val(k){ return k==="s1"?S1_END:S2_END; }
+  function draw(){
+    gH.innerHTML="";
+    var show=document.getElementById("edPanel").style.display!=="none";
+    if(!show) return;
+    HN.forEach(function(h,i){
+      var p=xyAt(val(h.k));
+      var g=el("g",{"data-h":i,style:"cursor:grab"});
+      g.appendChild(el("circle",{cx:p[0],cy:p[1],r:26,fill:h.col,stroke:"#FFFFFF","stroke-width":5}));
+      var t=el("text",{x:p[0],y:p[1]-40,fill:"#FFFFFF","font-size":26,"font-weight":800,"text-anchor":"middle"});
+      t.textContent=h.lab; g.appendChild(t);
+      gH.appendChild(g);
+    });
+  }
+  window.__drawSecH=draw;
+  function nearestF(x,y){
+    var best=0,bd=1e18;
+    for(var i=0;i<=2000;i++){ var f=i/2000, p=xyAt(f), d=(p[0]-x)*(p[0]-x)+(p[1]-y)*(p[1]-y); if(d<bd){bd=d;best=f;} }
+    return best;
+  }
+  function toLocal(ev){ var pt=svg.createSVGPoint(); pt.x=ev.clientX; pt.y=ev.clientY; return pt.matrixTransform(svg.getScreenCTM().inverse()); }
+  gH.addEventListener("mousedown",function(ev){ var g=ev.target.closest("g[data-h]"); if(!g) return; drag=+g.dataset.h; ev.preventDefault(); ev.stopPropagation(); });
+  window.addEventListener("mousemove",function(ev){
+    if(drag<0) return;
+    var l=toLocal(ev), f=nearestF(l.x,l.y);
+    var e=document.getElementById(drag===0?"edS1":"edS2");
+    e.value=f; e.dispatchEvent(new Event("input"));
+    draw();
+  });
+  window.addEventListener("mouseup",function(){ drag=-1; });
+  document.addEventListener("keydown",function(e){ if(e.key==="e"||e.key==="E") setTimeout(draw,0); });
+})();
+
+/* ---- playback ---- */
+var playing=true, t0=null, rafP=0;
+function loop(ts){ if(!playing){return;} if(t0===null)t0=ts; window.seek(((ts-t0)%LAP_MS)/LAP_MS); rafP=requestAnimationFrame(loop); }
+if(!window.__CAPTURE__) rafP=requestAnimationFrame(loop);
+
+</script></body></html>
