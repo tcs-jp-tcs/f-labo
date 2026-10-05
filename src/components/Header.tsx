@@ -19,7 +19,6 @@ const NAV = [
   // その要素だけ translate="no" にして Google翻訳の再翻訳を止める（他タブはGT任せ）。
   { href: "/circuits", label: "サーキット図鑑" },
   { href: "/quiz", label: "検定" },
-  { href: "/vote", label: "投票" },
 ];
 
 export default function Header() {
