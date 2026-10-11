@@ -5,7 +5,7 @@ import SeriesTabs from "@/components/SeriesTabs";
 import NewsCard from "@/components/NewsCard";
 import type { NewsItem } from "@/lib/data";
 
-const TABS = ["ALL", "F1", "F2/F3", "SF", "INDY"] as const;
+const TABS = ["ALL", "F1", "F2/F3", "SF"] as const;
 type Tab = (typeof TABS)[number];
 
 /** Supabase から取得済みの記事一覧を受け取り、タブで絞り込み表示するクライアント部分 */

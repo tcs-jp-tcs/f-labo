@@ -9,12 +9,23 @@ import type { Series } from "@/lib/data";
  * 全カテゴリに戻すときは VISIBLE_SERIES を ALL_SERIES に差し替えるだけでよい。
  *   例) export const VISIBLE_SERIES: readonly Series[] = ALL_SERIES;
  *
- * ※ニュースはこの制御の対象外（全カテゴリ維持）。
+ * ※ニュースは VISIBLE_SERIES ではなく HIDDEN_NEWS_CATEGORIES で別に制御する。
  */
 export const ALL_SERIES = ["F1", "F2", "F3", "SF", "INDY"] as const;
 
 /** 現在表示するシリーズ（F1のみ）。全カテに戻すなら ALL_SERIES を入れる。 */
 export const VISIBLE_SERIES: readonly Series[] = ["F1"];
+
+/**
+ * ニュース（一覧・記事ページ）で表示しないカテゴリ。DBの記事は消さず表示のみ止める。
+ * 戻すときは空配列にし、NewsList / NewsArchive の TABS に "INDY" を戻す。
+ */
+export const HIDDEN_NEWS_CATEGORIES: readonly string[] = ["INDY"];
+
+/** そのニュースカテゴリを表示してよいか */
+export function isNewsCategoryVisible(category: string): boolean {
+  return !HIDDEN_NEWS_CATEGORIES.includes(category);
+}
 
 /** そのシリーズを表示してよいか */
 export function isSeriesVisible(series: Series): boolean {

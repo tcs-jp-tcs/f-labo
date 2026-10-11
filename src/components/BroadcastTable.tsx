@@ -1,11 +1,11 @@
 import { seriesLabel, type Series, type WeekendBroadcast } from "@/lib/data";
 
-// カテゴリバッジ配色：/news のカテゴリチップ（NewsCard）と統一（F1赤 / F2・F3青 / SF黄 / INDY緑）
+// カテゴリバッジ配色：/news のカテゴリチップ（NewsCard）と統一（F1赤 / F2・F3青 / SF・INDY緑）
 const SERIES_CHIP: Record<Series, string> = {
   F1: "bg-flabo-red/15 text-flabo-red",
   F2: "bg-flabo-blue/15 text-flabo-blue",
   F3: "bg-flabo-blue/15 text-flabo-blue",
-  SF: "bg-flabo-yellow/15 text-flabo-yellow",
+  SF: "bg-flabo-green/15 text-flabo-green",
   INDY: "bg-flabo-green/15 text-flabo-green",
 };
 

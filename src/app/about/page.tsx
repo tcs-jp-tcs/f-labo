@@ -19,7 +19,7 @@ export default function AboutPage() {
             サイト概要
           </h3>
           <p>
-            「フォーミュラ研究所（Fラボ）」は、F1・F2・F3・スーパーフォーミュラ・インディカーといったフォーミュラ系モータースポーツを、ひとつのサイトでまとめて追えるようにすることを目的とした個人運営メディアです。
+            「フォーミュラ研究所（Fラボ）」は、F1・F2・F3・スーパーフォーミュラといったフォーミュラ系モータースポーツを、ひとつのサイトでまとめて追えるようにすることを目的とした個人運営メディアです。
             日本国内のファンが見やすい時刻表記（0:30／早朝4:50 形式）と、各シリーズの最新ニュース・スケジュール・放送予定・順位表・レースレビューを集約しています。
           </p>
         </section>
@@ -41,10 +41,6 @@ export default function AboutPage() {
               <div className="font-display font-bold tracking-wider text-white">スーパーフォーミュラ</div>
               <div className="text-xs text-flabo-grey mt-1">全日本スーパーフォーミュラ選手権</div>
             </li>
-            <li className="rounded-lg border border-white/5 bg-flabo-carbon px-4 py-3">
-              <div className="font-display font-bold tracking-wider text-white">インディカー</div>
-              <div className="text-xs text-flabo-grey mt-1">NTT INDYCAR SERIES</div>
-            </li>
           </ul>
         </section>
 
@@ -59,7 +55,7 @@ export default function AboutPage() {
             <li>Formula1.com（F1 公式）</li>
             <li>FIA Formula 2 / Formula 3 公式</li>
             <li>スーパーフォーミュラ公式 / AUTOSPORT web</li>
-            <li>INDYCAR.com / Motorsport.com</li>
+            <li>Motorsport.com</li>
             <li>各シリーズを取り扱う一次・二次報道メディア</li>
           </ul>
           <p className="mt-3 text-xs text-flabo-grey">

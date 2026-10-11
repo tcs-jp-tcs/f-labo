@@ -87,7 +87,7 @@ export default async function HomePage() {
             フォーミュラ研究所
           </h2>
           <p className="text-xs md:text-sm text-flabo-grey mt-2.5">
-            F1・F2・F3・スーパーフォーミュラ・インディカー
+            F1・F2・F3・スーパーフォーミュラ
           </p>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-5">

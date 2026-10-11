@@ -32,7 +32,7 @@ export default function Footer() {
             </text>
           </svg>
           <div className="text-[0.75rem] text-white/65 leading-relaxed max-w-xs">
-            F1・F2・F3・スーパーフォーミュラ・インディカーの<br />
+            F1・F2・F3・スーパーフォーミュラの<br />
             ニュース＆スケジュールメディア
           </div>
         </div>

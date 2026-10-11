@@ -19,7 +19,7 @@ type HeaderStyle = {
 /**
  * カテゴリー → 色・ラベルのマッピング。
  * 既存ニュースバー（HeroFeature）の配色定義を踏襲。色は新規ハードコードせず
- * flabo-* トークン（CSS変数）のみを使用。黄(SF)・緑(INDY)は白文字だと視認性が
+ * flabo-* トークン（CSS変数）のみを使用。緑(SF・INDY)は白文字だと視認性が
  * 低いため、既存定義同様に濃色文字を使う。
  */
 const CATEGORY_STYLE: Record<CardCategory, HeaderStyle> = {
@@ -27,7 +27,7 @@ const CATEGORY_STYLE: Record<CardCategory, HeaderStyle> = {
   F2: { block: "bg-flabo-blue", text: "text-white", cssVar: "var(--color-flabo-blue)", line: "bg-flabo-blue/50", label: "F2" },
   F3: { block: "bg-flabo-blue", text: "text-white", cssVar: "var(--color-flabo-blue)", line: "bg-flabo-blue/50", label: "F3" },
   "F2/F3": { block: "bg-flabo-blue", text: "text-white", cssVar: "var(--color-flabo-blue)", line: "bg-flabo-blue/50", label: "F2/F3" },
-  SF: { block: "bg-flabo-yellow", text: "text-flabo-darker", cssVar: "var(--color-flabo-yellow)", line: "bg-flabo-yellow/50", label: "SF" },
+  SF: { block: "bg-flabo-green", text: "text-flabo-darker", cssVar: "var(--color-flabo-green)", line: "bg-flabo-green/50", label: "SF" },
   INDY: { block: "bg-flabo-green", text: "text-flabo-darker", cssVar: "var(--color-flabo-green)", line: "bg-flabo-green/50", label: "INDY" },
 };
 

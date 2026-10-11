@@ -81,15 +81,14 @@ const notoThai = Noto_Sans_Thai({
 
 export const metadata: Metadata = {
   title:
-    "フォーミュラ研究所（Fラボ）| F1・F2・F3・SF・INDYのニュース＆スケジュール",
+    "フォーミュラ研究所（Fラボ）| F1・F2・F3・SFのニュース＆スケジュール",
   description:
-    "F1・F2・F3・スーパーフォーミュラ・インディカーの最新ニュース、レーススケジュール、放送予定、チャンピオンシップ順位表をひとつのサイトで。フォーミュラ研究所（Fラボ）",
+    "F1・F2・F3・スーパーフォーミュラの最新ニュース、レーススケジュール、放送予定、チャンピオンシップ順位表をひとつのサイトで。フォーミュラ研究所（Fラボ）",
   keywords: [
     "F1",
     "F2",
     "F3",
     "スーパーフォーミュラ",
-    "インディカー",
     "Fラボ",
     "フォーミュラ研究所",
   ],
@@ -113,7 +112,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "フォーミュラ研究所（Fラボ）",
     description:
-      "F1・F2・F3・スーパーフォーミュラ・インディカーの最新ニュース、放送予定、順位表まとめ",
+      "F1・F2・F3・スーパーフォーミュラの最新ニュース、放送予定、順位表まとめ",
     url: "https://f-labo.vercel.app",
     siteName: "フォーミュラ研究所",
     locale: "ja_JP",

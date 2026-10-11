@@ -6,7 +6,7 @@ const CATEGORY_BAR: Record<NewsItem["category"], { bg: string; text: string; lab
   F2: { bg: "bg-flabo-blue", text: "text-white", label: "FORMULA 2" },
   F3: { bg: "bg-flabo-blue", text: "text-white", label: "FORMULA 3" },
   "F2/F3": { bg: "bg-flabo-blue", text: "text-white", label: "FORMULA 2 / 3" },
-  SF: { bg: "bg-flabo-yellow", text: "text-flabo-darker", label: "SUPER FORMULA" },
+  SF: { bg: "bg-flabo-green", text: "text-flabo-darker", label: "SUPER FORMULA" },
   INDY: { bg: "bg-flabo-green", text: "text-flabo-darker", label: "INDYCAR" },
 };
 

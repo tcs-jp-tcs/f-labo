@@ -5,7 +5,7 @@ import SeriesTabs from "@/components/SeriesTabs";
 import NewsCard from "@/components/NewsCard";
 import type { NewsItem } from "@/lib/data";
 
-const TABS = ["ALL", "F1", "F2/F3", "SF", "INDY"] as const;
+const TABS = ["ALL", "F1", "F2/F3", "SF"] as const;
 type Tab = (typeof TABS)[number];
 
 /** 「2026年5月26日」→「2026年5月」。抽出できなければ "その他" */

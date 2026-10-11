@@ -1,5 +1,6 @@
 import { cache } from "react";
 import { supabase } from "@/lib/supabase";
+import { isNewsCategoryVisible } from "@/lib/displayConfig";
 import type { NewsContentType, NewsItem } from "@/lib/data";
 
 /**
@@ -89,7 +90,9 @@ async function fetchNews(
     console.error("[news] fetch failed:", error.message);
     return [];
   }
-  return (data ?? []).map((row) => toNewsItem(row as NewsRow));
+  return (data ?? [])
+    .map((row) => toNewsItem(row as NewsRow))
+    .filter((n) => isNewsCategoryVisible(n.category));
 }
 
 /** archived=false の記事を取得 */
@@ -115,5 +118,8 @@ export const getNewsById = cache(async (id: number): Promise<NewsItem | null> =>
     console.error("[news] getNewsById failed:", error.message);
     return null;
   }
-  return data ? toNewsItem(data as NewsRow) : null;
+  if (!data) return null;
+  const item = toNewsItem(data as NewsRow);
+  // 非表示カテゴリの記事は直接URLでも見せない（ページ側で 404）
+  return isNewsCategoryVisible(item.category) ? item : null;
 });

@@ -34,7 +34,7 @@ export const categoryBadge: Record<QuizCategory, string> = {
   f1: "bg-flabo-red/15 text-flabo-red",
   f2: "bg-flabo-blue/15 text-flabo-blue",
   f3: "bg-flabo-green/15 text-flabo-green",
-  sf: "bg-flabo-yellow/15 text-flabo-yellow",
+  sf: "bg-flabo-green/15 text-flabo-green",
   indy: "bg-flabo-yellow/15 text-flabo-yellow",
 };
 
