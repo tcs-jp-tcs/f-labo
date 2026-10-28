@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8"><title>Autódromo Hermanos Rodríguez</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;background:#0B1428;overflow:hidden}
+body{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;
+     font-variant-numeric:tabular-nums}
+#fit{position:absolute;top:0;left:0;transform-origin:top left}
+#stage{position:relative;width:1080px;height:1920px;background:#0B1428}
+.abs{position:absolute}
+#sectorBadge{padding:16px 34px;border-radius:10px;font-weight:800;letter-spacing:.14em;color:#fff;
+  background:#2C7BE5;display:inline-block;white-space:nowrap}
+#cornerBox .big{font-weight:800;color:#fff;line-height:1;white-space:nowrap}
+#cornerBox .sm{font-weight:700;color:#9DB2D0;margin-top:8px;letter-spacing:.06em;white-space:nowrap}
+svg{width:100%;overflow:visible}
+.cnum{fill:#0B1428;stroke:#8FA6C8;stroke-width:3}
+.clead{opacity:.5}
+.cnumT{fill:#E6EEF9;pointer-events:none;font-size:30px;font-weight:800;text-anchor:middle;dominant-baseline:central}
+.axl{fill:#6C82A8;font-size:24px;font-weight:700}
+.grid{stroke:#22314F;stroke-width:1.5}
+#edPanel{position:absolute;right:16px;top:16px;width:320px;background:rgba(8,16,32,.96);
+  border:1px solid #2E4670;border-radius:12px;padding:14px;z-index:50;font-size:13px;color:#C7D6EC;
+  font-family:"Helvetica Neue",Helvetica,Arial,sans-serif}
+#edHead{font-size:15px;font-weight:800;letter-spacing:.08em;color:#9DB2D0;margin-bottom:10px}
+.edRow{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.edRow span{width:120px;flex:none;color:#7A90AE}
+.edRow input{flex:1;accent-color:#E8323C}
+.edHint{color:#6C82A8;line-height:1.6;margin:6px 0 10px}
+#edBtns{display:flex;gap:8px;margin-bottom:8px}
+#edBtns button{flex:1;background:#22355A;color:#DCE7F7;border:1px solid #2E4670;
+  border-radius:7px;padding:6px;font-size:12px;font-weight:700;cursor:pointer}
+#edJson{width:100%;height:90px;background:#070E1C;color:#8FE3A8;border:1px solid #22314F;
+  border-radius:7px;padding:6px;font-family:ui-monospace,Menlo,monospace;font-size:10.5px}
+.cmark{cursor:grab}
+.txt{font-weight:800;letter-spacing:.14em;color:#4A5E80;white-space:nowrap}
+
+</style></head>
+<body><div id="fit"><div id="stage">
+
+  <div class="abs" id="sectorBadge" data-k="sector">SECTOR 1</div>
+  <div class="abs" id="cornerBox" data-k="corner"><div class="big" id="lblBig">S/F</div><div class="sm" id="lblSm">Start / Finish</div></div>
+
+  <div class="abs" id="mapWrap" data-k="map">
+    <svg id="map" viewBox="-40 -30 1120 800">
+      <path id="base" fill="none" stroke="#1B2A47" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      <path id="p1" fill="none" stroke="#2C7BE5" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      <path id="p2" fill="none" stroke="#E8323C" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      <path id="p3" fill="none" stroke="#28A745" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      <g id="corners"></g><g id="sf"></g><g id="secH"></g>
+      <circle id="car" r="15" fill="#FFFFFF" stroke="#0B1428" stroke-width="4"/>
+    </svg>
+  </div>
+
+  <div class="abs" id="elevWrap" data-k="elev">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:24px">
+      <div style="font-size:38px;font-weight:800;letter-spacing:.22em;color:#9DB2D0">ELEVATION &middot; ONE LAP</div>
+      <div style="font-size:27px;font-weight:800;color:#4DA3FF;white-space:nowrap" id="elevVal"></div>
+    </div>
+    <svg id="elev" viewBox="0 0 960 300" preserveAspectRatio="none" style="height:300px"></svg>
+  </div>
+
+  <div class="abs txt" id="titleTxt" data-k="title"></div>
+  <div class="abs txt" id="footTxt" data-k="foot"></div>
+
+  <div id="edPanel" style="display:none">
+    <div id="edHead">配置エディタ</div>
+    <div id="edBody">
+      <div class="edRow"><span>番号サイズ</span>
+        <input id="edSize" type="range" min="14" max="48" step="1" value="30"><b id="edSizeV">30</b></div>
+      <div class="edRow"><span>コースからの距離</span>
+        <input id="edOff" type="range" min="20" max="160" step="1" value="52"><b id="edOffV">52</b></div>
+      <div class="edRow"><span>引き出し線</span>
+        <input id="edLead" type="range" min="0" max="100" step="5" value="50"><b id="edLeadV">50</b></div>
+      <div class="edRow"><span>S/Fライン</span>
+        <input id="edSF" type="range" min="-0.06" max="0.06" step="0.0005" value="0"><b id="edSFV">0</b></div>
+      <div class="edRow"><span>S1終わり</span>
+        <input id="edS1" type="range" min="0.01" max="0.99" step="0.0005"><b id="edS1V"></b></div>
+      <div class="edRow"><span>S2終わり</span>
+        <input id="edS2" type="range" min="0.01" max="0.99" step="0.0005"><b id="edS2V"></b></div>
+      <div class="edHint">番号の丸をドラッグで個別に移動／Rでその番号をリセット<br>赤い丸（S1|S2）と緑の丸（S2|S3）をコースに沿ってドラッグすると、セクターの境目が動きます</div>
+      <div id="edBtns"><button id="edCopy">JSONをコピー</button><button id="edLoad">読み込み</button></div>
+      <textarea id="edJson" readonly></textarea>
+    </div>
+  </div>
+</div></div>
+
+
+<script>
+var D={"pts": [[111.26, 433.21], [120.95, 428.33], [132.97, 422.32], [145.04, 416.3], [156.38, 410.63], [167.33, 405.15], [181.15, 398.16], [193.1, 392.07], [202.72, 387.13], [213.66, 381.47], [226.61, 374.76], [241.3, 367.16], [254.43, 360.35], [265.42, 354.65], [275.01, 349.7], [284.51, 344.79], [297.54, 338.02], [310.85, 331.09], [323.19, 324.61], [333.46, 319.17], [342.64, 314.25], [353.79, 308.16], [365.19, 301.83], [376.5, 295.48], [387.6, 289.19], [398.7, 282.91], [409.81, 276.62], [420.91, 270.34], [432.01, 264.05], [443.18, 257.75], [454.51, 251.39], [465.83, 245.03], [478.82, 237.68], [493.34, 229.47], [503.27, 223.86], [512.39, 218.76], [523.06, 212.84], [534.9, 206.32], [549.22, 198.53], [563.8, 190.61], [575.94, 184.03], [585.02, 179.11], [591.54, 175.59], [602.58, 169.62], [614.01, 163.39], [625.53, 157.12], [637.6, 150.52], [648.95, 144.36], [660.37, 138.16], [671.87, 131.92], [683.38, 125.67], [696.3, 118.64], [711.49, 110.37], [721.32, 105.03], [730.87, 99.79], [740.88, 94.29], [753.85, 87.33], [769.34, 79.13], [778.5, 74.83], [790.07, 71.21], [804.18, 69.83], [815.92, 73.2], [826.8, 81.77], [833.5, 92.56], [838.73, 102.63], [847.6, 111.71], [859.69, 115.46], [872.79, 115.33], [886.3, 119.85], [894.58, 128.32], [900.41, 138.62], [905.11, 150.33], [909.4, 163.56], [913.16, 176.92], [915.51, 187.58], [918.19, 202.26], [920.0, 214.39], [921.11, 225.52], [922.15, 238.38], [922.97, 251.23], [923.74, 264.94], [924.43, 281.03], [924.99, 291.71], [926.0, 306.04], [927.19, 321.06], [928.16, 332.17], [929.18, 342.87], [930.38, 354.86], [932.16, 373.07], [933.35, 385.84], [934.39, 397.45], [935.46, 409.28], [936.47, 421.38], [937.38, 433.25], [938.39, 448.77], [939.44, 466.09], [939.97, 478.76], [940.33, 489.24], [940.64, 498.61], [941.0, 514.72], [941.61, 531.49], [942.32, 548.15], [943.32, 562.3], [948.0, 573.03], [956.98, 581.42], [971.78, 582.66], [982.84, 581.76], [994.45, 585.57], [999.91, 596.76], [997.41, 609.33], [993.29, 621.27], [989.05, 633.84], [985.13, 646.79], [979.85, 658.89], [969.29, 668.23], [957.75, 669.9], [946.43, 663.72], [938.57, 654.25], [931.96, 643.08], [926.33, 631.59], [919.57, 617.29], [913.91, 605.5], [907.82, 592.96], [903.07, 583.18], [897.79, 571.97], [892.41, 560.41], [887.0, 548.63], [881.36, 536.85], [875.24, 524.53], [868.25, 511.45], [861.77, 501.46], [852.07, 490.91], [843.27, 485.19], [831.98, 480.54], [818.9, 479.05], [804.48, 479.65], [792.73, 479.64], [777.7, 477.02], [763.19, 473.65], [754.64, 470.46], [740.7, 465.52], [728.51, 461.82], [718.79, 460.72], [705.39, 461.36], [690.9, 464.18], [680.79, 468.07], [668.95, 474.47], [656.9, 482.47], [645.91, 490.05], [635.46, 495.91], [623.13, 501.29], [610.78, 503.43], [597.92, 502.08], [585.47, 498.02], [573.1, 491.31], [562.03, 484.91], [551.38, 479.12], [535.95, 474.63], [524.22, 472.54], [512.49, 473.22], [498.93, 474.61], [488.13, 476.23], [475.21, 478.63], [459.9, 482.13], [445.8, 486.21], [432.2, 490.49], [422.09, 494.35], [410.88, 498.72], [397.97, 504.06], [389.95, 507.68], [378.61, 513.15], [364.6, 520.28], [350.83, 527.46], [341.02, 532.73], [330.42, 538.6], [317.82, 545.71], [308.58, 550.97], [297.29, 557.42], [283.46, 565.34], [270.54, 572.71], [258.8, 579.37], [247.56, 585.73], [238.72, 590.76], [227.17, 596.94], [213.58, 603.04], [203.22, 605.31], [190.32, 604.41], [178.01, 599.06], [169.15, 590.96], [161.11, 581.22], [153.92, 570.48], [146.83, 559.35], [138.81, 547.43], [129.0, 535.22], [120.1, 528.53], [108.08, 527.94], [99.57, 536.8], [95.49, 550.51], [89.79, 560.52], [80.15, 568.51], [67.24, 575.01], [55.88, 580.62], [43.33, 587.26], [33.85, 591.51], [20.43, 590.62], [9.98, 581.99], [4.43, 572.41], [0.83, 560.72], [0.49, 547.73], [1.37, 534.48], [3.87, 523.77], [8.61, 512.76], [15.38, 501.83], [25.51, 489.76], [36.77, 478.91], [46.19, 471.18], [54.16, 465.68], [64.42, 459.01], [75.54, 452.46], [90.36, 444.27]], "frc": [0.0, 0.00455, 0.00909, 0.01364, 0.01818, 0.02273, 0.02727, 0.03182, 0.03636, 0.04091, 0.04545, 0.05, 0.05455, 0.05909, 0.06364, 0.06818, 0.07273, 0.07727, 0.08182, 0.08636, 0.09091, 0.09545, 0.1, 0.10455, 0.10909, 0.11364, 0.11818, 0.12273, 0.12727, 0.13182, 0.13636, 0.14091, 0.14545, 0.15, 0.15455, 0.15909, 0.16364, 0.16818, 0.17273, 0.17727, 0.18182, 0.18636, 0.19091, 0.19545, 0.2, 0.20455, 0.20909, 0.21364, 0.21818, 0.22273, 0.22727, 0.23182, 0.23636, 0.24091, 0.24545, 0.25, 0.25455, 0.25909, 0.26364, 0.26818, 0.27273, 0.27727, 0.28182, 0.28636, 0.29091, 0.29545, 0.3, 0.30455, 0.30909, 0.31364, 0.31818, 0.32273, 0.32727, 0.33182, 0.33636, 0.34091, 0.34545, 0.35, 0.35455, 0.35909, 0.36364, 0.36818, 0.37273, 0.37727, 0.38182, 0.38636, 0.39091, 0.39545, 0.4, 0.40455, 0.40909, 0.41364, 0.41818, 0.42273, 0.42727, 0.43182, 0.43636, 0.44091, 0.44545, 0.45, 0.45455, 0.45909, 0.46364, 0.46818, 0.47273, 0.47727, 0.48182, 0.48636, 0.49091, 0.49545, 0.5, 0.50455, 0.50909, 0.51364, 0.51818, 0.52273, 0.52727, 0.53182, 0.53636, 0.54091, 0.54545, 0.55, 0.55455, 0.55909, 0.56364, 0.56818, 0.57273, 0.57727, 0.58182, 0.58636, 0.59091, 0.59545, 0.6, 0.60455, 0.60909, 0.61364, 0.61818, 0.62273, 0.62727, 0.63182, 0.63636, 0.64091, 0.64545, 0.65, 0.65455, 0.65909, 0.66364, 0.66818, 0.67273, 0.67727, 0.68182, 0.68636, 0.69091, 0.69545, 0.7, 0.70455, 0.70909, 0.71364, 0.71818, 0.72273, 0.72727, 0.73182, 0.73636, 0.74091, 0.74545, 0.75, 0.75455, 0.75909, 0.76364, 0.76818, 0.77273, 0.77727, 0.78182, 0.78636, 0.79091, 0.79545, 0.8, 0.80455, 0.80909, 0.81364, 0.81818, 0.82273, 0.82727, 0.83182, 0.83636, 0.84091, 0.84545, 0.85, 0.85455, 0.85909, 0.86364, 0.86818, 0.87273, 0.87727, 0.88182, 0.88636, 0.89091, 0.89545, 0.9, 0.90455, 0.90909, 0.91364, 0.91818, 0.92273, 0.92727, 0.93182, 0.93636, 0.94091, 0.94545, 0.95, 0.95455, 0.95909, 0.96364, 0.96818, 0.97273, 0.97727, 0.98182, 0.98636, 0.99091, 0.99545], "elev": [{"f": 0.0, "m": 0.7}, {"f": 0.0083, "m": 0.7}, {"f": 0.0167, "m": 0.7}, {"f": 0.025, "m": 0.7}, {"f": 0.0333, "m": 0.7}, {"f": 0.0417, "m": 0.7}, {"f": 0.05, "m": 0.7}, {"f": 0.0583, "m": 0.7}, {"f": 0.0667, "m": 0.7}, {"f": 0.075, "m": 0.7}, {"f": 0.0833, "m": 0.67}, {"f": 0.0917, "m": 0.6}, {"f": 0.1, "m": 0.6}, {"f": 0.1083, "m": 0.6}, {"f": 0.1167, "m": 0.6}, {"f": 0.125, "m": 0.6}, {"f": 0.1333, "m": 0.6}, {"f": 0.1417, "m": 0.57}, {"f": 0.15, "m": 0.51}, {"f": 0.1583, "m": 0.5}, {"f": 0.1667, "m": 0.5}, {"f": 0.175, "m": 0.42}, {"f": 0.1833, "m": 0.4}, {"f": 0.1917, "m": 0.4}, {"f": 0.2, "m": 0.4}, {"f": 0.2083, "m": 0.4}, {"f": 0.2167, "m": 0.4}, {"f": 0.225, "m": 0.4}, {"f": 0.2333, "m": 0.4}, {"f": 0.2417, "m": 0.29}, {"f": 0.25, "m": 0.22}, {"f": 0.2583, "m": 0.36}, {"f": 0.2667, "m": 0.4}, {"f": 0.275, "m": 0.2}, {"f": 0.2833, "m": 0.2}, {"f": 0.2917, "m": 0.2}, {"f": 0.3, "m": 0.24}, {"f": 0.3083, "m": 0.3}, {"f": 0.3167, "m": 0.4}, {"f": 0.325, "m": 0.4}, {"f": 0.3333, "m": 0.4}, {"f": 0.3417, "m": 0.4}, {"f": 0.35, "m": 0.4}, {"f": 0.3583, "m": 0.44}, {"f": 0.3667, "m": 0.5}, {"f": 0.375, "m": 0.61}, {"f": 0.3833, "m": 0.7}, {"f": 0.3917, "m": 0.7}, {"f": 0.4, "m": 0.7}, {"f": 0.4083, "m": 0.74}, {"f": 0.4167, "m": 0.87}, {"f": 0.425, "m": 0.78}, {"f": 0.4333, "m": 1.04}, {"f": 0.4417, "m": 1.14}, {"f": 0.45, "m": 1.2}, {"f": 0.4583, "m": 1.46}, {"f": 0.4667, "m": 1.7}, {"f": 0.475, "m": 1.99}, {"f": 0.4833, "m": 2.11}, {"f": 0.4917, "m": 2.43}, {"f": 0.5, "m": 2.6}, {"f": 0.5083, "m": 2.69}, {"f": 0.5167, "m": 2.53}, {"f": 0.525, "m": 2.4}, {"f": 0.5333, "m": 2.2}, {"f": 0.5417, "m": 2.08}, {"f": 0.55, "m": 1.79}, {"f": 0.5583, "m": 1.63}, {"f": 0.5667, "m": 1.37}, {"f": 0.575, "m": 1.19}, {"f": 0.5833, "m": 0.97}, {"f": 0.5917, "m": 0.88}, {"f": 0.6, "m": 0.7}, {"f": 0.6083, "m": 0.95}, {"f": 0.6167, "m": 1.1}, {"f": 0.625, "m": 0.87}, {"f": 0.6333, "m": 0.69}, {"f": 0.6417, "m": 0.6}, {"f": 0.65, "m": 0.69}, {"f": 0.6583, "m": 0.7}, {"f": 0.6667, "m": 0.66}, {"f": 0.675, "m": 0.6}, {"f": 0.6833, "m": 0.7}, {"f": 0.6917, "m": 0.7}, {"f": 0.7, "m": 0.64}, {"f": 0.7083, "m": 0.63}, {"f": 0.7167, "m": 0.7}, {"f": 0.725, "m": 0.7}, {"f": 0.7333, "m": 0.7}, {"f": 0.7417, "m": 0.7}, {"f": 0.75, "m": 0.7}, {"f": 0.7583, "m": 0.7}, {"f": 0.7667, "m": 0.7}, {"f": 0.775, "m": 0.7}, {"f": 0.7833, "m": 0.7}, {"f": 0.7917, "m": 0.7}, {"f": 0.8, "m": 0.63}, {"f": 0.8083, "m": 0.51}, {"f": 0.8167, "m": 0.61}, {"f": 0.825, "m": 0.7}, {"f": 0.8333, "m": 0.72}, {"f": 0.8417, "m": 0.71}, {"f": 0.85, "m": 0.1}, {"f": 0.8583, "m": 0.3}, {"f": 0.8667, "m": 0.41}, {"f": 0.875, "m": 0.73}, {"f": 0.8833, "m": 0.64}, {"f": 0.8917, "m": 0.68}, {"f": 0.9, "m": 0.7}, {"f": 0.9083, "m": 0.63}, {"f": 0.9167, "m": 0.28}, {"f": 0.925, "m": 0.0}, {"f": 0.9333, "m": 0.31}, {"f": 0.9417, "m": 0.43}, {"f": 0.95, "m": 0.39}, {"f": 0.9583, "m": 0.12}, {"f": 0.9667, "m": 0.02}, {"f": 0.975, "m": 0.08}, {"f": 0.9833, "m": 0.3}, {"f": 0.9917, "m": 0.48}, {"f": 1.0, "m": 0.66}], "lap_km": 4.304, "elev_max": 2.7, "elev_min": 0}, C={"START": 0, "S1_END": 0.4481, "S2_END": 0.7951, "ELEV_MAX": 10, "GRID_MAX": 10, "CORNERS": [{"f": 0.278, "name": "Moisés Solana", "off": 52, "side": 1, "mx": 794, "my": 27}, {"f": 0.2934, "name": "Moisés Solana", "off": 52, "side": 1, "mx": 797, "my": 140}, {"f": 0.3093, "name": "Moisés Solana", "off": 52, "side": 1, "mx": 949, "my": 101}, {"f": 0.4699, "name": "", "off": 52, "side": 1, "mx": 1010, "my": 543}, {"f": 0.4875, "name": "", "off": 52, "side": 1, "mx": 1051, "my": 613}, {"f": 0.5194, "name": "", "off": 52, "side": 1, "mx": 949, "my": 713}, {"f": 0.6008, "name": "", "off": 52, "side": 1, "mx": 863, "my": 437}, {"f": 0.6265, "name": "", "off": 52, "side": 1, "mx": 768, "my": 525}, {"f": 0.6448, "name": "", "off": 52, "side": 1, "mx": 723, "my": 409}, {"f": 0.6861, "name": "", "off": 52, "side": 1, "mx": 610, "my": 555}, {"f": 0.7099, "name": "", "off": 52, "side": 1, "mx": 525, "my": 432}, {"f": 0.8437, "name": "", "off": 52, "side": 1, "mx": 195, "my": 647}, {"f": 0.8869, "name": "Foro Sol", "off": 52, "side": 1, "mx": 145, "my": 490}, {"f": 0.9017, "name": "Foro Sol", "off": 52, "side": 1, "mx": 113, "my": 601}, {"f": 0.912, "name": "Foro Sol", "off": 52, "side": 1, "mx": 43, "my": 643}, {"f": 0.9281, "name": "", "off": 52, "side": 1, "mx": -34, "my": 609}, {"f": 0.9581, "name": "Peraltada", "off": 52, "side": 1, "mx": -37, "my": 498}], "LAYOUT": {"sector": {"x": 329, "y": 401, "size": 42}, "corner": {"x": 28, "y": 399, "size": 112, "sub": 40}, "map": {"x": 70, "y": 560, "w": 940, "h": 740}, "elev": {"x": 28, "y": 1367, "w": 1040}, "title": {"x": 40, "y": 316, "size": 30, "text": "AUTÓDROMO HERMANOS RODRÍGUEZ · MEXICO CITY"}, "foot": {"x": 381, "y": 1790, "size": 56, "text": "F-LABO"}}};
+var START0=C.START, START=C.START,S1_END=C.S1_END,S2_END=C.S2_END,EMAX=C.ELEV_MAX,CORNERS=C.CORNERS,L=C.LAYOUT;
+var GMAX=C.GRID_MAX||EMAX;
+var LAP_MS=20000; window.TOTAL_MS=LAP_MS;
+var DEFAULT_L=JSON.parse(JSON.stringify(L));
+
+var pts=D.pts, frc=D.frc;
+function xyRaw(f){
+  f=((f%1)+1)%1;
+  for(var i=0;i<frc.length-1;i++){
+    if(f>=frc[i]&&f<=frc[i+1]){
+      var t=(frc[i+1]-frc[i])?(f-frc[i])/(frc[i+1]-frc[i]):0;
+      return [pts[i][0]+(pts[i+1][0]-pts[i][0])*t, pts[i][1]+(pts[i+1][1]-pts[i][1])*t];
+    }
+  }
+  var a=pts[pts.length-1],b=pts[0];
+  var t2=(f-frc[frc.length-1])/(1-frc[frc.length-1]);
+  return [a[0]+(b[0]-a[0])*t2, a[1]+(b[1]-a[1])*t2];
+}
+function toRaw(f){ return ((f+START)%1+1)%1; }
+function xyAt(f){ return xyRaw(toRaw(f)); }
+function normAt(f){
+  var a=xyAt(f+0.012), b=xyAt(f-0.012);
+  var nx=-(a[1]-b[1]), ny=(a[0]-b[0]), Ln=Math.hypot(nx,ny)||1;
+  return [nx/Ln,ny/Ln];
+}
+function seg(f0,f1,N){
+  N=N||150; if(f1<=f0) return "";
+  var o=[];
+  for(var i=0;i<=N;i++) o.push(xyAt(f0+(f1-f0)*i/N));
+  return "M"+o.map(function(p){return p[0].toFixed(1)+" "+p[1].toFixed(1)}).join("L");
+}
+function elevRaw(fr){
+  var e=D.elev; fr=toRaw(fr);
+  if(fr<=e[0].f) return e[0].m;
+  for(var i=0;i<e.length-1;i++){
+    if(fr>=e[i].f&&fr<=e[i+1].f){
+      var t=(fr-e[i].f)/(e[i+1].f-e[i].f);
+      return e[i].m+(e[i+1].m-e[i].m)*t;
+    }
+  }
+  return e[e.length-1].m;
+}
+function lastCorner(p){ var b=-1; for(var i=0;i<CORNERS.length;i++) if(CORNERS[i].f<=p) b=i; return b; }
+function atCorner(p){
+  var b=-1,bd=0.022;
+  for(var i=0;i<CORNERS.length;i++){ var d=Math.abs(CORNERS[i].f-p); d=Math.min(d,1-d); if(d<bd){bd=d;b=i;} }
+  return b;
+}
+var NS="http://www.w3.org/2000/svg";
+function el(n,a){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);return e;}
+
+/* ---- apply layout ---- */
+function applyLayout(){
+  var b=document.getElementById("sectorBadge");
+  b.style.left=L.sector.x+"px"; b.style.top=L.sector.y+"px"; b.style.fontSize=L.sector.size+"px";
+  var c=document.getElementById("cornerBox");
+  c.style.left=L.corner.x+"px"; c.style.top=L.corner.y+"px";
+  document.getElementById("lblBig").style.fontSize=L.corner.size+"px";
+  document.getElementById("lblSm").style.fontSize=L.corner.sub+"px";
+  var m=document.getElementById("mapWrap");
+  m.style.left=L.map.x+"px"; m.style.top=L.map.y+"px"; m.style.width=L.map.w+"px"; m.style.height=(L.map.h||L.map.w)+"px";
+  var ev=document.getElementById("elevWrap");
+  ev.style.left=L.elev.x+"px"; ev.style.top=L.elev.y+"px"; ev.style.width=L.elev.w+"px";
+  var t=document.getElementById("titleTxt");
+  t.textContent=L.title.text; t.style.fontSize=L.title.size+"px";
+  t.style.left=L.title.x+"px"; t.style.top=L.title.y+"px";
+  var f=document.getElementById("footTxt");
+  f.textContent=L.foot.text; f.style.fontSize=L.foot.size+"px";
+  f.style.left=L.foot.x+"px"; f.style.top=L.foot.y+"px";
+  f.style.color="#5E76A0"; f.style.letterSpacing=".20em";
+}
+applyLayout();
+
+/* ---- static map ---- */
+var box=document.getElementById("corners"), markers=[];
+function defaultPos(c){
+  var b=xyAt(c.f), n=normAt(c.f);
+  return [b[0]+n[0]*c.off*c.side, b[1]+n[1]*c.off*c.side];
+}
+CORNERS.forEach(function(c){ if(c.mx===undefined){ var p=defaultPos(c); c.mx=Math.round(p[0]); c.my=Math.round(p[1]); } });
+function drawMap(){
+  document.getElementById("base").setAttribute("d",seg(0,0.9999,300));
+  box.innerHTML=""; markers=[];
+  CORNERS.forEach(function(c,i){
+    var b=xyAt(c.f);
+    var g=el("g",{"class":"cmark","data-ci":i});
+    g.appendChild(el("line",{x1:b[0].toFixed(1),y1:b[1].toFixed(1),
+      x2:c.mx,y2:c.my,stroke:"#4A5E80","stroke-width":2,"class":"clead"}));
+    g.appendChild(el("circle",{cx:c.mx,cy:c.my,r:34,fill:"transparent","class":"chit"}));
+    var ci=el("circle",{cx:c.mx,cy:c.my,r:30,"class":"cnum"});
+    g.appendChild(ci);
+    var tn=el("text",{x:c.mx,y:c.my,"class":"cnumT"});
+    tn.textContent=("0"+(i+1)).slice(-2); g.appendChild(tn);
+    box.appendChild(g);
+    markers.push(ci);
+  });
+  var sfg=document.getElementById("sf"); sfg.innerHTML="";
+  var p=xyAt(0),n=normAt(0);
+  sfg.appendChild(el("line",{x1:(p[0]-n[0]*26).toFixed(1),y1:(p[1]-n[1]*26).toFixed(1),
+    x2:(p[0]+n[0]*26).toFixed(1),y2:(p[1]+n[1]*26).toFixed(1),stroke:"#FFFFFF","stroke-width":8}));
+}
+drawMap();
+
+/* ---- elevation ---- */
+var EW=960,EH=300,PL=76,PR=14,PT=14,PB=44,iw=EW-PL-PR,ih=EH-PT-PB;
+function ex(f){return PL+f*iw} function ey(m){return PT+ih-(m/EMAX)*ih}
+var g="";
+for(var v=0;v<=GMAX;v+=(GMAX>30?10:GMAX>=10?5:1)){
+  g+='<line class="grid" x1="'+PL+'" y1="'+ey(v).toFixed(1)+'" x2="'+(EW-PR)+'" y2="'+ey(v).toFixed(1)+'"/>'
+   +'<text class="axl" x="'+(PL-12)+'" y="'+(ey(v)+8).toFixed(1)+'" text-anchor="end">'+v+'m</text>';
+}
+function drawElev(){
+var eline="",N=200;
+for(var i=0;i<=N;i++){var f=i/N; eline+=(i?"L":"M")+ex(f).toFixed(1)+" "+ey(elevRaw(f)).toFixed(1);}
+document.getElementById("elev").innerHTML=
+ '<defs><linearGradient id="eg" x1="0" y1="0" x2="0" y2="1">'+
+ '<stop offset="0%" stop-color="#2C7BE5" stop-opacity=".5"/>'+
+ '<stop offset="100%" stop-color="#2C7BE5" stop-opacity=".04"/></linearGradient>'+
+ '<clipPath id="ec"><rect id="ecr" x="'+PL+'" y="0" width="0" height="'+EH+'"/></clipPath></defs>'+g+
+ '<path id="earea" d="'+eline+'L'+ex(1).toFixed(1)+' '+ey(0).toFixed(1)+'L'+ex(0).toFixed(1)+' '+ey(0).toFixed(1)+'Z" fill="url(#eg)" clip-path="url(#ec)"/>'+
+ '<path d="'+eline+'" fill="none" stroke="#22314F" stroke-width="4" stroke-linejoin="round"/>'+
+ '<path d="'+eline+'" fill="none" stroke="#4DA3FF" stroke-width="4" stroke-linejoin="round" clip-path="url(#ec)"/>'+
+ '<text class="axl" x="'+PL+'" y="'+(EH-12)+'">START</text>'+
+ '<text class="axl" x="'+(EW-PR)+'" y="'+(EH-12)+'" text-anchor="end">FINISH</text>'+
+ '<circle id="edot" r="10" fill="#FFFFFF" stroke="#0B1428" stroke-width="3"/>';
+edot=document.getElementById("edot"); ecr=document.getElementById("ecr");
+}
+var edot,ecr; drawElev();
+document.getElementById("elevVal").textContent=D.lap_km.toFixed(3)+" km  \u00B7  \u25B2"+(D.elev_max-D.elev_min).toFixed(1)+" m";
+
+var car=document.getElementById("car");
+var badge=document.getElementById("sectorBadge");
+var hdBig=document.getElementById("lblBig"),hdSm=document.getElementById("lblSm");
+var SECCOL=["#2C7BE5","#E8323C","#28A745"];
+
+window.seek=function(p){
+  p=p<0?0:p>1?1:p;
+  document.getElementById("p1").setAttribute("d", seg(0, Math.min(p,S1_END), 200));
+  document.getElementById("p2").setAttribute("d", p>S1_END ? seg(S1_END, Math.min(p,S2_END), 200) : "");
+  document.getElementById("p3").setAttribute("d", p>S2_END ? seg(S2_END, p, 200) : "");
+  ecr.setAttribute("width", (p*iw).toFixed(1));
+
+  var xy=xyAt(p);
+  car.setAttribute("cx",xy[0].toFixed(1)); car.setAttribute("cy",xy[1].toFixed(1));
+  edot.setAttribute("cx",ex(p).toFixed(1)); edot.setAttribute("cy",ey(elevRaw(p)).toFixed(1));
+
+  var s=p<S1_END?0:p<S2_END?1:2;
+  badge.textContent="SECTOR "+(s+1); badge.style.background=SECCOL[s];
+
+  var nearSF=(p<0.030)||(p>0.990), shown=lastCorner(p);
+  if(nearSF||shown<0){ hdBig.textContent="S/F"; hdSm.textContent="Start / Finish"; }
+  else { hdBig.textContent="T"+("0"+(shown+1)).slice(-2); hdSm.textContent=CORNERS[shown].name||""; }
+
+  /* corner glow: lights up as the car passes, then fades */
+  for(var i=0;i<CORNERS.length;i++){
+    var cf=CORNERS[i].f, dd=Math.abs(p-cf); dd=Math.min(dd,1-dd);
+    var k=Math.max(0,1-dd/0.02); k=k*k*(3-2*k);
+    var sc=cf<S1_END?0:cf<S2_END?1:2, col=SECCOL[sc];
+    var m=markers[i];
+    m.setAttribute("r",(30+8*k).toFixed(1));
+    m.style.stroke = k>0.05?"#FFFFFF":"";
+    m.style.strokeWidth = k>0.05?(3+3*k).toFixed(1):"";
+    m.style.fill = k>0.05?col:"";
+    m.style.fillOpacity = k>0.05?(0.35+0.65*k).toFixed(2):"";
+    m.style.filter = k>0.05 ? "drop-shadow(0 0 "+(6+18*k).toFixed(0)+"px "+col+")" : "none";
+  }
+};
+
+var fit=document.getElementById("fit"), scale=1;
+function fitToWindow(){
+  scale=Math.min(window.innerWidth/1080,window.innerHeight/1920,1);
+  fit.style.transform="translateX("+Math.max(0,(window.innerWidth-1080*scale)/2)+"px) scale("+scale+")";
+}
+if(!window.__CAPTURE__){fitToWindow();window.addEventListener("resize",fitToWindow);}
+window.seek(0);
+
+/* ---- 配置エディタ（Eキーで開閉） ---- */
+(function(){
+  var panel=document.getElementById("edPanel");
+  var svg=document.getElementById("map");
+  var dragging=null, hoverI=-1;
+  var MARK={size:30, off:52, lead:50};
+  function dump(){
+    var o={size:MARK.size, off:MARK.off, lead:MARK.lead, start:+START.toFixed(4), s1:+S1_END.toFixed(4), s2:+S2_END.toFixed(4), cornerF:CORNERS.map(function(c){return +c.f.toFixed(4)}), pos:{}};
+    CORNERS.forEach(function(c,i){ o.pos[i]=[c.mx,c.my]; });
+    document.getElementById("edJson").value=JSON.stringify(o);
+  }
+  function toLocal(ev){
+    var pt=svg.createSVGPoint(); pt.x=ev.clientX; pt.y=ev.clientY;
+    return pt.matrixTransform(svg.getScreenCTM().inverse());
+  }
+  function restyle(){
+    document.querySelectorAll(".cnum").forEach(function(e){ e.setAttribute("r", MARK.size); });
+    document.querySelectorAll(".cnumT").forEach(function(e){ e.setAttribute("font-size", MARK.size*1.25); });
+    document.querySelectorAll(".chit").forEach(function(e){ e.setAttribute("r", MARK.size*1.4); });
+    document.querySelectorAll(".clead").forEach(function(e){ e.setAttribute("opacity", MARK.lead/100); });
+  }
+  document.addEventListener("keydown",function(e){
+    if(e.key==="e"||e.key==="E"){
+      var open = panel.style.display==="none";
+      panel.style.display = open ? "block" : "none"; dump();
+      if(open){ playing=false; window.seek(0.9999); }
+      else { playing=true; t0=null; requestAnimationFrame(loop); }
+    }
+    if((e.key==="r"||e.key==="R") && hoverI>=0){
+      var c=CORNERS[hoverI], p=defaultPos({f:c.f, off:MARK.off, side:c.side});
+      c.mx=Math.round(p[0]); c.my=Math.round(p[1]); drawMap(); restyle(); dump();
+    }
+  });
+  box.addEventListener("mousedown",function(ev){
+    var g=ev.target.closest(".cmark"); if(!g) return;
+    var i=+g.dataset.ci, l=toLocal(ev);
+    dragging={i:i, ox:l.x-CORNERS[i].mx, oy:l.y-CORNERS[i].my};
+    ev.preventDefault();
+  });
+  box.addEventListener("mouseover",function(ev){
+    var g=ev.target.closest(".cmark"); hoverI = g? +g.dataset.ci : -1;
+  });
+  window.addEventListener("mousemove",function(ev){
+    if(!dragging) return;
+    var l=toLocal(ev);
+    CORNERS[dragging.i].mx=Math.round(l.x-dragging.ox);
+    CORNERS[dragging.i].my=Math.round(l.y-dragging.oy);
+    drawMap(); restyle(); dump();
+  });
+  window.addEventListener("mouseup",function(){ dragging=null; });
+  document.getElementById("edSize").addEventListener("input",function(){
+    MARK.size=+this.value; document.getElementById("edSizeV").textContent=this.value; restyle(); dump(); });
+  document.getElementById("edOff").addEventListener("input",function(){
+    MARK.off=+this.value; document.getElementById("edOffV").textContent=this.value; dump(); });
+  document.getElementById("edLead").addEventListener("input",function(){
+    MARK.lead=+this.value; document.getElementById("edLeadV").textContent=this.value; restyle(); dump(); });
+  document.getElementById("edCopy").addEventListener("click",function(){
+    var t=document.getElementById("edJson"); t.select();
+    navigator.clipboard.writeText(t.value);
+    this.textContent="コピーしました"; var b=this;
+    setTimeout(function(){b.textContent="JSONをコピー"},1200);
+  });
+  document.getElementById("edLoad").addEventListener("click",function(){
+    var v=prompt("JSONを貼り付け"); if(!v) return;
+    try{ var o=JSON.parse(v);
+      if(o.size){MARK.size=o.size; document.getElementById("edSize").value=o.size; document.getElementById("edSizeV").textContent=o.size;}
+      if(o.off){MARK.off=o.off; document.getElementById("edOff").value=o.off; document.getElementById("edOffV").textContent=o.off;}
+      if(o.lead!==undefined){MARK.lead=o.lead; document.getElementById("edLead").value=o.lead; document.getElementById("edLeadV").textContent=o.lead;}
+      if(o.pos){ CORNERS.forEach(function(c,i){ if(o.pos[i]){ c.mx=o.pos[i][0]; c.my=o.pos[i][1]; } }); }
+      if(o.start!==undefined){ var dv=o.start-START0; sf.value=dv; document.getElementById("edSFV").textContent=dv.toFixed(4); applyStart(dv); }
+      if(o.s1!==undefined){ S1_END=o.s1; RAW.s1=(S1_END+START)%1; e1.value=S1_END; document.getElementById("edS1V").textContent=S1_END.toFixed(3); }
+      if(o.s2!==undefined){ S2_END=o.s2; RAW.s2=(S2_END+START)%1; e2.value=S2_END; document.getElementById("edS2V").textContent=S2_END.toFixed(3); }
+      drawMap(); restyle(); dump();
+    }catch(err){ alert("読み取れませんでした"); }
+  });
+  // --- S/F line & sector boundaries (kept fixed on the track when S/F moves) ---
+  var RAW={s1:(S1_END+START)%1, s2:(S2_END+START)%1, c:CORNERS.map(function(c){return (c.f+START)%1})};
+  function applyStart(v){
+    START=((START0+v)%1+1)%1;
+    S1_END=((RAW.s1-START)%1+1)%1; S2_END=((RAW.s2-START)%1+1)%1;
+    CORNERS.forEach(function(c,i){ c.f=((RAW.c[i]-START)%1+1)%1; });
+    e1.value=S1_END; e2.value=S2_END;
+    document.getElementById("edS1V").textContent=S1_END.toFixed(3); document.getElementById("edS2V").textContent=S2_END.toFixed(3);
+    drawMap(); restyle(); drawElev(); window.seek(0.9999); dump(); if(window.__drawSecH) window.__drawSecH();
+  }
+  var sf=document.getElementById("edSF"), e1=document.getElementById("edS1"), e2=document.getElementById("edS2");
+  e1.value=S1_END; e2.value=S2_END;
+  document.getElementById("edS1V").textContent=S1_END.toFixed(3); document.getElementById("edS2V").textContent=S2_END.toFixed(3);
+  sf.addEventListener("input",function(){ document.getElementById("edSFV").textContent=(+this.value).toFixed(4); applyStart(+this.value); });
+  e1.addEventListener("input",function(){ S1_END=+this.value; RAW.s1=(S1_END+START)%1; document.getElementById("edS1V").textContent=S1_END.toFixed(3); window.seek(0.999); dump(); });
+  e2.addEventListener("input",function(){ S2_END=+this.value; RAW.s2=(S2_END+START)%1; document.getElementById("edS2V").textContent=S2_END.toFixed(3); window.seek(0.999); dump(); });
+  var _load=document.getElementById("edLoad");
+  _load.addEventListener("click",function(){ /* start/s1/s2 in pasted JSON are applied below if present */ });
+  restyle(); dump();
+})();
+
+
+/* ---- sector boundary handles: drag along the track (editor open) ---- */
+(function(){
+  var svg=document.getElementById("map"), gH=document.getElementById("secH");
+  var HN=[{k:"s1",col:"#E8323C",lab:"S1|S2"},{k:"s2",col:"#28A745",lab:"S2|S3"}];
+  var drag=-1;
+  function val(k){ return k==="s1"?S1_END:S2_END; }
+  function draw(){
+    gH.innerHTML="";
+    var show=document.getElementById("edPanel").style.display!=="none";
+    if(!show) return;
+    HN.forEach(function(h,i){
+      var p=xyAt(val(h.k));
+      var g=el("g",{"data-h":i,style:"cursor:grab"});
+      g.appendChild(el("circle",{cx:p[0],cy:p[1],r:26,fill:h.col,stroke:"#FFFFFF","stroke-width":5}));
+      var t=el("text",{x:p[0],y:p[1]-40,fill:"#FFFFFF","font-size":26,"font-weight":800,"text-anchor":"middle"});
+      t.textContent=h.lab; g.appendChild(t);
+      gH.appendChild(g);
+    });
+  }
+  window.__drawSecH=draw;
+  function nearestF(x,y){
+    var best=0,bd=1e18;
+    for(var i=0;i<=2000;i++){ var f=i/2000, p=xyAt(f), d=(p[0]-x)*(p[0]-x)+(p[1]-y)*(p[1]-y); if(d<bd){bd=d;best=f;} }
+    return best;
+  }
+  function toLocal(ev){ var pt=svg.createSVGPoint(); pt.x=ev.clientX; pt.y=ev.clientY; return pt.matrixTransform(svg.getScreenCTM().inverse()); }
+  gH.addEventListener("mousedown",function(ev){ var g=ev.target.closest("g[data-h]"); if(!g) return; drag=+g.dataset.h; ev.preventDefault(); ev.stopPropagation(); });
+  window.addEventListener("mousemove",function(ev){
+    if(drag<0) return;
+    var l=toLocal(ev), f=nearestF(l.x,l.y);
+    var e=document.getElementById(drag===0?"edS1":"edS2");
+    e.value=f; e.dispatchEvent(new Event("input"));
+    draw();
+  });
+  window.addEventListener("mouseup",function(){ drag=-1; });
+  document.addEventListener("keydown",function(e){ if(e.key==="e"||e.key==="E") setTimeout(draw,0); });
+})();
+
+/* ---- playback ---- */
+var playing=true, t0=null, rafP=0;
+function loop(ts){ if(!playing){return;} if(t0===null)t0=ts; window.seek(((ts-t0)%LAP_MS)/LAP_MS); rafP=requestAnimationFrame(loop); }
+if(!window.__CAPTURE__) rafP=requestAnimationFrame(loop);
+
+</script></body></html>
