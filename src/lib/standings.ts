@@ -26,6 +26,8 @@ type StandingRowRaw = {
   team?: string;
   pts?: number;
   points?: number;
+  /** 任意。true の行に王者バッジを出す */
+  champion?: boolean;
 };
 
 /** DB の standings 行（読み取りに使うカラムのみ） */
@@ -43,6 +45,7 @@ function toStandingRow(r: StandingRowRaw): StandingRow {
     name: r.name,
     team: r.team,
     points: r.pts ?? r.points ?? 0,
+    champion: r.champion === true,
   };
 }
 

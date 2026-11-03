@@ -3,6 +3,15 @@
 import { useState } from "react";
 import type { StandingRow } from "@/lib/data";
 
+/** 王者バッジ（rows の champion: true の行のみ表示） */
+function ChampionBadge() {
+  return (
+    <span className="inline-flex shrink-0 items-center whitespace-nowrap rounded bg-flabo-yellow/15 px-1 py-0.5 font-display text-[0.65rem] leading-none tracking-[0.04em] text-flabo-yellow">
+      👑 CHAMPION
+    </span>
+  );
+}
+
 export default function StandingsCard({
   title,
   rows,
@@ -76,10 +85,22 @@ export default function StandingsCard({
               <p className="truncate font-bold text-[0.85rem] leading-tight">
                 {row.name}
               </p>
-              {row.team && (
-                <p className="truncate text-[0.7rem] text-flabo-grey leading-tight mt-0.5">
-                  {row.team}
-                </p>
+              {row.champion ? (
+                // 王者：チーム行の右にバッジ（チーム行が無いコンストラクターズは名前の下）
+                <div className="flex min-w-0 items-center gap-1.5 mt-0.5">
+                  {row.team && (
+                    <p className="min-w-0 truncate text-[0.7rem] text-flabo-grey leading-tight">
+                      {row.team}
+                    </p>
+                  )}
+                  <ChampionBadge />
+                </div>
+              ) : (
+                row.team && (
+                  <p className="truncate text-[0.7rem] text-flabo-grey leading-tight mt-0.5">
+                    {row.team}
+                  </p>
+                )
               )}
             </div>
             <span className="font-display text-[0.8rem] text-flabo-yellow shrink-0">
@@ -119,6 +140,11 @@ export default function StandingsCard({
                       </td>
                       <td className="font-bold text-[0.75rem] py-1.5 pr-2">
                         {row.name}
+                        {row.champion && (
+                          <span className="ml-1.5 inline-flex align-middle">
+                            <ChampionBadge />
+                          </span>
+                        )}
                       </td>
                       <td className="text-[0.7rem] text-flabo-grey py-1.5 pr-2">
                         {row.team ?? "—"}

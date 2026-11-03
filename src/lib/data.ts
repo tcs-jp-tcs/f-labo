@@ -139,6 +139,8 @@ export type StandingRow = {
   name: string;
   team?: string;
   points: number;
+  /** シリーズチャンピオン確定時に true（王者バッジ表示） */
+  champion?: boolean;
 };
 
 export type PodiumRow = {
