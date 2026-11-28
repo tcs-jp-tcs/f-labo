@@ -11,8 +11,15 @@ import PodiumBody from "./PodiumBody";
  * optional=true のタブはそのカードにデータがある時だけ表示（例: SF 2レース大会の決勝1/決勝2）。
  * optional でないタブは常に表示し、データが無ければグレーアウト（タップ不可）にする。
  */
-const SERIES_SESSION_TABS: Record<Series, { type: string; optional?: boolean }[]> = {
+const SERIES_SESSION_TABS: Record<
+  Series,
+  { type: string; optional?: boolean; label?: string }[]
+> = {
   F1: [
+    // フリー走行はデータがある時だけ表示（週末の途中でも結果ページに出せるように）
+    { type: "フリー走行1", optional: true, label: "FP1" },
+    { type: "フリー走行2", optional: true, label: "FP2" },
+    { type: "フリー走行3", optional: true, label: "FP3" },
     { type: "スプリント予選" },
     { type: "スプリント" },
     { type: "予選" },
@@ -103,7 +110,7 @@ export default function ResultGPCard({
                       : "bg-transparent text-white/20 border-white/5 cursor-not-allowed"
                 }`}
               >
-                {t.type}
+                {t.label ?? t.type}
               </button>
             );
           })}
